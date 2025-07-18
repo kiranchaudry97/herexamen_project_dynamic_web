@@ -103,59 +103,83 @@ function toonKaart(data, taal = "nl") {
 
 // ========== Initialisatie ==========
 document.addEventListener("DOMContentLoaded", async () => {
+  // Controleer of filter.js al data heeft geladen
+  if (typeof window.filterFuncties !== 'undefined') {
+    // Filter.js is geladen, gebruik de gefilterde data
+    console.log("Filter systeem gedetecteerd - gebruik gefilterde data");
+    setupViewToggle(); // Setup alleen de view toggle
+    return; // Filter.js handelt data loading af
+  }
+  
+  // Fallback: laad data zoals voorheen als filter.js niet beschikbaar is
   cachedData = await haalStripmurenOp();
   toonStripmuren(cachedData, huidigeTaal);
+  setupViewToggle();
+});
 
+function setupViewToggle() {
   const toggle = document.getElementById("viewToggle");
   const titelLijst = document.getElementById("titel-lijst");
   const titelKaart = document.getElementById("titel-kaart");
 
-  toggle.addEventListener("change", () => {
-    const isKaart = toggle.checked;
+  if (toggle) {
+    toggle.addEventListener("change", () => {
+      const isKaart = toggle.checked;
 
-    document.getElementById("parcours-lijst").style.display = isKaart ? "none" : "flex";
-    document.getElementById("map-container").style.display = isKaart ? "block" : "none";
+      document.getElementById("parcours-lijst").style.display = isKaart ? "none" : "flex";
+      document.getElementById("map-container").style.display = isKaart ? "block" : "none";
 
-    titelLijst.style.display = isKaart ? "none" : "block";
-    titelKaart.style.display = isKaart ? "block" : "none";
+      if (titelLijst) titelLijst.style.display = isKaart ? "none" : "block";
+      if (titelKaart) titelKaart.style.display = isKaart ? "block" : "none";
 
-    if (isKaart) {
-      toonKaart(cachedData, taalSelect.value);
+      if (isKaart) {
+        // Gebruik gefilterde data als beschikbaar, anders cached data
+        const dataVoorKaart = (typeof window.filterFuncties !== 'undefined') 
+          ? window.filterFuncties.gefilterdeMuren() 
+          : cachedData;
+        toonKaart(dataVoorKaart, taalSelect.value);
+      }
+    });
+
+    // Initiële staat instellen
+    if (toggle.checked) {
+      const dataVoorKaart = (typeof window.filterFuncties !== 'undefined') 
+        ? window.filterFuncties.gefilterdeMuren() 
+        : cachedData;
+      toonKaart(dataVoorKaart, huidigeTaal);
+      if (titelLijst) titelLijst.style.display = "none";
+      if (titelKaart) titelKaart.style.display = "block";
+    } else {
+      if (titelLijst) titelLijst.style.display = "block";
+      if (titelKaart) titelKaart.style.display = "none";
     }
-  });
-
-  if (toggle.checked) {
-    toonKaart(cachedData, huidigeTaal);
-    titelLijst.style.display = "none";
-    titelKaart.style.display = "block";
-  } else {
-    titelLijst.style.display = "block";
-    titelKaart.style.display = "none";
   }
 
   // ✅ Toon gebruiker locatie
   if ("geolocation" in navigator) {
     navigator.geolocation.getCurrentPosition(
       function (position) {
-        const gebruikerLat = position.coords.latitude;
-        const gebruikerLon = position.coords.longitude;
-        L.marker([gebruikerLat, gebruikerLon], {
-          icon: L.icon({
-            iconUrl: 'https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/images/marker-icon.png',
-            iconSize: [25, 41],
-            iconAnchor: [12, 41],
-            popupAnchor: [1, -34],
-            shadowUrl: 'https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/images/marker-shadow.png',
-            shadowSize: [41, 41]
-          })
-        }).addTo(map).bindPopup("Uw locatie");
+        if (map) {
+          const gebruikerLat = position.coords.latitude;
+          const gebruikerLon = position.coords.longitude;
+          L.marker([gebruikerLat, gebruikerLon], {
+            icon: L.icon({
+              iconUrl: 'https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/images/marker-icon.png',
+              iconSize: [25, 41],
+              iconAnchor: [12, 41],
+              popupAnchor: [1, -34],
+              shadowUrl: 'https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/images/marker-shadow.png',
+              shadowSize: [41, 41]
+            })
+          }).addTo(map).bindPopup("Uw locatie");
+        }
       },
       function () {
         console.warn("Geolocatie geweigerd of niet beschikbaar.");
       }
     );
   }
-});
+}
 
 // ========== Taal wissel ==========
 taalSelect.value = huidigeTaal;
@@ -163,6 +187,13 @@ taalSelect.addEventListener("change", () => {
   const nieuweTaal = taalSelect.value;
   localStorage.setItem("language", nieuweTaal);
 
+  // Als filter systeem beschikbaar is, gebruik dat
+  if (typeof window.filterFuncties !== 'undefined') {
+    window.filterFuncties.wijzigTaal(nieuweTaal);
+    return;
+  }
+
+  // Fallback voor als filter.js niet beschikbaar is
   const isKaart = document.getElementById("viewToggle").checked;
   if (isKaart) {
     toonKaart(cachedData, nieuweTaal);

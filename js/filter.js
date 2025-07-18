@@ -1,84 +1,166 @@
-const taalSelect = document.getElementById("language");
-const huidigeTaal = localStorage.getItem("language") || "nl";
+// DOM-elementen ophalen
+const zoekInput = document.getElementById("zoekInput");
+const sortSelect = document.getElementById("sorteerSelect");
+const jaarSelect = document.getElementById("filterJaar");
+const kunstenaarSelect = document.getElementById("filterKunstenaar");
+const resetButton = document.getElementById("resetFilters");
 
-let cachedData = [];
-let map;
-let markersLayer;
+// Globale variabelen
+let alleStripmuren = [];
+let gefilterdeMuren = [];
+let huidigeTaal = "nl";
 
-// Filterelementen
-const zoekInput = document.getElementById("zoekveld");
-const sortSelect = document.getElementById("sortering");
-const jaarSelect = document.getElementById("filter-jaar");
-const kunstenaarSelect = document.getElementById("filter-kunstenaar");
-const resetButton = document.getElementById("reset-filters");
-
+// Data ophalen en initialiseren
 async function haalStripmurenOp() {
-  const response = await fetch("https://opendata.brussels.be/api/explore/v2.1/catalog/datasets/bruxelles_parcours_bd/records?limit=100");
-  const data = await response.json();
-  return data.results;
+  try {
+    const response = await fetch("https://opendata.brussels.be/api/explore/v2.1/catalog/datasets/bruxelles_parcours_bd/records?limit=28");
+    const data = await response.json();
+    return data.results;
+  } catch (error) {
+    console.error("Fout bij het ophalen van data:", error);
+    return [];
+  }
 }
 
+// Filteropties vullen
 function vulFilterOpties(data) {
-  const jaren = new Set();
-  const kunstenaars = new Set();
+  // Controleer of vertalingen beschikbaar zijn
+  const vertalingen = window.translations || {
+    nl: { allYears: "Alle jaren", allArtists: "Alle kunstenaars" },
+    fr: { allYears: "Toutes les années", allArtists: "Tous les artistes" }
+  };
 
-  data.forEach(muur => {
-    if (muur.date) jaren.add(muur.date);
-    if (muur.dessinateur) kunstenaars.add(muur.dessinateur.trim());
+  // Jaren verzamelen
+  const jaren = [...new Set(data.map(muur => muur.date).filter(jaar => jaar))].sort();
+  jaarSelect.innerHTML = `<option value="">${vertalingen[huidigeTaal]?.allYears || "Alle jaren"}</option>`;
+  jaren.forEach(jaar => {
+    const option = document.createElement("option");
+    option.value = jaar;
+    option.textContent = jaar;
+    jaarSelect.appendChild(option);
   });
 
-  [...jaren].sort().forEach(j => {
-    const opt = document.createElement("option");
-    opt.value = opt.textContent = j;
-    jaarSelect.appendChild(opt);
-  });
-
-  [...kunstenaars].sort().forEach(k => {
-    const opt = document.createElement("option");
-    opt.value = opt.textContent = k;
-    kunstenaarSelect.appendChild(opt);
+  // Kunstenaars verzamelen
+  const kunstenaars = [...new Set(data.map(muur => muur.dessinateur).filter(kunstenaar => kunstenaar))].sort();
+  kunstenaarSelect.innerHTML = `<option value="">${vertalingen[huidigeTaal]?.allArtists || "Alle kunstenaars"}</option>`;
+  kunstenaars.forEach(kunstenaar => {
+    const option = document.createElement("option");
+    option.value = kunstenaar;
+    option.textContent = kunstenaar;
+    kunstenaarSelect.appendChild(option);
   });
 }
 
-function pasFiltersToe() {
+// Filteren en zoeken
+function filterEnZoek() {
   const zoekterm = zoekInput.value.toLowerCase();
-  const gekozenJaar = jaarSelect.value;
-  const gekozenKunstenaar = kunstenaarSelect.value;
-  const sorteer = sortSelect.value;
+  const geselecteerdJaar = jaarSelect.value;
+  const geselecteerdeKunstenaar = kunstenaarSelect.value;
 
-  let gefilterd = [...cachedData].filter(muur => {
-    const naam = muur[`naam_fresco_${huidigeTaal}`]?.toLowerCase() || "";
-    const auteur = muur.dessinateur?.toLowerCase() || "";
+  gefilterdeMuren = alleStripmuren.filter(muur => {
+    const naam = (muur[`naam_fresco_${huidigeTaal}`] || muur.nom_de_la_fresque || "").toLowerCase();
+    const kunstenaar = (muur.dessinateur || "").toLowerCase();
     const jaar = muur.date || "";
+    const beschrijving = (
+      muur[`description_${huidigeTaal}`] ||
+      muur[`info_${huidigeTaal}`] ||
+      muur.description_nl ||
+      muur.description_fr ||
+      muur.info_nl ||
+      muur.info_fr ||
+      ""
+    ).toLowerCase();
 
-    const matchZoek = !zoekterm || naam.includes(zoekterm) || auteur.includes(zoekterm) || jaar.includes(zoekterm);
-    const matchJaar = !gekozenJaar || jaar === gekozenJaar;
-    const matchKunstenaar = !gekozenKunstenaar || muur.dessinateur === gekozenKunstenaar;
+    // Zoekfilter
+    const voldoetAanZoek = !zoekterm || 
+      naam.includes(zoekterm) || 
+      kunstenaar.includes(zoekterm) || 
+      jaar.includes(zoekterm) ||
+      beschrijving.includes(zoekterm);
 
-    return matchZoek && matchJaar && matchKunstenaar;
+    // Jaarfilter
+    const voldoetAanJaar = !geselecteerdJaar || jaar === geselecteerdJaar;
+
+    // Kunstenaarfilter
+    const voldoetAanKunstenaar = !geselecteerdeKunstenaar || muur.dessinateur === geselecteerdeKunstenaar;
+
+    return voldoetAanZoek && voldoetAanJaar && voldoetAanKunstenaar;
   });
 
-  // Sorteren
-  gefilterd.sort((a, b) => {
-    const naamA = a[`naam_fresco_${huidigeTaal}`] || "";
-    const naamB = b[`naam_fresco_${huidigeTaal}`] || "";
-    return sorteer === "az" ? naamA.localeCompare(naamB) : naamB.localeCompare(naamA);
-  });
-
-  toonStripmuren(gefilterd, huidigeTaal);
+  sorteerMuren();
+  toonStripmuren(gefilterdeMuren, huidigeTaal);
+  updateKaart();
 }
 
+// Sorteren
+function sorteerMuren() {
+  const sorteerWaarde = sortSelect.value;
+
+  gefilterdeMuren.sort((a, b) => {
+    const naamA = a[`naam_fresco_${huidigeTaal}`] || a.nom_de_la_fresque || "Naam onbekend";
+    const naamB = b[`naam_fresco_${huidigeTaal}`] || b.nom_de_la_fresque || "Naam onbekend";
+    const jaarA = parseInt(a.date) || 0;
+    const jaarB = parseInt(b.date) || 0;
+
+    switch (sorteerWaarde) {
+      case "za":
+        return naamB.localeCompare(naamA);
+      case "jaar_op":
+        return jaarA - jaarB;
+      case "jaar_af":
+        return jaarB - jaarA;
+      case "az":
+      default:
+        return naamA.localeCompare(naamB);
+    }
+  });
+}
+
+// Kaart updaten met gefilterde resultaten
+function updateKaart() {
+  // Controleer of kaart functionaliteit beschikbaar is (uit parcours.js)
+  if (typeof toonKaart === 'function') {
+    const isKaartZichtbaar = document.getElementById("viewToggle")?.checked;
+    if (isKaartZichtbaar) {
+      toonKaart(gefilterdeMuren, huidigeTaal);
+    }
+  }
+}
+
+// Filters resetten
 function resetFilters() {
   zoekInput.value = "";
+  sortSelect.value = "az";
   jaarSelect.value = "";
   kunstenaarSelect.value = "";
-  sortSelect.value = "az";
-  pasFiltersToe();
+  
+  gefilterdeMuren = [...alleStripmuren];
+  sorteerMuren();
+  toonStripmuren(gefilterdeMuren, huidigeTaal);
+  updateKaart();
+}
+
+// Taal wijzigen
+function wijzigTaal(nieuweTaal) {
+  huidigeTaal = nieuweTaal;
+  
+  // Update filteropties met nieuwe taal
+  vulFilterOpties(alleStripmuren);
+  
+  // Herfilter met nieuwe taal
+  filterEnZoek(); 
 }
 
 function toonStripmuren(data, taal = "nl") {
   const container = document.getElementById("parcours-lijst");
   container.innerHTML = "";
+
+  if (data.length === 0) {
+    container.innerHTML = `<p style="text-align: center; color: #666; margin: 2rem 0;">
+      ${taal === "fr" ? "Aucun résultat trouvé." : "Geen resultaten gevonden."}
+    </p>`;
+    return;
+  }
 
   data.forEach((muur) => {
     const naam = muur[`naam_fresco_${taal}`] || muur.nom_de_la_fresque || "Naam onbekend";
@@ -102,13 +184,13 @@ function toonStripmuren(data, taal = "nl") {
     kaart.innerHTML = `
       <img src="${afbeelding}" alt="${naam}" />
       <h3>${naam}</h3>
-      <p><strong>Kunstenaar:</strong> ${kunstenaar}</p>
-      <p><strong>Adres:</strong> ${adres}</p>
-      <p><strong>Jaar:</strong> ${jaar}</p>
-      <p><strong>Beschrijving:</strong> ${beschrijving}</p>
+      <p><strong>${taal === "fr" ? "Artiste" : "Kunstenaar"}:</strong> ${kunstenaar}</p>
+      <p><strong>${taal === "fr" ? "Adresse" : "Adres"}:</strong> ${adres}</p>
+      <p><strong>${taal === "fr" ? "Année" : "Jaar"}:</strong> ${jaar}</p>
+      <p><strong>${taal === "fr" ? "Description" : "Beschrijving"}:</strong> ${beschrijving}</p>
       <div class="kaart-acties">
-        <a href="${mapLink}" target="_blank">Open in Google Maps</a>
-        <button class="add-favorite">Voeg toe</button>
+        <a href="${mapLink}" target="_blank">${taal === "fr" ? "Ouvrir dans Google Maps" : "Open in Google Maps"}</a>
+        <button class="add-favorite">${taal === "fr" ? "Ajouter" : "Voeg toe"}</button>
       </div>
     `;
 
@@ -116,104 +198,47 @@ function toonStripmuren(data, taal = "nl") {
   });
 }
 
-function initMap() {
-  map = L.map('map-container').setView([50.8503, 4.3517], 13);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; OpenStreetMap-bijdragers'
-  }).addTo(map);
-  markersLayer = L.layerGroup().addTo(map);
-}
-
-function toonKaart(data, taal = "nl") {
-  if (!map) initMap();
-  markersLayer.clearLayers();
-
-  data.forEach(muur => {
-    const titel = muur[`naam_fresco_${taal}`] || muur.nom_de_la_fresque || '';
-    const beschrijving = muur[`description_${taal}`] || muur[`info_${taal}`] || '';
-    const tekenaar = muur.dessinateur || "Onbekend";
-    const adres = muur.adres || muur.adresse || "Adres niet beschikbaar";
-    const gemeente = muur.commune_gemeente || "Onbekend";
-    const link = muur.link_site_striproute || muur.lien_site_parcours_bd || "#";
-    const afbeelding = muur.image || null;
-
-    const lat = muur.coordonnees_geographiques?.lat;
-    const lon = muur.coordonnees_geographiques?.lon;
-
-    if (lat && lon) {
-      const popupHtml = `
-        <strong>${titel}</strong><br>
-        <span><b>Kunstenaar:</b> ${tekenaar}</span><br>
-        <span><b>Adres:</b> ${adres}</span><br>
-        <span><b>Gemeente:</b> ${gemeente}</span><br>
-        ${beschrijving ? `<p>${beschrijving}</p>` : ""}
-        ${link !== "#" ? `<p><a href="${link}" target="_blank" style="color:#007bff;">Meer info</a></p>` : ""}
-        ${afbeelding ? `<img src="${afbeelding}" alt="${titel}" style="max-width:180px; border-radius:8px; margin-top:6px;">` : ""}
-      `;
-      const marker = L.marker([lat, lon]).bindPopup(popupHtml);
-      markersLayer.addLayer(marker);
-    }
-  });
-
-  setTimeout(() => map.invalidateSize(), 200);
-}
-
-// ========== Initialisatie ==========
+// Event listeners toevoegen
 document.addEventListener("DOMContentLoaded", async () => {
-  cachedData = await haalStripmurenOp();
-  vulFilterOpties(cachedData);
-  toonStripmuren(cachedData, huidigeTaal);
-
-  // Toggle kaart ↔ lijst
-  const toggle = document.getElementById("viewToggle");
-  const titelLijst = document.getElementById("titel-lijst");
-  const titelKaart = document.getElementById("titel-kaart");
-
-  toggle.addEventListener("change", () => {
-    const isKaart = toggle.checked;
-    document.getElementById("parcours-lijst").style.display = isKaart ? "none" : "flex";
-    document.getElementById("map-container").style.display = isKaart ? "block" : "none";
-    titelLijst.style.display = isKaart ? "none" : "block";
-    titelKaart.style.display = isKaart ? "block" : "none";
-    if (isKaart) toonKaart(cachedData, taalSelect.value);
-  });
-
-  // Filters
-  zoekInput.addEventListener("input", pasFiltersToe);
-  sortSelect.addEventListener("change", pasFiltersToe);
-  jaarSelect.addEventListener("change", pasFiltersToe);
-  kunstenaarSelect.addEventListener("change", pasFiltersToe);
-  resetButton.addEventListener("click", resetFilters);
-
-  // Kaart tonen bij opstart (indien geselecteerd)
-  if (toggle.checked) {
-    toonKaart(cachedData, huidigeTaal);
-    titelLijst.style.display = "none";
-    titelKaart.style.display = "block";
+  // Data ophalen
+  alleStripmuren = await haalStripmurenOp();
+  gefilterdeMuren = [...alleStripmuren];
+  
+  // Taal uit localStorage halen
+  huidigeTaal = localStorage.getItem("language") || "nl";
+  
+  // Filteropties vullen
+  vulFilterOpties(alleStripmuren);
+  
+  // Initiële weergave
+  toonStripmuren(gefilterdeMuren, huidigeTaal);
+  
+  // Event listeners
+  if (zoekInput) {
+    zoekInput.addEventListener("input", filterEnZoek);
   }
-
-  // Locatie
-  if ("geolocation" in navigator) {
-    navigator.geolocation.getCurrentPosition(position => {
-      const { latitude, longitude } = position.coords;
-      L.marker([latitude, longitude], {
-        icon: L.icon({
-          iconUrl: 'https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/images/marker-icon.png',
-          iconSize: [25, 41],
-          iconAnchor: [12, 41],
-          shadowUrl: 'https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/images/marker-shadow.png',
-          shadowSize: [41, 41]
-        })
-      }).addTo(map).bindPopup("Uw locatie");
-    });
+  
+  if (sortSelect) {
+    sortSelect.addEventListener("change", filterEnZoek);
+  }
+  
+  if (jaarSelect) {
+    jaarSelect.addEventListener("change", filterEnZoek);
+  }
+  
+  if (kunstenaarSelect) {
+    kunstenaarSelect.addEventListener("change", filterEnZoek);
+  }
+  
+  if (resetButton) {
+    resetButton.addEventListener("click", resetFilters);
   }
 });
 
-// Taal wissel
-taalSelect.value = huidigeTaal;
-taalSelect.addEventListener("change", () => {
-  const nieuweTaal = taalSelect.value;
-  localStorage.setItem("language", nieuweTaal);
-  const isKaart = document.getElementById("viewToggle").checked;
-  isKaart ? toonKaart(cachedData, nieuweTaal) : toonStripmuren(cachedData, nieuweTaal);
-});
+// Exporteer functies voor gebruik door andere scripts
+window.filterFuncties = {
+  wijzigTaal,
+  filterEnZoek,
+  toonStripmuren,
+  gefilterdeMuren: () => gefilterdeMuren
+};
