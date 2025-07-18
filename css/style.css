@@ -1,0 +1,480 @@
+/* ========== ALGEMENE BASIS ========== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #f7f7f7;
+  color: #333;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ========== NAVIGATIEBALK ========== */
+.main-nav {
+  background-color: rgb(68, 148, 140);
+  padding: 0.5rem 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.nav-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  margin-right: auto;
+}
+
+.nav-logo img {
+  height: 45px;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 2rem;
+}
+
+.nav-links li a {
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+  padding: 0.5rem 1rem;
+  transition: background-color 0.3s, border-radius 0.3s;
+}
+
+.nav-links li a:hover {
+  background-color: #c85a13;
+  border-radius: 8px;
+}
+
+/* ========== INSTELLINGEN ========== */
+.settings {
+  background-color: #e0f3f1;
+  border-radius: 10px;
+  padding: 1rem 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  margin: 2rem auto;
+  max-width: 900px;
+}
+
+.settings label {
+  font-weight: bold;
+  margin-right: 0.5rem;
+}
+
+.settings select {
+  padding: 0.3rem;
+  font-size: 1rem;
+}
+
+.settings span {
+  font-weight: bold;
+}
+
+/* ========== SLIDER ========== */
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 28px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  background-color: #ccc;
+  border-radius: 34px;
+  top: 0; left: 0; right: 0; bottom: 0;
+  transition: 0.4s;
+}
+
+.slider::before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  background-color: white;
+  border-radius: 50%;
+  bottom: 4px;
+  left: 4px;
+  transition: 0.4s;
+}
+
+.switch input:checked + .slider {
+  background-color: #c85a13;
+}
+
+.switch input:checked + .slider::before {
+  transform: translateX(22px);
+}
+
+/* ========== TOGGLE VIEW ========== */
+.toggle-weergave {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* ========== INFO ========== */
+.info {
+  text-align: center;
+  padding: 1rem 2rem;
+  max-width: 900px;
+  margin: auto;
+}
+
+.info p {
+  line-height: 1.6;
+}
+
+/* ========== PARCOURS LIJST ========== */
+.parcours-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: center;
+  padding: 2rem;
+}
+
+/* ========== KAART STIJL ========== */
+.muur-kaart {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 260px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: transform 0.2s;
+}
+
+.muur-kaart:hover {
+  transform: translateY(-5px);
+}
+
+.muur-kaart img {
+  width: 100%;
+  height: 190px;
+  object-fit: cover;
+}
+
+.muur-kaart h3 {
+  color: #c85a13;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-align: center;
+  margin: 0.8rem 0 0.5rem;
+}
+
+/* ========== TEKST IN DE KAART ========== */
+.muur-kaart p {
+  font-size: 0.95rem;
+  margin: 0.25rem 1rem;
+  line-height: 1.4;
+}
+
+.muur-kaart p strong {
+  display: inline-block;
+  margin-right: 5px;
+}
+
+.muur-kaart p:nth-of-type(1)::before {
+  content: "\1F3A8 ";
+}
+
+.muur-kaart p:nth-of-type(2)::before {
+  content: "\1F4CD ";
+}
+
+.muur-kaart p:nth-of-type(3)::before {
+  content: "\1F4C5 ";
+}
+
+.muur-kaart p:nth-of-type(4)::before {
+  content: "\2139 \FE0F ";
+}
+
+/* ========== ACTIEKNOPPEN ========== */
+.kaart-acties {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 1rem;
+}
+
+.kaart-acties a {
+  background-color: #2bb673;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.kaart-acties a:hover {
+  background-color: #239a60;
+}
+
+.kaart-acties button {
+  background-color: #e53935;
+  color: white;
+  border: none;
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background-color 0.3s;
+}
+
+.kaart-acties button:hover {
+  background-color: #c62828;
+}
+
+/* ========== FOOTER ========== */
+footer {
+  text-align: center;
+  padding: 1rem;
+  background-color: #f4f4f4;
+  margin-top: auto;
+}
+
+/* ========== DONKER THEMA ========== */
+body.dark-mode {
+  background-color: #121212;
+  color: white;
+}
+
+body.dark-mode header,
+body.dark-mode footer {
+  background-color: #1e1e1e;
+}
+
+body.dark-mode .main-nav {
+  background-color: rgb(34, 90, 85);
+}
+
+body.dark-mode .settings {
+  background-color: #2d3d3d;
+  color: white;
+}
+
+body.dark-mode .muur-kaart {
+  background-color: #1e1e1e;
+  color: white;
+}
+
+body.dark-mode .kaart-acties a {
+  background-color: #2e8b57;
+}
+
+body.dark-mode .kaart-acties button {
+  background-color: #b71c1c;
+}
+
+/* ========== KAARTWEERGAVE (LEAFLET) ========== */
+#map-container {
+  margin: 2rem auto;
+  max-width: 1000px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border: 2px solid #ccc;
+}
+
+#map-container .leaflet-container {
+  height: 500px;
+  width: 100%;
+}
+
+body.dark-mode #map-container {
+  border-color: #444;
+}
+
+#map-container::before {
+  content: "Striplocatie";
+  display: block;
+  text-align: center;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #333;
+  padding: 1rem 0 0.5rem;
+  background-color: white;
+}
+
+body.dark-mode #map-container::before {
+  color: white;
+  background-color: #121212;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+  .nav-links {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .nav-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .settings {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .muur-kaart {
+    width: 90%;
+  }
+}
+
+
+/* ========== ABOUT PAGINA ========== */
+.pagina-header {
+  text-align: center;
+  background-color: #fcefe5;
+  padding: 2rem 1rem 1rem;
+}
+
+.pagina-header h1 {
+  color: #c85a13;
+  font-size: 2.2rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Container en content gecentreerd */
+.about-container {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.about-content h2 {
+  color: #c85a13;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.about-content p {
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  color: #333; /* Goede leesbaarheid in light mode */
+}
+
+/* ========== DONKER THEMA AANPASSINGEN ========== */
+body.dark-mode .pagina-header {
+  background-color: #2d2d2d;
+}
+
+body.dark-mode .about-container {
+  background-color: #1e1e1e;
+  color: #f0f0f0;
+}
+
+body.dark-mode .about-content p {
+  color: #dddddd; /* Lichte tekst in dark mode */
+}
+
+body.dark-mode .about-content h2 {
+  color: #ffa54d; /* Oranje in dark mode */
+}
+
+body.dark-mode .pagina-header h1 {
+  color: #ffa54d;
+}
+
+
+/* Filterbalk-stijl */
+.filterbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  max-width: 1100px;
+}
+
+.filterbar input,
+.filterbar select,
+.filterbar button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #c85a13;
+  border-radius: 999px;
+  background-color: white;
+  font-size: 0.9rem;
+  transition: 0.2s ease;
+}
+
+.filterbar input::placeholder {
+  color: #aaa;
+}
+
+.filterbar input:focus,
+.filterbar select:focus,
+.filterbar button:focus {
+  outline: none;
+  border-color: #a0410c;
+}
+
+.filterbar select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg fill='%23000' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1rem;
+  padding-right: 2.5rem;
+}
+
+.filterbar button {
+  background-color: transparent;
+  color: #c85a13;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.filterbar button:hover {
+  background-color: #f3e4da;
+}

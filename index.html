@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BrusselsExplorer</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ✅ Navigatie -->
+  <nav class="main-nav">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo">
+        <img src="img/logo brussel parcours.png" alt="BrusselsExplorer logo" />
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html" data-i18n="home">Home</a></li>
+        <li><a href="parcours.html" data-i18n="parcours">Parcours</a></li>
+        <li><a href="about.html" data-i18n="about">Over ons</a></li>
+        <li><a href="contact.html" data-i18n="contact">Contact</a></li>
+        <li><a href="favorites.html" data-i18n="favorites">Favorieten</a></li>
+        <li><a href="login.html" data-i18n="login">Login</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ✅ Pagina-inhoud -->
+  <header>
+    <h1 data-i18n="title">🎨 BrusselsExplorer</h1>
+    <p data-i18n="intro">Ontdek street art en verborgen parels in Brussel</p>
+  </header>
+
+  <!-- ✅ Instellingen -->
+  <section class="settings">
+    <div>
+      <label for="language" data-i18n="language">Taal:</label>
+      <select id="language">
+        <option value="nl">Nederlands</option>
+        <option value="fr">Frans</option>
+      </select>
+    </div>
+
+    <div class="theme-toggle">
+      <label class="switch">
+        <input type="checkbox" id="themeToggle">
+        <span class="slider round"></span>
+      </label>
+      <span class="theme-label" data-i18n="theme"></span>
+    </div>
+  </section>
+
+  <!-- ✅ Startknop -->
+  <section class="start">
+    <button id="startBtn" data-i18n="start">🧭 Ontdek de strip parcours in Brussel</button>
+  </section>
+
+  <!-- ✅ Informatiesectie -->
+  <section class="info" style="max-width: 800px; margin: 2rem auto; padding: 0 1rem;">
+    <h2 data-i18n="infoTitle">Wat zijn de stripmuren van Brussel?</h2>
+    <p data-i18n="infoText">
+      In Brussel vind je meer dan 60 prachtige muurschilderingen die een eerbetoon zijn aan Belgische stripfiguren zoals Kuifje, Lucky Luke, Nero en de Smurfen. Deze kleurrijke muren vormen samen het beroemde stripparcours dat je uitnodigt om de stad op een unieke manier te ontdekken. 
+    </p>
+    <h3 data-i18n="goalTitle">Doel van BrusselsExplorer</h3>
+    <p data-i18n="goalText">
+      Met deze webapplicatie kun je deze stripmuren verkennen, favorieten opslaan, filteren op locatie en meer – allemaal met echte data uit de open databronnen van Brussel.
+    </p>
+  </section>
+
+  <!-- ✅ Footer -->
+  <footer>
+    <p>© 2025 BrusselsExplorer | Herexamen Project Dynamic Web | Kiran Chaud-ry</p>
+  </footer>
+
+  <!-- ✅ Scripts -->
+  <script src="js/thematoggle.js"></script>
+  <script src="js/taal.js"></script>
+  <script src="js/navigatie.js"></script>
+</body>
+</html>

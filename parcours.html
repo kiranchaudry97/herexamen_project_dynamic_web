@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Parcours | BrusselsExplorer</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+</head>
+<body>
+
+  <!-- ✅ Navigatie -->
+  <nav class="main-nav">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo">
+        <img src="img/logo brussel parcours.png" alt="BrusselsExplorer logo" />
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="parcours.html">Parcours</a></li>
+        <li><a href="about.html">Over ons</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="favorites.html">Favorieten</a></li>
+        <li><a href="login.html">Login</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ✅ Instellingen -->
+  <section class="settings">
+    <div>
+      <label for="language">Taal:</label>
+      <select id="language">
+        <option value="nl">Nederlands</option>
+        <option value="fr">Frans</option>
+      </select>
+    </div>
+    <div class="theme-toggle">
+      <label class="switch">
+        <input type="checkbox" id="themeToggle" />
+        <span class="slider round"></span>
+      </label>
+      <span class="theme-label">Donkere modus</span>
+    </div>
+    <div class="toggle-weergave">
+      <label class="switch">
+        <input type="checkbox" id="viewToggle" />
+        <span class="slider round"></span>
+      </label>
+      <span id="viewLabel">Stripmuren / Kaart</span>
+    </div>
+  </section>
+
+  <section class="filterbar">
+  <input type="text" id="zoekInput" placeholder="Zoek op titel, auteur of jaar..." />
+
+  <select id="sorteerSelect">
+    <option value="az">Sorteer op alfabetisch</option>
+    <option value="za">Z → A</option>
+    <option value="jaar_op">Jaar ↑</option>
+    <option value="jaar_af">Jaar ↓</option>
+  </select>
+
+  <select id="filterJaar">
+    <option value="">Alle jaren</option>
+    <!-- Dynamisch gevuld via JS -->
+  </select>
+
+  <select id="filterKunstenaar">
+    <option value="">Alle kunstenaars</option>
+    <!-- Dynamisch gevuld via JS -->
+  </select>
+
+  <button id="resetFilters">Reset</button>
+</section>
+
+
+  <!-- ✅ Titels -->
+  <h2 id="titel-lijst" style="text-align:center; color:#c85a13; margin-top:1.5rem;">🖼️ Stripmuren in Brussel</h2>
+  <h2 id="titel-kaart" style="text-align:center; color:#c85a13; margin-top:1.5rem; display:none;">🗺️ Striproute</h2>
+
+  <!-- ✅ Introductie -->
+  <section class="info">
+    <p>
+      Ontdek hier een selectie van de kleurrijke stripmuren in Brussel: muurschilderingen geïnspireerd op bekende striphelden zoals Kuifje, Lucky Luke en de Smurfen.
+    </p>
+  </section>
+
+  <!-- ✅ Lijst -->
+  <section id="parcours-lijst" class="parcours-container"></section>
+
+  <!-- ✅ Kaart -->
+  <section id="map-container" class="map-container" style="display: none; height: 500px; width: 100%;" aria-label="Kaartweergave stripmuren"></section>
+
+  <noscript>
+    <p style="text-align: center; margin: 2rem;">
+      JavaScript is vereist om de stripmuren en kaart te bekijken.
+    </p>
+  </noscript>
+
+  <!-- ✅ Footer -->
+  <footer>
+    <p>© 2025 BrusselsExplorer | herexamen - project dynamic web | Kiran Chaud-ry</p>
+  </footer>
+
+  <!-- ✅ Scripts -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="js/thematoggle.js"></script>
+  <script src="js/taal.js"></script>
+  <script src="js/parcours.js"></script>
+  <script src="js/filters.js"></script>
+</body>
+</html>

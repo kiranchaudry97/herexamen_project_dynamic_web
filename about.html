@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Over | BrusselsExplorer</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+</head>
+<body>
+
+  <!-- ✅ Navigatie -->
+  <nav class="main-nav">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo">
+        <img src="img/logo brussel parcours.png" alt="BrusselsExplorer logo" />
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html" data-i18n="home">Home</a></li>
+        <li><a href="parcours.html" data-i18n="parcours">Parcours</a></li>
+        <li><a href="about.html" data-i18n="about">Over ons</a></li>
+        <li><a href="contact.html" data-i18n="contact">Contact</a></li>
+        <li><a href="favorites.html" data-i18n="favorites">Favorieten</a></li>
+        <li><a href="login.html" data-i18n="login">Login</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ✅ Instellingen -->
+  <section class="settings">
+    <div>
+      <label for="language" data-i18n="language">Taal:</label>
+      <select id="language">
+        <option value="nl">Nederlands</option>
+        <option value="fr">Frans</option>
+      </select>
+    </div>
+
+    <div class="theme-toggle">
+      <label class="switch">
+        <input type="checkbox" id="themeToggle" />
+        <span class="slider round"></span>
+      </label>
+      <span class="theme-label" data-i18n="theme">Donkere modus</span>
+    </div>
+  </section>
+
+  <!-- ✅ Pagina Header -->
+  <header class="pagina-header">
+    <h1 data-i18n="about_header">Over BrusselsExplorer</h1>
+  </header>
+
+  <!-- ✅ Hoofdinhoud -->
+  <main class="about-container">
+    <section class="about-content">
+      <h2>✨ <span data-i18n="mission_title">Missie</span></h2>
+      <p data-i18n="mission_text">
+        BrusselsExplorer is een digitale gids ontworpen door student Kiran Chaud-ry voor nieuwsgierige bezoekers en locals die de verborgen parels van de stripkunst in Brussel willen ontdekken.
+      </p>
+
+      <h2>📚 <span data-i18n="whatwedo_title">Wat doen we?</span></h2>
+      <p data-i18n="whatwedo_text">
+        We verzamelen en visualiseren data over muurschilderingen, kunstenaars en locaties uit het open data platform van Brussel. Via onze interactieve website brengen we deze striproutes tot leven.
+      </p>
+
+      <h2>📅 <span data-i18n="projectinfo_title">Projectinfo</span></h2>
+      <p data-i18n="projectinfo_text">
+        Dit project is onderdeel van het Dynamic Web curriculum. Het laat zien hoe je echte API-data, JavaScript-functionaliteit, themakeuze en gebruikersinteractie combineert in een moderne webtoepassing.
+      </p>
+
+      <h2>👤 <span data-i18n="team_title">Ontwikkelaar</span></h2>
+      <p data-i18n="team_text">
+        Gemaakt door Kiran Jamil Chaud-ry — student Graduaat Programmeren - Project Dynamic Web.
+      </p>
+    </section>
+  </main>
+
+  <!-- ✅ Footer -->
+  <footer>
+    <p>© 2025 BrusselsExplorer | Herexamen Project Dynamic Web | Kiran Chaud-ry</p>
+  </footer>
+
+  <!-- ✅ Leaflet & Scripts -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="js/thematoggle.js"></script>
+  <script src="js/taal.js"></script>
+</body>
+</html>
