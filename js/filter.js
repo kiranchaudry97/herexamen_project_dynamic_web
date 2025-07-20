@@ -1,3 +1,5 @@
+// zie commit bericht voor filter.js
+
 // DOM-elementen ophalen
 const zoekInput = document.getElementById("zoekInput");
 const sortSelect = document.getElementById("sorteerSelect");
