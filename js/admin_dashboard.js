@@ -1,3 +1,5 @@
+// zie commit bericht voor admin_dashboard.js
+
 // Admin Dashboard functionaliteit voor contact berichten
 document.addEventListener('DOMContentLoaded', function() {
     // Check of gebruiker admin is
