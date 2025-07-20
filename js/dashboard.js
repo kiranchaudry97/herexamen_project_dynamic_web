@@ -1,3 +1,5 @@
+// zie commit bericht voor dashboard.js
+
 // Dashboard en navigatie logica
 document.addEventListener('DOMContentLoaded', function() {
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
