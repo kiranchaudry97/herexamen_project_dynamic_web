@@ -156,6 +156,118 @@ body {
   line-height: 1.6;
 }
 
+/* ========== HOMEPAGE STYLING ========== */
+/* Header styling voor index pagina */
+header {
+  text-align: center;
+  padding: 2rem 1rem;
+  background: linear-gradient(135deg, #fcefe5, #f7f7f7);
+  margin-bottom: 1rem;
+}
+
+header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  color: #c85a13;
+}
+
+header p {
+  font-size: 1.1rem;
+  color: #666;
+  margin-bottom: 0;
+}
+
+/* Start button styling */
+.start {
+  text-align: center;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+#startBtn {
+  background: linear-gradient(135deg, #c85a13, #e67232);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: bold;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(200, 90, 19, 0.3);
+  display: inline-block;
+}
+
+#startBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(200, 90, 19, 0.4);
+  background: linear-gradient(135deg, #e67232, #c85a13);
+}
+
+#startBtn:active {
+  transform: translateY(0);
+}
+
+/* Info sectie styling voor homepage */
+.info h2 {
+  color: #c85a13;
+  text-align: center;
+  font-size: 1.8rem;
+  margin: 1.5rem 0 1rem 0;
+  font-weight: 600;
+}
+
+.info h3 {
+  color: #c85a13;
+  text-align: center;
+  font-size: 1.4rem;
+  margin: 2rem 0 1rem 0;
+  font-weight: 600;
+}
+
+.info p {
+  text-align: center;
+  line-height: 1.6;
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 1rem;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Dark mode voor homepage */
+body.dark-mode header {
+  background: linear-gradient(135deg, #2d2d2d, #1e1e1e);
+}
+
+body.dark-mode header h1 {
+  color: #ffa54d;
+}
+
+body.dark-mode header p {
+  color: #ccc;
+}
+
+body.dark-mode #startBtn {
+  background: linear-gradient(135deg, #ffa54d, #ff8c1a);
+  box-shadow: 0 4px 15px rgba(255, 165, 77, 0.3);
+}
+
+body.dark-mode #startBtn:hover {
+  box-shadow: 0 6px 20px rgba(255, 165, 77, 0.4);
+  background: linear-gradient(135deg, #ff8c1a, #ffa54d);
+}
+
+body.dark-mode .info h2,
+body.dark-mode .info h3 {
+  color: #ffa54d;
+}
+
+body.dark-mode .info p {
+  color: #dddddd;
+}
+
 /* ========== PARCOURS LIJST ========== */
 .parcours-container {
   display: flex;
@@ -271,8 +383,14 @@ body {
 footer {
   text-align: center;
   padding: 1rem;
-  background-color: #f4f4f4;
+  background-color: rgb(68, 148, 140);
+  color: white;
   margin-top: auto;
+  font-weight: 500;
+}
+
+footer p {
+  margin: 0;
 }
 
 /* ========== DONKER THEMA ========== */
@@ -281,9 +399,13 @@ body.dark-mode {
   color: white;
 }
 
-body.dark-mode header,
+body.dark-mode header {
+  background: linear-gradient(135deg, #2d2d2d, #1e1e1e);
+}
+
 body.dark-mode footer {
-  background-color: #1e1e1e;
+  background-color: rgb(34, 90, 85);
+  color: white;
 }
 
 body.dark-mode .main-nav {
@@ -316,6 +438,9 @@ body.dark-mode .kaart-acties button {
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   border: 2px solid #ccc;
+  display: none;
+  height: 500px;
+  width: 100%;
 }
 
 #map-container .leaflet-container {
@@ -323,8 +448,33 @@ body.dark-mode .kaart-acties button {
   width: 100%;
 }
 
+/* Titel styling voor parcours pagina */
+#titel-lijst,
+#titel-kaart {
+  text-align: center;
+  color: #c85a13;
+  margin-top: 1.5rem;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+#titel-kaart {
+  display: none;
+}
+
+/* Noscript styling */
+.noscript-message {
+  text-align: center;
+  margin: 2rem;
+}
+
 body.dark-mode #map-container {
   border-color: #444;
+}
+
+body.dark-mode #titel-lijst,
+body.dark-mode #titel-kaart {
+  color: #ffa54d;
 }
 
 #map-container::before {
@@ -343,7 +493,7 @@ body.dark-mode #map-container::before {
   background-color: #121212;
 }
 
-/* ========== RESPONSIVE ========== */
+/* ========== RESPONSIVE VOOR HOMEPAGE ========== */
 @media (max-width: 768px) {
   .nav-links {
     flex-direction: column;
@@ -363,14 +513,37 @@ body.dark-mode #map-container::before {
   .muur-kaart {
     width: 90%;
   }
+  
+  /* Homepage responsive */
+  header h1 {
+    font-size: 2rem;
+  }
+  
+  header p {
+    font-size: 1rem;
+  }
+  
+  #startBtn {
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+  }
+  
+  .info h2 {
+    font-size: 1.5rem;
+  }
+  
+  .info h3 {
+    font-size: 1.2rem;
+  }
 }
 
 
 /* ========== ABOUT PAGINA ========== */
 .pagina-header {
   text-align: center;
-  background-color: #fcefe5;
+  background-color: #ffffff;
   padding: 2rem 1rem 1rem;
+  margin-bottom: 1rem;
 }
 
 .pagina-header h1 {
@@ -405,7 +578,11 @@ body.dark-mode #map-container::before {
 
 /* ========== DONKER THEMA AANPASSINGEN ========== */
 body.dark-mode .pagina-header {
-  background-color: #2d2d2d;
+  background-color: #1565c0;
+}
+
+body.dark-mode .pagina-header h1 {
+  color: #ffffff;
 }
 
 body.dark-mode .about-container {
@@ -419,10 +596,6 @@ body.dark-mode .about-content p {
 
 body.dark-mode .about-content h2 {
   color: #ffa54d; /* Oranje in dark mode */
-}
-
-body.dark-mode .pagina-header h1 {
-  color: #ffa54d;
 }
 
 
@@ -498,4 +671,198 @@ body.dark-mode .filterbar button {
 
 body.dark-mode .filterbar button:hover {
   background-color: #3d3d3d;
+}
+
+
+/* Contactpagina container */
+.contact-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 1rem;
+}
+
+/* 📩 Contactformulier - Aangepaste styling */
+.contact-formulier {
+  background: #f9f9f9;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  max-width: 600px;
+  margin: 30px auto;
+  border: 1px solid #ddd;
+}
+
+.contact-formulier h2 {
+  text-align: center;
+  font-size: 1.6rem;
+  color: #e53935;
+  background-color: #ffeaea;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  border-left: 4px solid #e53935;
+}
+
+/* Formulier layout */
+.contact-formulier form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+/* Labels */
+.contact-formulier label {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.3rem;
+  display: block;
+}
+
+/* Input & Textarea */
+.contact-formulier input,
+.contact-formulier textarea {
+  width: 100%;
+  padding: 12px 15px;
+  font-size: 1rem;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  background-color: #ffffff;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+  margin-bottom: 5px;
+}
+
+.contact-formulier input:focus,
+.contact-formulier textarea:focus {
+  outline: none;
+  border-color: #1976d2;
+  background-color: #fff;
+  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
+}
+
+/* Submit knop */
+.contact-formulier button {
+  background-color: #1976d2;
+  color: #fff;
+  font-size: 1.1rem;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.contact-formulier button:hover {
+  background-color: #1565c0;
+}
+
+/* 📍 Contactgegevens sectie */
+.contact-gegevens {
+  background-color: transparent;
+  padding: 1rem 0;
+  border-radius: 0;
+  box-shadow: none;
+  text-align: center;
+}
+
+.contact-gegevens h2 {
+  color: #c85a13;
+  margin-bottom: 0.8rem;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.contact-gegevens p,
+.contact-gegevens a {
+  font-size: 1rem;
+  color: #444;
+  margin: 0.3rem 0;
+  text-decoration: none;
+}
+
+.contact-gegevens a:hover {
+  color: #c85a13;
+  text-decoration: underline;
+}
+
+/* 🗺️ Kaart titel en iframe */
+.contact-map-title {
+  text-align: center;
+  font-size: 1.3rem;
+  color: #c85a13;
+  margin: 2rem 0 1rem;
+  font-weight: 600;
+}
+
+.google-map iframe {
+  width: 100%;
+  height: 300px;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* Responsief */
+@media (max-width: 600px) {
+  .contact-container {
+    padding: 1rem;
+  }
+
+  .contact-formulier,
+  .contact-gegevens {
+    padding: 1.5rem;
+  }
+
+  .contact-formulier h2 {
+    font-size: 1.4rem;
+  }
+}
+
+/* Dark mode voor contact formulier */
+body.dark-mode .contact-formulier {
+  background-color: #1e1e1e;
+  color: #f0f0f0;
+}
+
+body.dark-mode .contact-formulier h2 {
+  color: #ff6b6b;
+  background-color: #2d1b1b;
+  border-left-color: #ff6b6b;
+}
+
+body.dark-mode .contact-formulier label {
+  color: #f0f0f0;
+}
+
+body.dark-mode .contact-formulier input,
+body.dark-mode .contact-formulier textarea {
+  background-color: #2d2d2d;
+  border-color: #555;
+  color: #f0f0f0;
+}
+
+body.dark-mode .contact-formulier input:focus,
+body.dark-mode .contact-formulier textarea:focus {
+  border-color: #64b5f6;
+  box-shadow: 0 0 0 3px rgba(100, 181, 246, 0.1);
+}
+
+body.dark-mode .contact-gegevens {
+  background-color: transparent;
+  color: #f0f0f0;
+}
+
+body.dark-mode .contact-gegevens h2 {
+  color: #ffa54d;
+}
+
+body.dark-mode .contact-gegevens p,
+body.dark-mode .contact-gegevens a {
+  color: #dddddd;
+}
+
+body.dark-mode .contact-gegevens a:hover {
+  color: #ffa54d;
 }

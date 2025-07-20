@@ -47,6 +47,11 @@ const translations = {
     projectinfo_text: "Dit project is onderdeel van het Dynamic Web curriculum. Het laat zien hoe je echte API-data, JavaScript-functionaliteit, themakeuze en gebruikersinteractie combineert in een moderne webtoepassing.",
     team_title: "Ontwikkelaar",
     team_text: "Gemaakt door Kiran Jamil Chaud-ry — student Graduaat Programmeren - Project Dynamic Web.",
+    // Homepage info sectie
+    infoTitle: "Wat zijn de stripmuren van Brussel?",
+    infoText: "In Brussel vind je meer dan 60 prachtige muurschilderingen die een eerbetoon zijn aan Belgische stripfiguren zoals Kuifje, Lucky Luke, Nero en de Smurfen. Deze kleurrijke muren vormen samen het beroemde stripparcours dat je uitnodigt om de stad op een unieke manier te ontdekken.",
+    goalTitle: "Doel van BrusselsExplorer",
+    goalText: "Met deze webapplicatie kun je deze stripmuren verkennen, favorieten opslaan, filteren op locatie en meer – allemaal met echte data uit de open databronnen van Brussel.",
   },
   fr: {
     title: "🎨 BrusselsExplorer",
@@ -83,6 +88,21 @@ const translations = {
     pageTitle: "🖼️ Fresques BD à Bruxelles",
     mapTitle: "🗺️ Circuit BD",
     pageDescription: "Découvrez ici une sélection de fresques BD colorées à Bruxelles, inspirées de héros de bande dessinée comme Tintin, Lucky Luke et les Schtroumpfs.",
+    // About pagina vertalingen
+    about_header: "À propos de BrusselsExplorer",
+    mission_title: "Mission",
+    mission_text: "BrusselsExplorer est un guide numérique conçu par l'étudiant Kiran Chaud-ry pour les visiteurs curieux et les locaux qui souhaitent découvrir les perles cachées de l'art de la bande dessinée à Bruxelles.",
+    whatwedo_title: "Que faisons-nous ?",
+    whatwedo_text: "Nous collectons et visualisons des données sur les peintures murales, les artistes et les lieux à partir de la plateforme open data de Bruxelles. Grâce à notre site web interactif, nous donnons vie à ces circuits BD.",
+    projectinfo_title: "Info projet",
+    projectinfo_text: "Ce projet fait partie du curriculum Dynamic Web. Il montre comment combiner des données API réelles, des fonctionnalités JavaScript, le choix de thème et l'interaction utilisateur dans une application web moderne.",
+    team_title: "Développeur",
+    team_text: "Créé par Kiran Jamil Chaud-ry — étudiant Graduaat Programmeren - Project Dynamic Web.",
+    // Homepage info sectie
+    infoTitle: "Que sont les murs BD de Bruxelles ?",
+    infoText: "À Bruxelles, vous trouverez plus de 60 magnifiques peintures murales qui rendent hommage aux personnages de bande dessinée belges comme Tintin, Lucky Luke, Nero et les Schtroumpfs. Ces murs colorés forment ensemble le célèbre parcours BD qui vous invite à découvrir la ville d'une manière unique.",
+    goalTitle: "Objectif de BrusselsExplorer",
+    goalText: "Avec cette application web, vous pouvez explorer ces murs BD, sauvegarder vos favoris, filtrer par lieu et plus encore – le tout avec de vraies données des sources de données ouvertes de Bruxelles.",
   },
 };
 

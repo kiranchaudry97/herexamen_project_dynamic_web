@@ -9,7 +9,6 @@
 </head>
 <body>
 
-  <!-- ✅ Navigatie -->
   <nav class="main-nav">
     <div class="nav-container">
       <a href="index.html" class="nav-logo">
@@ -73,8 +72,8 @@
     <button id="resetFilters" data-i18n="resetFilters">Reset</button>
   </section>
 
-  <h2 id="titel-lijst" style="text-align:center; color:#c85a13; margin-top:1.5rem;" data-i18n="pageTitle">🖼️ Stripmuren in Brussel</h2>
-  <h2 id="titel-kaart" style="text-align:center; color:#c85a13; margin-top:1.5rem; display:none;" data-i18n="mapTitle">🗺️ Striproute</h2>
+  <h2 id="titel-lijst" data-i18n="pageTitle">🖼️ Stripmuren in Brussel</h2>
+  <h2 id="titel-kaart" data-i18n="mapTitle">🗺️ Striproute</h2>
 
   <section class="info">
     <p data-i18n="pageDescription">
@@ -84,10 +83,10 @@
 
   <section id="parcours-lijst" class="parcours-container"></section>
 
-  <section id="map-container" class="map-container" style="display: none; height: 500px; width: 100%;" aria-label="Kaartweergave stripmuren"></section>
+  <section id="map-container" class="map-container" aria-label="Kaartweergave stripmuren"></section>
 
   <noscript>
-    <p style="text-align: center; margin: 2rem;">
+    <p class="noscript-message">
       JavaScript is vereist om de stripmuren en kaart te bekijken.
     </p>
   </noscript>
