@@ -184,7 +184,7 @@ async function haalStripmurenOp() {
   return data.results;
 }
 
-function toonStripmuren(data, taal = "nl") {
+function toonStripmurenParcours(data, taal = "nl") {
   const container = document.getElementById("parcours-lijst");
   container.innerHTML = "";
 
@@ -298,8 +298,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Wacht een moment om ervoor te zorgen dat filter.js eerst laadt
     setTimeout(async () => {
       // Controleer of filter.js al data heeft geladen
-      if (typeof window.filterFuncties !== 'undefined') {
-        // Filter.js is geladen, gebruik de gefilterde data
+      if (typeof window.filterFuncties !== 'undefined' && typeof alleStripmuren !== 'undefined' && alleStripmuren.length > 0) {
+        // Filter.js is geladen en heeft data, gebruik de gefilterde data
         console.log("Filter systeem gedetecteerd - gebruik gefilterde data");
         
         // Haal data op uit filter systeem
@@ -313,37 +313,35 @@ document.addEventListener("DOMContentLoaded", async () => {
         
         // Update favoriet knoppen na een korte delay
         setTimeout(() => {
-          console.log('FavorietenManager na timeout:', typeof favorietenManager); // Debug
           if (typeof favorietenManager !== 'undefined') {
             favorietenManager.updateFavorietenDisplay();
           } else {
             console.warn('FavorietenManager nog steeds niet beschikbaar na timeout');
           }
-        }, 1000); // Langere timeout voor betere betrouwbaarheid
-        return; // Filter.js handelt data loading af
+        }, 1000);
+        return; // Filter.js handelt data loading en display af
       }
       
       // Fallback: laad data zoals voorheen als filter.js niet beschikbaar is
-      console.log('Laden van stripmuren data...'); // Debug
+      console.log('Filter.js niet beschikbaar - gebruik fallback data loading'); // Debug
       cachedData = await haalStripmurenOp();
       console.log('Data geladen:', cachedData.length, 'items'); // Debug
       const huidigeTaal = localStorage.getItem("language") || "nl";
       
-      // Toon stripmuren
-      toonStripmuren(cachedData, huidigeTaal);
+      // Toon stripmuren (gebruik parcours eigen functie als fallback)
+      toonStripmurenParcours(cachedData, huidigeTaal);
       setupViewToggle();
       setupFavorietenEventListeners(); // Setup favoriet event listeners
       
       // Update favoriet knoppen als favorietenManager beschikbaar is
       setTimeout(() => {
-        console.log('FavorietenManager na fallback timeout:', typeof favorietenManager); // Debug
         if (typeof favorietenManager !== 'undefined') {
           favorietenManager.updateFavorietenDisplay();
         } else {
           console.warn('FavorietenManager niet beschikbaar na fallback timeout');
         }
       }, 500);
-    }, 100); // Wacht 100ms voor filter.js
+    }, 500); // Wacht 500ms voor filter.js
     
   } catch (error) {
     console.error('Error loading stripmuren:', error);
@@ -653,3 +651,16 @@ function observeImages() {
     console.log(`👁️ Observeren gestart voor afbeelding ${index + 1}:`, img.dataset.src);
   });
 }
+
+// Export functies voor gebruik door andere scripts (bijv. filter.js)
+window.parcoursFuncties = {
+  setupViewToggle,
+  setupFavorietenEventListeners,
+  observeImages,
+  toonKaart,
+  initMap,
+  getStripmuurById
+};
+
+// Maak belangrijke functies ook globaal beschikbaar voor compatibiliteit
+window.getStripmuurById = getStripmuurById;

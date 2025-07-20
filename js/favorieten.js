@@ -364,9 +364,16 @@ class FavorietenManager {
 
     // Maak een stripmuur kaart (met verwijder optie voor favorieten)
     createStripmuurCard(stripmuur, showRemove = false, isTijdelijk = false) {
+        console.log('🎨 createStripmuurCard aangeroepen voor:', stripmuur.id); // Debug
         const currentLang = localStorage.getItem('language') || 'nl';
         let removeButton = '';
         let tijdelijkLabel = '';
+        
+        // Check of translations object beschikbaar is
+        if (typeof translations === 'undefined') {
+            console.error('❌ Translations object niet beschikbaar in createStripmuurCard'); // Debug
+            return '<div class="error">Translations not available</div>';
+        }
         
         // Gebruik correcte data properties
         const titel = stripmuur.title || stripmuur.naam_fresco_nl || stripmuur.nom_de_la_fresque || 'Naam onbekend';
