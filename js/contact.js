@@ -13,7 +13,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 voornaam: document.getElementById('voornaam').value,
                 achternaam: document.getElementById('achternaam').value,
                 email: document.getElementById('email').value,
-                telefoon: document.getElementById('telefoon').value,
                 opmerking: document.getElementById('opmerking').value,
                 status: 'nieuw' // Status: nieuw, gelezen, beantwoord
             };
