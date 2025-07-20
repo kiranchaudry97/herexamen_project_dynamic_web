@@ -1198,3 +1198,886 @@ body.dark-mode .action-button {
 body.dark-mode .action-button:hover {
   background-color: #236b4a;
 }
+
+/* ========== ADMIN DASHBOARD STYLING ========== */
+
+/* Statistieken Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.stat-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+}
+
+.stat-card h3 {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.stat-number {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin: 0;
+  transition: transform 0.2s ease;
+}
+
+.stat-card:nth-child(1) {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.stat-card:nth-child(2) {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.stat-card:nth-child(3) {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.stat-card:nth-child(4) {
+  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+}
+
+/* Alternative styling voor stat-kaart klasse */
+.stat-kaart {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat-kaart:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+}
+
+.stat-kaart h3 {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.stat-nummer {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin: 0.5rem 0;
+  transition: transform 0.2s ease;
+}
+
+.stat-kaart p {
+  font-size: 0.8rem;
+  opacity: 0.8;
+  margin: 0;
+}
+
+.stat-kaart:nth-child(1) {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.stat-kaart:nth-child(2) {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.stat-kaart:nth-child(3) {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.stat-kaart:nth-child(4) {
+  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+}
+
+.stat-kaart:nth-child(5) {
+  background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+}
+
+.stat-kaart:nth-child(6) {
+  background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+}
+
+.stat-kaart:nth-child(7) {
+  background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+}
+
+/* Contact Berichten Sectie */
+.contact-berichten-sectie {
+  margin: 2rem 0;
+}
+
+/* Gebruikers Favorieten Sectie */
+.gebruikers-favorieten-sectie {
+  margin: 2rem 0;
+}
+
+.sectie-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.sectie-header h2 {
+  margin: 0;
+  color: #333;
+  font-size: 1.8rem;
+}
+
+.berichten-filters {
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.berichten-filters select {
+  padding: 10px 16px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  background-color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.berichten-filters select:focus {
+  outline: none;
+  border-color: #2196F3;
+  box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+}
+
+.berichten-filters .button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.berichten-filters .button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+/* Specifieke button styling */
+#refreshBerichten {
+  background: linear-gradient(135deg, #4CAF50, #45a049);
+  color: white;
+}
+
+#refreshBerichten:hover {
+  background: linear-gradient(135deg, #45a049, #3d8b40);
+}
+
+#clearAllBerichten {
+  background: linear-gradient(135deg, #f44336, #d32f2f);
+  color: white;
+}
+
+#clearAllBerichten:hover {
+  background: linear-gradient(135deg, #d32f2f, #b71c1c);
+}
+
+/* Admin Controls */
+.admin-controls {
+  display: flex;
+  gap: 1rem;
+  margin: 2rem 0;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.admin-controls select {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background-color: white;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.admin-controls .button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.admin-controls .button.primary {
+  background-color: #2196F3;
+  color: white;
+}
+
+.admin-controls .button.primary:hover {
+  background-color: #1976D2;
+}
+
+.admin-controls .button.danger {
+  background-color: #f44336;
+  color: white;
+}
+
+.admin-controls .button.danger:hover {
+  background-color: #d32f2f;
+}
+
+/* Berichten Container */
+.berichten-container {
+  margin: 2rem 0;
+}
+
+.geen-berichten {
+  text-align: center;
+  padding: 3rem;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  color: #666;
+}
+
+.geen-berichten h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Bericht Kaarten */
+.bericht-kaart {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-left: 4px solid #ddd;
+}
+
+.bericht-kaart:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+
+.bericht-kaart.status-nieuw {
+  border-left-color: #f44336;
+  background: linear-gradient(to right, #fff5f5, white);
+}
+
+.bericht-kaart.status-gelezen {
+  border-left-color: #FF9800;
+  background: linear-gradient(to right, #fffaf2, white);
+}
+
+.bericht-kaart.status-beantwoord {
+  border-left-color: #4CAF50;
+  background: linear-gradient(to right, #f5fdf5, white);
+}
+
+.bericht-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.bericht-info h3 {
+  color: #333;
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+}
+
+.bericht-contact {
+  color: #666;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.bericht-contact a {
+  color: #2196F3;
+  text-decoration: none;
+}
+
+.bericht-contact a:hover {
+  text-decoration: underline;
+}
+
+.bericht-datum {
+  color: #999;
+  font-size: 0.8rem;
+}
+
+.bericht-status .status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+.status-badge.status-nieuw {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+.status-badge.status-gelezen {
+  background-color: #fff3e0;
+  color: #e65100;
+}
+
+.status-badge.status-beantwoord {
+  background-color: #e8f5e8;
+  color: #2e7d32;
+}
+
+.bericht-content {
+  margin: 1.5rem 0;
+}
+
+.bericht-content h4 {
+  color: #555;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.opmerking {
+  background-color: #f9f9f9;
+  padding: 1rem;
+  border-radius: 8px;
+  line-height: 1.6;
+  color: #333;
+  border-left: 3px solid #ddd;
+}
+
+.bericht-acties {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.bericht-acties .button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.bericht-acties .button:not(.danger):not(.disabled) {
+  background-color: #2196F3;
+  color: white;
+}
+
+.bericht-acties .button:not(.danger):not(.disabled):hover {
+  background-color: #1976D2;
+}
+
+.bericht-acties .button.danger {
+  background-color: #f44336;
+  color: white;
+}
+
+.bericht-acties .button.danger:hover {
+  background-color: #d32f2f;
+}
+
+.bericht-acties .button.disabled {
+  background-color: #eee;
+  color: #999;
+  cursor: not-allowed;
+}
+
+/* Animations */
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+/* Responsive Design voor Admin Dashboard */
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  
+  .stat-card {
+    padding: 1rem;
+  }
+  
+  .stat-number {
+    font-size: 2rem;
+  }
+  
+  .sectie-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .sectie-header h2 {
+    margin-bottom: 1rem;
+  }
+  
+  .berichten-filters {
+    justify-content: center;
+    width: 100%;
+  }
+  
+  .admin-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .admin-controls > * {
+    width: 100%;
+    text-align: center;
+  }
+  
+  .bericht-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .bericht-acties {
+    flex-direction: column;
+  }
+  
+  .bericht-acties .button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .bericht-kaart {
+    padding: 1rem;
+  }
+  
+  .berichten-filters {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .berichten-filters select,
+  .berichten-filters .button {
+    width: 100%;
+  }
+  
+  .favorieten-filters {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .favorieten-filters select,
+  .favorieten-filters .button {
+    width: 100%;
+  }
+  
+  .gebruiker-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .gebruiker-acties {
+    justify-content: stretch;
+  }
+  
+  .gebruiker-acties .button {
+    flex: 1;
+    justify-content: center;
+  }
+}
+
+/* Dark Mode voor Admin Dashboard */
+body.dark-mode .stat-card {
+  box-shadow: 0 4px 15px rgba(255,255,255,0.1);
+}
+
+body.dark-mode .sectie-header h2 {
+  color: #f0f0f0;
+}
+
+body.dark-mode .berichten-filters select {
+  background-color: #2a2a2a;
+  color: #f0f0f0;
+  border-color: #555;
+}
+
+body.dark-mode .berichten-filters select:focus {
+  border-color: #64b5f6;
+  box-shadow: 0 0 0 3px rgba(100, 181, 246, 0.1);
+}
+
+body.dark-mode #refreshBerichten {
+  background: linear-gradient(135deg, #2e8b57, #236b4a);
+}
+
+body.dark-mode #refreshBerichten:hover {
+  background: linear-gradient(135deg, #236b4a, #1e5a3c);
+}
+
+body.dark-mode #clearAllBerichten {
+  background: linear-gradient(135deg, #c62828, #b71c1c);
+}
+
+body.dark-mode #clearAllBerichten:hover {
+  background: linear-gradient(135deg, #b71c1c, #8e0000);
+}
+
+body.dark-mode .admin-controls select {
+  background-color: #2a2a2a;
+  color: #f0f0f0;
+  border-color: #555;
+}
+
+body.dark-mode .bericht-kaart {
+  background: #2a2a2a;
+  color: #f0f0f0;
+  box-shadow: 0 2px 10px rgba(255,255,255,0.1);
+}
+
+body.dark-mode .bericht-kaart.status-nieuw {
+  background: linear-gradient(to right, #2a1f1f, #2a2a2a);
+}
+
+body.dark-mode .bericht-kaart.status-gelezen {
+  background: linear-gradient(to right, #2a2419, #2a2a2a);
+}
+
+body.dark-mode .bericht-kaart.status-beantwoord {
+  background: linear-gradient(to right, #1f2a1f, #2a2a2a);
+}
+
+body.dark-mode .bericht-info h3 {
+  color: #f0f0f0;
+}
+
+body.dark-mode .bericht-content h4 {
+  color: #ddd;
+}
+
+body.dark-mode .opmerking {
+  background-color: #1e1e1e;
+  color: #f0f0f0;
+  border-left-color: #555;
+}
+
+body.dark-mode .geen-berichten {
+  background-color: #2a2a2a;
+  color: #999;
+}
+
+/* ========== GEBRUIKERS FAVORIETEN STYLING ========== */
+
+.favorieten-filters {
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.favorieten-filters select {
+  padding: 10px 16px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  background-color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.favorieten-filters select:focus {
+  outline: none;
+  border-color: #2196F3;
+  box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+}
+
+.favorieten-filters .button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.favorieten-filters .button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+#refreshFavorieten {
+  background: linear-gradient(135deg, #4CAF50, #45a049);
+  color: white;
+}
+
+#refreshFavorieten:hover {
+  background: linear-gradient(135deg, #45a049, #3d8b40);
+}
+
+#exportFavorieten {
+  background: linear-gradient(135deg, #2196F3, #1976D2);
+  color: white;
+}
+
+#exportFavorieten:hover {
+  background: linear-gradient(135deg, #1976D2, #1565C0);
+}
+
+/* Gebruiker Favorieten Kaarten */
+.gebruiker-favorieten-kaart {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-left: 4px solid #2196F3;
+}
+
+.gebruiker-favorieten-kaart:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+
+.gebruiker-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.gebruiker-info h3 {
+  color: #333;
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+}
+
+.gebruiker-stats {
+  color: #666;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.gebruiker-acties {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.gebruiker-acties .button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.gebruiker-acties .button:not(.danger) {
+  background-color: #2196F3;
+  color: white;
+}
+
+.gebruiker-acties .button:not(.danger):hover {
+  background-color: #1976D2;
+}
+
+.gebruiker-acties .button.danger {
+  background-color: #f44336;
+  color: white;
+}
+
+.gebruiker-acties .button.danger:hover {
+  background-color: #d32f2f;
+}
+
+/* Favorieten Lijst */
+.favorieten-lijst {
+  margin-top: 1rem;
+}
+
+.favorieten-lijst h4 {
+  color: #555;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+
+.favorieten-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.favoriet-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  border-left: 3px solid #2196F3;
+}
+
+.favoriet-naam {
+  font-weight: 600;
+  color: #333;
+  flex: 1;
+}
+
+.favoriet-type {
+  color: #666;
+  font-size: 0.9rem;
+  margin: 0 1rem;
+}
+
+.kleine-btn {
+  padding: 0.3rem 0.6rem !important;
+  font-size: 0.8rem !important;
+  border-radius: 4px !important;
+}
+
+.geen-favorieten {
+  text-align: center;
+  padding: 3rem;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  color: #666;
+}
+
+.geen-favorieten h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Dark Mode voor Gebruikers Favorieten */
+body.dark-mode .favorieten-filters select {
+  background-color: #2a2a2a;
+  color: #f0f0f0;
+  border-color: #555;
+}
+
+body.dark-mode .favorieten-filters select:focus {
+  border-color: #64b5f6;
+  box-shadow: 0 0 0 3px rgba(100, 181, 246, 0.1);
+}
+
+body.dark-mode #refreshFavorieten {
+  background: linear-gradient(135deg, #2e8b57, #236b4a);
+}
+
+body.dark-mode #refreshFavorieten:hover {
+  background: linear-gradient(135deg, #236b4a, #1e5a3c);
+}
+
+body.dark-mode #exportFavorieten {
+  background: linear-gradient(135deg, #1976D2, #1565C0);
+}
+
+body.dark-mode #exportFavorieten:hover {
+  background: linear-gradient(135deg, #1565C0, #0d47a1);
+}
+
+body.dark-mode .gebruiker-favorieten-kaart {
+  background: #2a2a2a;
+  color: #f0f0f0;
+  box-shadow: 0 2px 10px rgba(255,255,255,0.1);
+}
+
+body.dark-mode .gebruiker-info h3 {
+  color: #f0f0f0;
+}
+
+body.dark-mode .gebruiker-stats {
+  color: #ccc;
+}
+
+body.dark-mode .favorieten-lijst h4 {
+  color: #ddd;
+}
+
+body.dark-mode .favoriet-item {
+  background-color: #1e1e1e;
+  border-left-color: #64b5f6;
+}
+
+body.dark-mode .favoriet-naam {
+  color: #f0f0f0;
+}
+
+body.dark-mode .favoriet-type {
+  color: #ccc;
+}
+
+body.dark-mode .geen-favorieten {
+  background-color: #2a2a2a;
+  color: #999;
+}

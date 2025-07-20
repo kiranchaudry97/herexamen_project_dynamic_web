@@ -76,6 +76,21 @@
             <div class="stat-nummer" id="beantwoordeBerichten">0</div>
             <p>Beantwoorde berichten</p>
           </div>
+          <div class="stat-kaart">
+            <h3>👥 Gebruikers</h3>
+            <div class="stat-nummer" id="totaalGebruikers">0</div>
+            <p>Actieve gebruikers</p>
+          </div>
+          <div class="stat-kaart">
+            <h3>⭐ Favorieten</h3>
+            <div class="stat-nummer" id="totaalFavorieten">0</div>
+            <p>Totaal favorieten</p>
+          </div>
+          <div class="stat-kaart">
+            <h3>📊 Gemiddeld</h3>
+            <div class="stat-nummer" id="gemiddeldFavorieten">0</div>
+            <p>Favorieten per gebruiker</p>
+          </div>
         </div>
       </section>
 
@@ -97,6 +112,24 @@
         
         <div id="berichtenContainer" class="berichten-container">
           <!-- Berichten worden hier dynamisch geladen -->
+        </div>
+      </section>
+
+      <!-- Gebruikers Favorieten sectie -->
+      <section class="gebruikers-favorieten-sectie">
+        <div class="sectie-header">
+          <h2>⭐ Gebruikers Favorieten</h2>
+          <div class="favorieten-filters">
+            <select id="gebruikerFilter">
+              <option value="alle">Alle gebruikers</option>
+            </select>
+            <button id="refreshFavorieten" class="button">🔄 Ververs</button>
+            <button id="exportFavorieten" class="button">📊 Exporteer</button>
+          </div>
+        </div>
+        
+        <div id="favorietenContainer" class="favorieten-container">
+          <!-- Favorieten worden hier dynamisch geladen -->
         </div>
       </section>
 
