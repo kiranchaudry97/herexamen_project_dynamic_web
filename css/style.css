@@ -866,3 +866,223 @@ body.dark-mode .contact-gegevens a {
 body.dark-mode .contact-gegevens a:hover {
   color: #ffa54d;
 }
+
+
+/* ========== FAVORIETEN PAGINA ========== */
+.favorieten-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 1rem;
+}
+
+.favorieten-content {
+  background: #ffffff;
+  padding: 3rem 2rem;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  margin: 2rem auto;
+}
+
+.favorieten-content h2 {
+  color: #c85a13;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  font-weight: 600;
+}
+
+.geen-favorieten p {
+  font-size: 1.1rem;
+  color: #666;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.terug-button {
+  display: inline-block;
+  background-color: #c85a13;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 25px;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(200, 90, 19, 0.3);
+}
+
+.terug-button:hover {
+  background-color: #a0410c;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(200, 90, 19, 0.4);
+}
+
+/* Dark mode voor favorieten */
+body.dark-mode .favorieten-content {
+  background-color: #1e1e1e;
+  color: #f0f0f0;
+}
+
+body.dark-mode .favorieten-content h2 {
+  color: #ffa54d;
+}
+
+body.dark-mode .geen-favorieten p {
+  color: #dddddd;
+}
+
+body.dark-mode .terug-button {
+  background-color: #ffa54d;
+  color: #1e1e1e;
+}
+
+body.dark-mode .terug-button:hover {
+  background-color: #ff8c1a;
+}
+
+
+/* ========== LOGIN PAGINA ========== */
+.login-container {
+  max-width: 500px;
+  margin: 2rem auto;
+  padding: 1rem;
+}
+
+.login-formulier {
+  background: #ffffff;
+  padding: 2.5rem;
+  border-radius: 15px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  margin: 2rem auto;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.login-formulier label {
+  display: block;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.login-formulier input,
+.login-formulier select {
+  width: 100%;
+  padding: 12px 15px;
+  font-size: 1rem;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  background-color: #ffffff;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.login-formulier input:focus,
+.login-formulier select:focus {
+  outline: none;
+  border-color: #c85a13;
+  box-shadow: 0 0 0 3px rgba(200, 90, 19, 0.1);
+}
+
+.login-formulier select {
+  background-color: #f8f9fa;
+  cursor: pointer;
+}
+
+.login-button {
+  width: 100%;
+  background-color: #2bb673;
+  color: white;
+  font-size: 1.1rem;
+  font-weight: bold;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 1rem;
+}
+
+.login-button:hover {
+  background-color: #239a60;
+}
+
+.login-info {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background-color: #fff3cd;
+  border: 1px solid #ffeaa7;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.login-info h3 {
+  color: #c85a13;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.credentials p {
+  margin: 0.3rem 0;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.credentials strong {
+  color: #333;
+}
+
+/* Dark mode voor login */
+body.dark-mode .login-formulier {
+  background-color: #1e1e1e;
+  color: #f0f0f0;
+}
+
+body.dark-mode .login-formulier label {
+  color: #f0f0f0;
+}
+
+body.dark-mode .login-formulier input,
+body.dark-mode .login-formulier select {
+  background-color: #2d2d2d;
+  border-color: #555;
+  color: #f0f0f0;
+}
+
+body.dark-mode .login-formulier input:focus,
+body.dark-mode .login-formulier select:focus {
+  border-color: #ffa54d;
+  box-shadow: 0 0 0 3px rgba(255, 165, 77, 0.1);
+}
+
+body.dark-mode .login-formulier select {
+  background-color: #2d2d2d;
+}
+
+body.dark-mode .login-button {
+  background-color: #2e8b57;
+}
+
+body.dark-mode .login-button:hover {
+  background-color: #236b4a;
+}
+
+body.dark-mode .login-info {
+  background-color: #2d2416;
+  border-color: #6b5b00;
+  color: #f0f0f0;
+}
+
+body.dark-mode .login-info h3 {
+  color: #ffa54d;
+}
+
+body.dark-mode .credentials p {
+  color: #dddddd;
+}
+
+body.dark-mode .credentials strong {
+  color: #ffffff;
+}

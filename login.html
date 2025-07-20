@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BrusselsExplorer - Login</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ✅ Navigatie -->
+  <nav class="main-nav">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo">
+        <img src="img/logo brussel parcours.png" alt="BrusselsExplorer logo" />
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html" data-i18n="home">Home</a></li>
+        <li><a href="parcours.html" data-i18n="parcours">Parcours</a></li>
+        <li><a href="about.html" data-i18n="about">Over ons</a></li>
+        <li><a href="contact.html" data-i18n="contact">Contact</a></li>
+        <li><a href="favorieten.html" data-i18n="favorites">Favorieten</a></li>
+        <li><a href="login.html" data-i18n="login">Login</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ✅ Instellingen -->
+  <section class="settings">
+    <div>
+      <label for="language" data-i18n="language">Taal:</label>
+      <select id="language">
+        <option value="nl">Nederlands</option>
+        <option value="fr">Frans</option>
+      </select>
+    </div>
+
+    <div class="theme-toggle">
+      <label class="switch">
+        <input type="checkbox" id="themeToggle">
+        <span class="slider round"></span>
+      </label>
+      <span class="theme-label" data-i18n="theme"></span>
+    </div>
+  </section>
+
+  <main>
+    <header class="pagina-header">
+      <h1 data-i18n="login_title">🔐 Login</h1>
+    </header>
+
+    <div class="login-container">
+      <section class="login-formulier">
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="role" data-i18n="choose_role">Kies rol:</label>
+            <select id="role" name="role" required>
+              <option value="" data-i18n="select_role">-- Selecteer rol --</option>
+              <option value="user" data-i18n="role_user">Gebruiker</option>
+              <option value="admin" data-i18n="role_admin">Administrator</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="email" data-i18n="email_address">E-mailadres</label>
+            <input type="email" id="email" name="email" required placeholder="bijv. gebruiker@brussel.be" />
+          </div>
+
+          <div class="form-group">
+            <label for="password" data-i18n="password">Wachtwoord</label>
+            <input type="password" id="password" name="password" required placeholder="Voer je wachtwoord in" />
+          </div>
+
+          <button type="submit" class="login-button" data-i18n="login_button">Inloggen</button>
+        </form>
+
+        <div class="login-info">
+          <h3 data-i18n="test_credentials">🔑 Gebruk/admin gegevens:</h3>
+          <div class="credentials">
+            <p><strong data-i18n="user_account">Gebruiker account:</strong></p>
+            <p>gebruiker@brussel.be / user123</p>
+            <p><strong data-i18n="admin_account">Admin account:</strong></p>
+            <p>admin@brussel.be / admin123</p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- ✅ Footer -->
+  <footer>
+    <p>© 2025 BrusselsExplorer | Herexamen Project Dynamic Web | Kiran Chaud-ry</p>
+  </footer>
+
+  <!-- ✅ Scripts -->
+  <script src="js/thematoggle.js"></script>
+  <script src="js/taal.js"></script>
+  <script src="js/navigatie.js"></script>
+  <script src="js/login.js"></script>
+</body>
+</html>

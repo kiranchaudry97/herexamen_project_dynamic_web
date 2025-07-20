@@ -52,6 +52,23 @@ const translations = {
     infoText: "In Brussel vind je meer dan 60 prachtige muurschilderingen die een eerbetoon zijn aan Belgische stripfiguren zoals Kuifje, Lucky Luke, Nero en de Smurfen. Deze kleurrijke muren vormen samen het beroemde stripparcours dat je uitnodigt om de stad op een unieke manier te ontdekken.",
     goalTitle: "Doel van BrusselsExplorer",
     goalText: "Met deze webapplicatie kun je deze stripmuren verkennen, favorieten opslaan, filteren op locatie en meer – allemaal met echte data uit de open databronnen van Brussel.",
+    // Favorieten pagina vertalingen
+    nav_favorites: "Mijn Favorieten",
+    favorites_title: "Favorieten",
+    no_favorites: "Je hebt nog geen favorieten opgeslagen.",
+    back_to_murals: "← Terug naar stripmuren",
+    // Login pagina vertalingen
+    login_title: "🔐 Login",
+    choose_role: "Kies rol:",
+    select_role: "-- Selecteer rol --",
+    role_user: "Gebruiker",
+    role_admin: "Administrator",
+    email_address: "E-mailadres",
+    password: "Wachtwoord",
+    login_button: "Inloggen",
+    test_credentials: "🔑 Gebruk/admin gegevens:",
+    user_account: "Gebruiker account:",
+    admin_account: "Admin account:",
   },
   fr: {
     title: "🎨 BrusselsExplorer",
@@ -103,6 +120,23 @@ const translations = {
     infoText: "À Bruxelles, vous trouverez plus de 60 magnifiques peintures murales qui rendent hommage aux personnages de bande dessinée belges comme Tintin, Lucky Luke, Nero et les Schtroumpfs. Ces murs colorés forment ensemble le célèbre parcours BD qui vous invite à découvrir la ville d'une manière unique.",
     goalTitle: "Objectif de BrusselsExplorer",
     goalText: "Avec cette application web, vous pouvez explorer ces murs BD, sauvegarder vos favoris, filtrer par lieu et plus encore – le tout avec de vraies données des sources de données ouvertes de Bruxelles.",
+    // Favorieten pagina vertalingen
+    nav_favorites: "Mes Favoris",
+    favorites_title: "Favoris",
+    no_favorites: "Vous n'avez pas encore sauvegardé de favoris.",
+    back_to_murals: "← Retour aux fresques BD",
+    // Login pagina vertalingen
+    login_title: "🔐 Connexion",
+    choose_role: "Choisir le rôle :",
+    select_role: "-- Sélectionner un rôle --",
+    role_user: "Utilisateur",
+    role_admin: "Administrateur",
+    email_address: "Adresse e-mail",
+    password: "Mot de passe",
+    login_button: "Se connecter",
+    test_credentials: "🔑 Identifiants utilisateur/admin :",
+    user_account: "Compte utilisateur :",
+    admin_account: "Compte admin :",
   },
 };
 
