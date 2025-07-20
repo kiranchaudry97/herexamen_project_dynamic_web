@@ -1,3 +1,5 @@
+// zie commit bericht voor favorieten.js
+
 // Favorieten functionaliteit
 class FavorietenManager {
     constructor() {
