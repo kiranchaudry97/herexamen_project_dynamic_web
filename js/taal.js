@@ -57,6 +57,7 @@ const translations = {
     favorites_title: "Favorieten",
     no_favorites: "Je hebt nog geen favorieten opgeslagen.",
     back_to_murals: "← Terug naar stripmuren",
+    back_to_dashboard: "← Terug naar Dashboard",
     // Login pagina vertalingen
     login_title: "🔐 Login",
     choose_role: "Kies rol:",
@@ -141,6 +142,7 @@ const translations = {
     favorites_title: "Favoris",
     no_favorites: "Vous n'avez pas encore sauvegardé de favoris.",
     back_to_murals: "← Retour aux fresques BD",
+    back_to_dashboard: "← Retour au Tableau de Bord",
     // Login pagina vertalingen
     login_title: "🔐 Connexion",
     choose_role: "Choisir le rôle :",

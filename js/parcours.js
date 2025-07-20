@@ -1,9 +1,178 @@
+// ========== DIRECTE EVENT LISTENER - ALTIJD WERKEND ==========
+// Deze wordt onmiddellijk uitgevoerd zonder te wachten op DOMContentLoaded
+(function() {
+  console.log('Directe event listener setup gestart');
+  
+  // Wacht tot het DOM geladen is
+  function setupDirectEventListener() {
+    console.log('Setup directe event listener');
+    
+    // Gebruik event delegation op document - dit werkt altijd
+    document.addEventListener('click', function(e) {
+      if (e.target.classList.contains('favoriet-button')) {
+        console.log('FAVORIET KNOP GEKLIKT! 🎉');
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        
+        const muralId = parseInt(e.target.dataset.id);
+        console.log('Mural ID:', muralId);
+        
+        // Check of favorietenManager beschikbaar is
+        if (typeof favorietenManager === 'undefined') {
+          console.error('FavorietenManager niet geladen!');
+          showNotification('Favorieten systeem wordt geladen... Probeer het opnieuw.', 'error');
+          return false;
+        }
+        
+        // Haal mural data op
+        const muralData = getStripmuurById(muralId);
+        console.log('Mural data gevonden:', muralData);
+        
+        if (muralData) {
+          // Zorg ervoor dat de mural data de juiste eigenschappen heeft voor favorieten
+          const favorietData = {
+            id: muralData.id || muralId,
+            title: muralData.naam_fresco_nl || muralData.nom_de_la_fresque || "Naam onbekend",
+            naam_fresco_nl: muralData.naam_fresco_nl,
+            nom_de_la_fresque: muralData.nom_de_la_fresque,
+            dessinateur: muralData.dessinateur || "Onbekend",
+            adres: muralData.adres || muralData.adresse || "Adres niet beschikbaar",
+            date: muralData.date || "Onbekend",
+            description_nl: muralData.description_nl || muralData.info_nl || "",
+            description_fr: muralData.description_fr || muralData.info_fr || "",
+            image: muralData.image || "img/placeholder.jpg",
+            coordonnees_geographiques: muralData.coordonnees_geographiques
+          };
+          
+          console.log('Favoriet data voorbereid:', favorietData);
+          
+          const result = favorietenManager.voegFavorietToe(favorietData);
+          console.log('Favoriet toevoeg resultaat:', result);
+          
+          if (result.success) {
+            // Toon success melding op basis van type
+            const titel = result.title;
+            
+            if (result.type === 'permanent') {
+              showNotification(`✅ "${titel}" toegevoegd aan je permanente favorieten!`, 'success');
+            } else if (result.type === 'temporary') {
+              showNotification(`✅ "${titel}" tijdelijk toegevoegd! Login om permanent op te slaan.`, 'warning');
+            }
+            
+            // Update de knop display via favorietenManager
+            favorietenManager.updateFavorietenDisplay();
+            
+            // Redirect na een korte delay
+            setTimeout(() => {
+              const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+              if (isLoggedIn) {
+                window.location.href = 'favorieten.html';
+              } else {
+                if (confirm('Wil je je tijdelijke favorieten bekijken?')) {
+                  window.location.href = 'favorieten.html';
+                }
+              }
+            }, 2000);
+          } else {
+            // Toon error melding op basis van type
+            const titel = result.title;
+            
+            if (result.type === 'duplicate-permanent') {
+              showNotification(`⚠️ "${titel}" staat al permanent in je favorieten!`, 'warning');
+            } else if (result.type === 'duplicate-temporary') {
+              showNotification(`⚠️ "${titel}" staat al in je tijdelijke favorieten! Log in om permanent op te slaan.`, 'warning');
+            }
+          }
+        } else {
+          console.error('Geen mural data gevonden voor ID:', muralId);
+          showNotification('Fout: Kan stripmuur niet vinden. Probeer de pagina te verversen.', 'error');
+        }
+        
+        return false;
+      }
+    }, true); // Gebruik capture fase voor maximale betrouwbaarheid
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupDirectEventListener);
+  } else {
+    setupDirectEventListener();
+  }
+})();
+
 const taalSelect = document.getElementById("language");
 const huidigeTaal = localStorage.getItem("language") || "nl";
 
 let cachedData = [];
 let map;
 let markersLayer;
+
+// ========== Helper functie om stripmuur data op te halen per ID ==========
+function getStripmuurById(id) {
+  console.log('getStripmuurById aangeroepen met ID:', id); // Debug
+  
+  // Probeer eerst uit filter systeem als beschikbaar
+  let dataSource = cachedData;
+  if (typeof window.filterFuncties !== 'undefined' && window.filterFuncties.gefilterdeMuren) {
+    const filteredData = window.filterFuncties.gefilterdeMuren();
+    if (filteredData && filteredData.length > 0) {
+      dataSource = filteredData;
+      console.log('Gebruik gefilterde data:', filteredData.length, 'items');
+    }
+  }
+  
+  // Als we geen data hebben, probeer uit de originele alleStripmuren van filter.js
+  if ((!dataSource || dataSource.length === 0) && window.alleStripmuren) {
+    dataSource = window.alleStripmuren;
+    console.log('Gebruik alleStripmuren uit filter.js:', dataSource.length, 'items');
+  }
+  
+  console.log('Zoeken naar ID:', id, 'in data:', dataSource.length, 'items'); // Debug
+  
+  if (!dataSource || dataSource.length === 0) {
+    console.error('Geen data beschikbaar!');
+    return null;
+  }
+  
+  // Zoek op basis van verschillende mogelijkheden
+  let result = null;
+  
+  // 1. Zoek op werkelijke id property
+  result = dataSource.find(muur => muur.id === id);
+  if (result) {
+    console.log('Gevonden via id property:', result);
+    return result;
+  }
+  
+  // 2. Zoek op index (id - 1)
+  if (id > 0 && id <= dataSource.length) {
+    result = dataSource[id - 1];
+    if (result) {
+      console.log('Gevonden via index:', result);
+      // Voeg ID toe als het ontbreekt
+      if (!result.id) {
+        result.id = id;
+      }
+      return result;
+    }
+  }
+  
+  // 3. Als laatste redmiddel, zoek op basis van DOM-element data
+  const buttonElement = document.querySelector(`[data-id="${id}"]`);
+  if (buttonElement) {
+    const kaartElement = buttonElement.closest('.muur-kaart');
+    if (kaartElement) {
+      const muralId = parseInt(kaartElement.dataset.muralId);
+      if (muralId && muralId !== id) {
+        console.log('Probeer met muralId uit DOM:', muralId);
+        return getStripmuurById(muralId);
+      }
+    }
+  }
+  
+  console.error('Geen mural gevonden voor ID:', id);
+  return null;
+}
 
 async function haalStripmurenOp() {
   const response = await fetch("https://opendata.brussels.be/api/explore/v2.1/catalog/datasets/bruxelles_parcours_bd/records?limit=28");
@@ -15,7 +184,7 @@ function toonStripmuren(data, taal = "nl") {
   const container = document.getElementById("parcours-lijst");
   container.innerHTML = "";
 
-  data.forEach((muur) => {
+  data.forEach((muur, index) => {
     const naam = muur[`naam_fresco_${taal}`] || muur.nom_de_la_fresque || "Naam onbekend";
     const kunstenaar = muur.dessinateur || "Onbekend";
     const adres = muur.adres || muur.adresse || "Adres niet beschikbaar";
@@ -30,9 +199,13 @@ function toonStripmuren(data, taal = "nl") {
       (taal === "fr" ? "Pas de description disponible." : "Geen beschrijving beschikbaar.");
     const afbeelding = muur.image || "img/placeholder.jpg";
     const mapLink = `https://www.google.com/maps?q=${encodeURIComponent(adres)}`;
+    
+    // Genereer unieke ID voor deze stripmuur
+    const muralId = muur.id || index + 1;
 
     const kaart = document.createElement("div");
     kaart.classList.add("muur-kaart");
+    kaart.dataset.muralId = muralId;
 
     kaart.innerHTML = `
       <img src="${afbeelding}" alt="${naam}" />
@@ -42,13 +215,18 @@ function toonStripmuren(data, taal = "nl") {
       <p><strong>${taal === "fr" ? "Année" : "Jaar"}:</strong> ${jaar}</p>
       <p><strong>${taal === "fr" ? "Description" : "Beschrijving"}:</strong> ${beschrijving}</p>
       <div class="kaart-acties">
-        <a href="${mapLink}" target="_blank">${taal === "fr" ? "Ouvrir dans Google Maps" : "Open in Google Maps"}</a>
-        <button class="add-favorite">${taal === "fr" ? "Ajouter" : "Voeg toe"}</button>
+        <a href="${mapLink}" target="_blank" class="button">${taal === "fr" ? "🗺️ Ouvrir dans Google Maps" : "🗺️ Open in Google Maps"}</a>
+        <button class="favoriet-button button" data-id="${muralId}" style="background-color: #e53935;">${taal === "fr" ? "🌟 Ajouter" : "🌟 Voeg toe"}</button>
       </div>
     `;
 
     container.appendChild(kaart);
   });
+  
+  // Update favoriet knoppen na het laden van de stripmuren
+  if (typeof favorietenManager !== 'undefined') {
+    favorietenManager.updateFavorietenDisplay();
+  }
 }
 
 function initMap() {
@@ -103,19 +281,226 @@ function toonKaart(data, taal = "nl") {
 
 // ========== Initialisatie ==========
 document.addEventListener("DOMContentLoaded", async () => {
-  // Controleer of filter.js al data heeft geladen
-  if (typeof window.filterFuncties !== 'undefined') {
-    // Filter.js is geladen, gebruik de gefilterde data
-    console.log("Filter systeem gedetecteerd - gebruik gefilterde data");
-    setupViewToggle(); // Setup alleen de view toggle
-    return; // Filter.js handelt data loading af
+  try {
+    console.log('Parcours.js initialisatie gestart'); // Debug
+    console.log('FavorietenManager bij start:', typeof favorietenManager); // Debug
+    
+    // Wacht een moment om ervoor te zorgen dat filter.js eerst laadt
+    setTimeout(async () => {
+      // Controleer of filter.js al data heeft geladen
+      if (typeof window.filterFuncties !== 'undefined') {
+        // Filter.js is geladen, gebruik de gefilterde data
+        console.log("Filter systeem gedetecteerd - gebruik gefilterde data");
+        
+        // Haal data op uit filter systeem
+        if (window.filterFuncties.gefilterdeMuren) {
+          cachedData = window.filterFuncties.gefilterdeMuren();
+          console.log('Data uit filter systeem:', cachedData.length, 'items');
+        }
+        
+        setupViewToggle(); // Setup alleen de view toggle
+        setupFavorietenEventListeners(); // Setup favoriet event listeners
+        
+        // Update favoriet knoppen na een korte delay
+        setTimeout(() => {
+          console.log('FavorietenManager na timeout:', typeof favorietenManager); // Debug
+          if (typeof favorietenManager !== 'undefined') {
+            favorietenManager.updateFavorietenDisplay();
+          } else {
+            console.warn('FavorietenManager nog steeds niet beschikbaar na timeout');
+          }
+        }, 1000); // Langere timeout voor betere betrouwbaarheid
+        return; // Filter.js handelt data loading af
+      }
+      
+      // Fallback: laad data zoals voorheen als filter.js niet beschikbaar is
+      console.log('Laden van stripmuren data...'); // Debug
+      cachedData = await haalStripmurenOp();
+      console.log('Data geladen:', cachedData.length, 'items'); // Debug
+      const huidigeTaal = localStorage.getItem("language") || "nl";
+      
+      // Toon stripmuren
+      toonStripmuren(cachedData, huidigeTaal);
+      setupViewToggle();
+      setupFavorietenEventListeners(); // Setup favoriet event listeners
+      
+      // Update favoriet knoppen als favorietenManager beschikbaar is
+      setTimeout(() => {
+        console.log('FavorietenManager na fallback timeout:', typeof favorietenManager); // Debug
+        if (typeof favorietenManager !== 'undefined') {
+          favorietenManager.updateFavorietenDisplay();
+        } else {
+          console.warn('FavorietenManager niet beschikbaar na fallback timeout');
+        }
+      }, 500);
+    }, 100); // Wacht 100ms voor filter.js
+    
+  } catch (error) {
+    console.error('Error loading stripmuren:', error);
+  }
+});
+
+// ========== Aparte functie voor favoriet event listeners ==========
+function setupFavorietenEventListeners() {
+  // Gebruik event delegation op document level voor betere betrouwbaarheid
+  document.removeEventListener('click', handleFavorietClick); // Verwijder oude listener eerst
+  document.addEventListener('click', handleFavorietClick);
+}
+
+function handleFavorietClick(e) {
+  if (e.target.classList.contains('favoriet-button')) {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const muralId = parseInt(e.target.dataset.id);
+    
+    console.log('Favoriet knop geklikt, ID:', muralId); // Debug
+    console.log('FavorietenManager aanwezig:', typeof favorietenManager !== 'undefined'); // Debug
+    console.log('cachedData length:', cachedData.length); // Debug
+    
+    // Check of favorietenManager beschikbaar is
+    if (typeof favorietenManager === 'undefined') {
+      console.error('FavorietenManager niet geladen!');
+      showNotification('Favorieten systeem wordt geladen... Probeer het opnieuw.', 'error');
+      return;
+    }
+    
+    const muralData = getStripmuurById(muralId);
+    console.log('Mural data:', muralData); // Debug
+    
+    if (muralData) {
+      // Zorg ervoor dat de mural data de juiste eigenschappen heeft voor favorieten
+      const favorietData = {
+        id: muralData.id || muralId,
+        title: muralData.naam_fresco_nl || muralData.nom_de_la_fresque || "Naam onbekend",
+        naam_fresco_nl: muralData.naam_fresco_nl,
+        nom_de_la_fresque: muralData.nom_de_la_fresque,
+        dessinateur: muralData.dessinateur || "Onbekend",
+        adres: muralData.adres || muralData.adresse || "Adres niet beschikbaar",
+        date: muralData.date || "Onbekend",
+        description_nl: muralData.description_nl || muralData.info_nl || "",
+        description_fr: muralData.description_fr || muralData.info_fr || "",
+        image: muralData.image || "img/placeholder.jpg",
+        coordonnees_geographiques: muralData.coordonnees_geographiques
+      };
+      
+      console.log('Favoriet data voorbereid:', favorietData); // Debug
+      
+      const result = favorietenManager.voegFavorietToe(favorietData);
+      console.log('Favoriet toevoeg resultaat:', result); // Debug
+      
+      if (result.success) {
+        // Toon success melding op basis van type
+        const titel = result.title;
+        
+        if (result.type === 'permanent') {
+          showNotification(`✅ "${titel}" toegevoegd aan je permanente favorieten!`, 'success');
+        } else if (result.type === 'temporary') {
+          showNotification(`✅ "${titel}" tijdelijk toegevoegd! Login om permanent op te slaan.`, 'warning');
+        }
+        
+        // Update de knop display via favorietenManager
+        favorietenManager.updateFavorietenDisplay();
+        
+        // Redirect na een korte delay
+        setTimeout(() => {
+          const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+          if (isLoggedIn) {
+            window.location.href = 'favorieten.html';
+          } else {
+            if (confirm('Wil je je tijdelijke favorieten bekijken?')) {
+              window.location.href = 'favorieten.html';
+            }
+          }
+        }, 2000);
+      } else {
+        // Toon error melding op basis van type
+        const titel = result.title;
+        
+        if (result.type === 'duplicate-permanent') {
+          showNotification(`⚠️ "${titel}" staat al permanent in je favorieten!`, 'warning');
+        } else if (result.type === 'duplicate-temporary') {
+          showNotification(`⚠️ "${titel}" staat al in je tijdelijke favorieten! Log in om permanent op te slaan.`, 'warning');
+        }
+      }
+    } else {
+      console.error('Geen mural data gevonden voor ID:', muralId);
+      console.error('Beschikbare data:', cachedData);
+      showNotification('Fout: Kan stripmuur niet vinden. Probeer de pagina te verversen.', 'error');
+    }
+  }
+}
+
+// ========== Notification systeem ==========
+function showNotification(message, type = 'info') {
+  // Verwijder bestaande notifications
+  const existingNotification = document.querySelector('.notification');
+  if (existingNotification) {
+    existingNotification.remove();
   }
   
-  // Fallback: laad data zoals voorheen als filter.js niet beschikbaar is
-  cachedData = await haalStripmurenOp();
-  toonStripmuren(cachedData, huidigeTaal);
-  setupViewToggle();
-});
+  // Maak nieuwe notification
+  const notification = document.createElement('div');
+  notification.className = `notification notification-${type}`;
+  notification.textContent = message;
+  
+  // Styling
+  notification.style.cssText = `
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 25px;
+    border-radius: 8px;
+    color: white;
+    font-weight: bold;
+    z-index: 10000;
+    max-width: 300px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    animation: slideIn 0.3s ease-out;
+  `;
+  
+  // Type-specifieke kleuren
+  switch(type) {
+    case 'success':
+      notification.style.backgroundColor = '#4CAF50';
+      break;
+    case 'error':
+      notification.style.backgroundColor = '#f44336';
+      break;
+    case 'warning':
+      notification.style.backgroundColor = '#FF9800';
+      break;
+    default:
+      notification.style.backgroundColor = '#2196F3';
+  }
+  
+  document.body.appendChild(notification);
+  
+  // Auto-verwijderen na 4 seconden
+  setTimeout(() => {
+    if (notification.parentNode) {
+      notification.style.animation = 'slideOut 0.3s ease-in';
+      setTimeout(() => notification.remove(), 300);
+    }
+  }, 4000);
+}
+
+// CSS animaties toevoegen als ze nog niet bestaan
+if (!document.querySelector('#notification-styles')) {
+  const style = document.createElement('style');
+  style.id = 'notification-styles';
+  style.textContent = `
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    @keyframes slideOut {
+      from { transform: translateX(0); opacity: 1; }
+      to { transform: translateX(100%); opacity: 0; }
+    }
+  `;
+  document.head.appendChild(style);
+}
 
 function setupViewToggle() {
   const toggle = document.getElementById("viewToggle");
@@ -180,24 +565,3 @@ function setupViewToggle() {
     );
   }
 }
-
-// ========== Taal wissel ==========
-taalSelect.value = huidigeTaal;
-taalSelect.addEventListener("change", () => {
-  const nieuweTaal = taalSelect.value;
-  localStorage.setItem("language", nieuweTaal);
-
-  // Als filter systeem beschikbaar is, gebruik dat
-  if (typeof window.filterFuncties !== 'undefined') {
-    window.filterFuncties.wijzigTaal(nieuweTaal);
-    return;
-  }
-
-  // Fallback voor als filter.js niet beschikbaar is
-  const isKaart = document.getElementById("viewToggle").checked;
-  if (isKaart) {
-    toonKaart(cachedData, nieuweTaal);
-  } else {
-    toonStripmuren(cachedData, nieuweTaal);
-  }
-});
