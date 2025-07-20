@@ -474,10 +474,16 @@ function createGebruikerFavorietenCard(userData, index) {
     
     let favorietenHtml = '';
     userData.favorieten.forEach((favoriet, fIndex) => {
+        const naam = favoriet.title || favoriet.naam_fresco_nl || favoriet.nom_de_la_fresque || 'Naamloos';
+        const kunstenaar = favoriet.dessinateur || 'Onbekende kunstenaar';
+        const locatie = favoriet.adres || favoriet.adresse || 'Locatie onbekend';
+        
         favorietenHtml += `
             <div class="favoriet-item">
-                <span class="favoriet-naam">${favoriet.naam}</span>
-                <span class="favoriet-type">${favoriet.kunstenaar || 'Onbekend'}</span>
+                <div class="favoriet-info">
+                    <span class="favoriet-naam">${naam}</span>
+                    <span class="favoriet-details">${kunstenaar} - ${locatie}</span>
+                </div>
                 <button onclick="verwijderFavorietVanGebruiker('${userData.gebruiker}', ${fIndex})" 
                         class="button danger kleine-btn" title="Verwijder favoriet">
                     🗑️
