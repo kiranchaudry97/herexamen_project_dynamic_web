@@ -578,16 +578,21 @@ function exporteerGebruikerFavorieten(gebruikerEmail) {
         return;
     }
     
-    // Maak CSV data
-    let csvContent = "Naam,Kunstenaar,Adres,Jaar,Info\n";
+    // Uitgebreide CSV headers met alle stripmuur informatie
+    let csvContent = "ID,Naam_NL,Naam_FR,Kunstenaar,Adres,Jaar,Beschrijving_NL,Beschrijving_FR,Coordinaten\n";
+    
     favorieten.forEach(favoriet => {
         const row = [
-            favoriet.naam || '',
-            favoriet.kunstenaar || '',
-            favoriet.adres || '',
-            favoriet.jaar || '',
-            favoriet.info || ''
-        ].map(field => `"${field.replace(/"/g, '""')}"`).join(',');
+            favoriet.id || '',
+            favoriet.title || favoriet.naam_fresco_nl || '',
+            favoriet.nom_de_la_fresque || '',
+            favoriet.dessinateur || 'Onbekend',
+            favoriet.adres || favoriet.adresse || '',
+            favoriet.date || '',
+            (favoriet.description_nl || favoriet.info_nl || '').replace(/\n/g, ' ').replace(/\r/g, ''),
+            (favoriet.description_fr || favoriet.info_fr || '').replace(/\n/g, ' ').replace(/\r/g, ''),
+            favoriet.coordonnees_geographiques || ''
+        ].map(field => `"${String(field).replace(/"/g, '""')}"`).join(',');
         csvContent += row + "\n";
     });
     
@@ -598,7 +603,7 @@ function exporteerGebruikerFavorieten(gebruikerEmail) {
     link.download = `favorieten_${gebruikerEmail}_${new Date().toISOString().split('T')[0]}.csv`;
     link.click();
     
-    toonMelding(`Favorieten van ${gebruikerEmail} geëxporteerd!`, 'success');
+    toonMelding(`Uitgebreide favorieten van ${gebruikerEmail} geëxporteerd!`, 'success');
 }
 
 function exporteerFavorieten() {
@@ -609,19 +614,24 @@ function exporteerFavorieten() {
         return;
     }
     
-    // Maak CSV data voor alle gebruikers
-    let csvContent = "Gebruiker,Naam,Kunstenaar,Adres,Jaar,Info\n";
+    // Uitgebreide CSV headers voor alle gebruikers met complete stripmuur data
+    let csvContent = "Gebruiker,ID,Naam_NL,Naam_FR,Kunstenaar,Adres,Jaar,Beschrijving_NL,Beschrijving_FR,Coordinaten,Toegevoegd_Op\n";
     
     alleFavorieten.forEach(userData => {
         userData.favorieten.forEach(favoriet => {
             const row = [
                 userData.gebruiker,
-                favoriet.naam || '',
-                favoriet.kunstenaar || '',
-                favoriet.adres || '',
-                favoriet.jaar || '',
-                favoriet.info || ''
-            ].map(field => `"${field.replace(/"/g, '""')}"`).join(',');
+                favoriet.id || '',
+                favoriet.title || favoriet.naam_fresco_nl || '',
+                favoriet.nom_de_la_fresque || '',
+                favoriet.dessinateur || 'Onbekend',
+                favoriet.adres || favoriet.adresse || '',
+                favoriet.date || '',
+                (favoriet.description_nl || favoriet.info_nl || '').replace(/\n/g, ' ').replace(/\r/g, ''),
+                (favoriet.description_fr || favoriet.info_fr || '').replace(/\n/g, ' ').replace(/\r/g, ''),
+                favoriet.coordonnees_geographiques || '',
+                userData.laatsteUpdate.toISOString()
+            ].map(field => `"${String(field).replace(/"/g, '""')}"`).join(',');
             csvContent += row + "\n";
         });
     });
@@ -630,10 +640,10 @@ function exporteerFavorieten() {
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = `alle_favorieten_${new Date().toISOString().split('T')[0]}.csv`;
+    link.download = `alle_favorieten_compleet_${new Date().toISOString().split('T')[0]}.csv`;
     link.click();
     
-    toonMelding('Alle favorieten geëxporteerd!', 'success');
+    toonMelding('Alle favorieten met volledige informatie geëxporteerd!', 'success');
 }
 
 function updateFavorietenStatistieken() {
