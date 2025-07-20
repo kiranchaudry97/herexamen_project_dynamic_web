@@ -1996,16 +1996,22 @@ body.dark-mode .geen-berichten {
   border-left: 3px solid #2196F3;
 }
 
+.favoriet-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
 .favoriet-naam {
   font-weight: 600;
   color: #333;
-  flex: 1;
+  font-size: 1rem;
 }
 
-.favoriet-type {
+.favoriet-details {
   color: #666;
-  font-size: 0.9rem;
-  margin: 0 1rem;
+  font-size: 0.85rem;
 }
 
 .kleine-btn {
@@ -2080,6 +2086,10 @@ body.dark-mode .favoriet-item {
 
 body.dark-mode .favoriet-naam {
   color: #f0f0f0;
+}
+
+body.dark-mode .favoriet-details {
+  color: #aaa;
 }
 
 body.dark-mode .favoriet-type {
