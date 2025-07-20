@@ -1,3 +1,5 @@
+// zie commit berict voor taal.js 
+
 const languageSelect = document.getElementById("language");
 const savedLanguage = localStorage.getItem("language") || "nl";
 
