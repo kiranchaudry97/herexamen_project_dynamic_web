@@ -1,3 +1,5 @@
+//zie commit bericht voor thematoggle.js
+
 const themeToggle = document.getElementById("themeToggle");
 const currentTheme = localStorage.getItem("theme");
 
