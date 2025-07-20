@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BrusselsExplorer - Admin Dashboard</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ✅ Navigatie -->
+  <nav class="main-nav">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo">
+        <img src="img/logo brussel parcours.png" alt="BrusselsExplorer logo" />
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html" data-i18n="home">Home</a></li>
+        <li><a href="parcours.html" data-i18n="parcours">Parcours</a></li>
+        <li><a href="about.html" data-i18n="about">Over ons</a></li>
+        <li><a href="contact.html" data-i18n="contact">Contact</a></li>
+        <li><a href="favorieten.html" data-i18n="favorites">Favorieten</a></li>
+        <li><a href="#" id="logoutBtn" data-i18n="logout">Uitloggen</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ✅ Instellingen -->
+  <section class="settings">
+    <div>
+      <label for="language" data-i18n="language">Taal:</label>
+      <select id="language">
+        <option value="nl">Nederlands</option>
+        <option value="fr">Frans</option>
+      </select>
+    </div>
+
+    <div class="theme-toggle">
+      <label class="switch">
+        <input type="checkbox" id="themeToggle">
+        <span class="slider round"></span>
+      </label>
+      <span class="theme-label" data-i18n="theme"></span>
+    </div>
+  </section>
+
+  <main>
+    <header class="pagina-header">
+      <h1 data-i18n="admin_dashboard_title">🔧 Admin Dashboard</h1>
+      <p>Welkom, <span id="adminEmail">admin@brussel.be</span>!</p>
+    </header>
+
+    <div class="dashboard-container">
+      
+      <!-- Dashboard statistieken -->
+      <section class="dashboard-stats">
+        <h2>📊 Overzicht</h2>
+        <div class="stats-grid">
+          <div class="stat-kaart">
+            <h3>📧 Berichten</h3>
+            <div class="stat-nummer" id="totaalBerichten">0</div>
+            <p>Totaal contactberichten</p>
+          </div>
+          <div class="stat-kaart">
+            <h3>🆕 Nieuw</h3>
+            <div class="stat-nummer" id="nieuweBerichten">0</div>
+            <p>Ongelezen berichten</p>
+          </div>
+          <div class="stat-kaart">
+            <h3>👁️ Gelezen</h3>
+            <div class="stat-nummer" id="gelezenBerichten">0</div>
+            <p>Gelezen berichten</p>
+          </div>
+          <div class="stat-kaart">
+            <h3>✅ Beantwoord</h3>
+            <div class="stat-nummer" id="beantwoordeBerichten">0</div>
+            <p>Beantwoorde berichten</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Contact berichten sectie -->
+      <section class="contact-berichten-sectie">
+        <div class="sectie-header">
+          <h2>📬 Contact Berichten</h2>
+          <div class="berichten-filters">
+            <select id="statusFilter">
+              <option value="alle">Alle berichten</option>
+              <option value="nieuw">🆕 Nieuw</option>
+              <option value="gelezen">👁️ Gelezen</option>
+              <option value="beantwoord">✅ Beantwoord</option>
+            </select>
+            <button id="refreshBerichten" class="button">🔄 Ververs</button>
+            <button id="clearAllBerichten" class="button danger">🗑️ Alles wissen</button>
+          </div>
+        </div>
+        
+        <div id="berichtenContainer" class="berichten-container">
+          <!-- Berichten worden hier dynamisch geladen -->
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ✅ Footer -->
+  <footer>
+    <p>© 2025 BrusselsExplorer | Herexamen Project Dynamic Web | Kiran Chaud-ry</p>
+  </footer>
+
+  <!-- ✅ Scripts -->
+  <script src="js/thematoggle.js"></script>
+  <script src="js/taal.js"></script>
+  <script src="js/navigatie.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="js/contact.js"></script>
+  <script src="js/admin_dashboard.js"></script>
+</body>
+</html>
