@@ -1086,3 +1086,115 @@ body.dark-mode .credentials p {
 body.dark-mode .credentials strong {
   color: #ffffff;
 }
+
+
+/* ========== DASHBOARD PAGINA'S ========== */
+.dashboard-container {
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 1rem;
+}
+
+.welcome-section {
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.welcome-section h2 {
+  color: #c85a13;
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+}
+
+.welcome-section p {
+  color: #666;
+  font-size: 1.1rem;
+}
+
+#userEmail {
+  font-weight: bold;
+  color: #c85a13;
+}
+
+.dashboard-actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.action-card {
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.action-card:hover {
+  transform: translateY(-5px);
+}
+
+.action-card h3 {
+  color: #c85a13;
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+}
+
+.action-card p {
+  color: #666;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.action-button {
+  display: inline-block;
+  background-color: #2bb673;
+  color: white;
+  text-decoration: none;
+  padding: 10px 20px;
+  border-radius: 25px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.action-button:hover {
+  background-color: #239a60;
+}
+
+/* Dark mode voor dashboard */
+body.dark-mode .welcome-section,
+body.dark-mode .action-card {
+  background-color: #1e1e1e;
+  color: #f0f0f0;
+}
+
+body.dark-mode .welcome-section h2,
+body.dark-mode .action-card h3 {
+  color: #ffa54d;
+}
+
+body.dark-mode .welcome-section p,
+body.dark-mode .action-card p {
+  color: #dddddd;
+}
+
+body.dark-mode #userEmail {
+  color: #ffa54d;
+}
+
+body.dark-mode .action-button {
+  background-color: #2e8b57;
+}
+
+body.dark-mode .action-button:hover {
+  background-color: #236b4a;
+}
