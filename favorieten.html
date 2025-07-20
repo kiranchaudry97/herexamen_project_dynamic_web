@@ -53,12 +53,15 @@
       <section class="favorieten-content">
         <h2 data-i18n="favorites_title">Favorieten</h2>
         
-        <div class="geen-favorieten">
-          <p data-i18n="no_favorites">Je hebt nog geen favorieten opgeslagen.</p>
-          
-          <a href="parcours.html" class="terug-button" data-i18n="back_to_murals">
-            ← Terug naar stripmuren
+        <!-- Terug naar Dashboard knop -->
+        <div class="navigation-buttons">
+          <a href="user_dashboard.html" class="terug-button" data-i18n="back_to_dashboard">
+            ← Terug naar Dashboard
           </a>
+        </div>
+        
+        <div id="favorietenContainer">
+          <!-- Favorieten worden hier dynamisch geladen -->
         </div>
       </section>
     </div>
@@ -73,5 +76,6 @@
   <script src="js/thematoggle.js"></script>
   <script src="js/taal.js"></script>
   <script src="js/navigatie.js"></script>
+  <script src="js/favorieten.js"></script>
 </body>
 </html>

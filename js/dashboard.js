@@ -42,6 +42,13 @@ function updateNavigation() {
     const favorietenLinks = document.querySelectorAll('a[href="favorieten.html"]');
     
     favorietenLinks.forEach(link => {
+        // Als de link de class "action-button" heeft (dashboard knop), laat dan favorieten.html staan
+        if (link.classList.contains('action-button')) {
+            link.href = 'favorieten.html'; // Dashboard knop gaat naar favorieten pagina
+            return;
+        }
+        
+        // Voor navigatie links: ga naar dashboard of login
         if (isLoggedIn && userType === 'user') {
             // Voor ingelogde gebruikers: ga naar user dashboard
             link.href = 'user_dashboard.html';
