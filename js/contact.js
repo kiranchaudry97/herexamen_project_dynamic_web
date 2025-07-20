@@ -1,3 +1,5 @@
+// zie commit bericht voor contact.js
+
 // Contact formulier functionaliteit
 document.addEventListener('DOMContentLoaded', function() {
     const contactForm = document.getElementById('contactForm');
