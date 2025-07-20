@@ -176,7 +176,7 @@ function toonStripmuren(data, taal = "nl") {
       muur.description_fr ||
       muur.info_nl ||
       muur.info_fr ||
-      (taal === "fr" ? "Pas de description disponible." : "Geen beschrijving beschikbaar.");
+      translations[taal].noDescription;
     const afbeelding = muur.image || "img/placeholder.jpg";
     const mapLink = `https://www.google.com/maps?q=${encodeURIComponent(adres)}`;
 
@@ -192,7 +192,7 @@ function toonStripmuren(data, taal = "nl") {
       <p><strong>${taal === "fr" ? "Description" : "Beschrijving"}:</strong> ${beschrijving}</p>
       <div class="kaart-acties">
         <a href="${mapLink}" target="_blank">${taal === "fr" ? "Ouvrir dans Google Maps" : "Open in Google Maps"}</a>
-        <button class="add-favorite">${taal === "fr" ? "Ajouter" : "Voeg toe"}</button>
+        <button class="add-favorite">${translations[taal].add}</button>
       </div>
     `;
 

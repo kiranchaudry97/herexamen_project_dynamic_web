@@ -53,9 +53,11 @@
             const titel = result.title;
             
             if (result.type === 'permanent') {
-              showNotification(`✅ "${titel}" toegevoegd aan je permanente favorieten!`, 'success');
+              const currentLang = localStorage.getItem('language') || 'nl';
+              showNotification(`✅ "${titel}" ${translations[currentLang].added_permanent}`, 'success');
             } else if (result.type === 'temporary') {
-              showNotification(`✅ "${titel}" tijdelijk toegevoegd! Login om permanent op te slaan.`, 'warning');
+              const currentLang = localStorage.getItem('language') || 'nl';
+              showNotification(`✅ "${titel}" ${translations[currentLang].temporary_added}`, 'warning');
             }
             
             // Update de knop display via favorietenManager
@@ -67,7 +69,8 @@
               if (isLoggedIn) {
                 window.location.href = 'favorieten.html';
               } else {
-                if (confirm('Wil je je tijdelijke favorieten bekijken?')) {
+                const currentLang = localStorage.getItem('language') || 'nl';
+                if (confirm(translations[currentLang].temp_favorites_question)) {
                   window.location.href = 'favorieten.html';
                 }
               }
@@ -77,9 +80,11 @@
             const titel = result.title;
             
             if (result.type === 'duplicate-permanent') {
-              showNotification(`⚠️ "${titel}" staat al permanent in je favorieten!`, 'warning');
+              const currentLang = localStorage.getItem('language') || 'nl';
+              showNotification(`⚠️ "${titel}" ${translations[currentLang].already_permanent}`, 'warning');
             } else if (result.type === 'duplicate-temporary') {
-              showNotification(`⚠️ "${titel}" staat al in je tijdelijke favorieten! Log in om permanent op te slaan.`, 'warning');
+              const currentLang = localStorage.getItem('language') || 'nl';
+              showNotification(`⚠️ "${titel}" ${translations[currentLang].already_in_temp_favorites}`, 'warning');
             }
           }
         } else {
@@ -209,13 +214,13 @@ function toonStripmuren(data, taal = "nl") {
     kaart.innerHTML = `
       <img data-src="${afbeelding}" src="img/placeholder.jpg" alt="${naam}" class="lazy-load" />
       <h3>${naam}</h3>
-      <p><strong>${taal === "fr" ? "Artiste" : "Kunstenaar"}:</strong> ${kunstenaar}</p>
+      <p><strong>${translations[taal].artist}:</strong> ${kunstenaar}</p>
       <p><strong>${taal === "fr" ? "Adresse" : "Adres"}:</strong> ${adres}</p>
       <p><strong>${taal === "fr" ? "Année" : "Jaar"}:</strong> ${jaar}</p>
       <p><strong>${taal === "fr" ? "Description" : "Beschrijving"}:</strong> ${beschrijving}</p>
       <div class="kaart-acties">
         <a href="${mapLink}" target="_blank" class="button">${taal === "fr" ? "🗺️ Ouvrir dans Google Maps" : "🗺️ Open in Google Maps"}</a>
-        <button class="favoriet-button button" data-id="${muralId}" style="background-color: #e53935;">${taal === "fr" ? "🌟 Ajouter" : "🌟 Voeg toe"}</button>
+        <button class="favoriet-button button" data-id="${muralId}" style="background-color: #e53935;">🌟 ${translations[taal].add}</button>
       </div>
     `;
 
@@ -263,7 +268,7 @@ function toonKaart(data, taal = "nl") {
           ${titel_nl ? `<div><b>NL:</b> ${titel_nl}</div>` : ''}
           ${titel_fr ? `<div><b>FR:</b> ${titel_fr}</div>` : ''}
         </strong><br>
-        <span><b>${taal === 'fr' ? "Artiste" : "Kunstenaar"}:</b> ${tekenaar}</span><br>
+        <span><b>${translations[taal].artist}:</b> ${tekenaar}</span><br>
         <span><b>${taal === 'fr' ? "Adresse" : "Adres"}:</b> ${adres}</span><br>
         <span><b>Gemeente:</b> ${gemeente}</span><br><br>
         ${beschrijving_nl ? `<div><b>NL:</b> ${beschrijving_nl}</div>` : ''}
@@ -399,9 +404,11 @@ function handleFavorietClick(e) {
         const titel = result.title;
         
         if (result.type === 'permanent') {
-          showNotification(`✅ "${titel}" toegevoegd aan je permanente favorieten!`, 'success');
+          const currentLang = localStorage.getItem('language') || 'nl';
+          showNotification(`✅ "${titel}" ${translations[currentLang].added_permanent}`, 'success');
         } else if (result.type === 'temporary') {
-          showNotification(`✅ "${titel}" tijdelijk toegevoegd! Login om permanent op te slaan.`, 'warning');
+          const currentLang = localStorage.getItem('language') || 'nl';
+          showNotification(`✅ "${titel}" ${translations[currentLang].temporary_added}`, 'warning');
         }
         
         // Update de knop display via favorietenManager
@@ -413,7 +420,8 @@ function handleFavorietClick(e) {
           if (isLoggedIn) {
             window.location.href = 'favorieten.html';
           } else {
-            if (confirm('Wil je je tijdelijke favorieten bekijken?')) {
+            const currentLang = localStorage.getItem('language') || 'nl';
+            if (confirm(translations[currentLang].temp_favorites_question)) {
               window.location.href = 'favorieten.html';
             }
           }
@@ -423,9 +431,11 @@ function handleFavorietClick(e) {
         const titel = result.title;
         
         if (result.type === 'duplicate-permanent') {
-          showNotification(`⚠️ "${titel}" staat al permanent in je favorieten!`, 'warning');
+          const currentLang = localStorage.getItem('language') || 'nl';
+          showNotification(`⚠️ "${titel}" ${translations[currentLang].already_permanent}`, 'warning');
         } else if (result.type === 'duplicate-temporary') {
-          showNotification(`⚠️ "${titel}" staat al in je tijdelijke favorieten! Log in om permanent op te slaan.`, 'warning');
+          const currentLang = localStorage.getItem('language') || 'nl';
+          showNotification(`⚠️ "${titel}" ${translations[currentLang].already_in_temp_favorites}`, 'warning');
         }
       }
     } else {

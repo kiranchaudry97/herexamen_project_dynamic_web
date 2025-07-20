@@ -100,6 +100,30 @@ const translations = {
     logout: "Uitloggen",
     dashboard: "Dashboard",
     admin_dashboard: "Admin Dashboard",
+    // Tijdelijke favorieten berichten
+    temp_favorites_question: "Wil je je tijdelijke favorieten bekijken?",
+    already_in_temp_favorites: "staat al in je tijdelijke favorieten! Log in om permanent op te slaan.",
+    temp_favorites_title: "Tijdelijke Favorieten",
+    temp_favorites_message: "Je hebt {count} stripmuur(en) tijdelijk toegevoegd. Deze blijven bewaard tot je ze permanent opslaat of verwijdert. Log in om deze permanent op te slaan!",
+    login_to_save: "Inloggen om te bewaren",
+    remove_all_temp: "Verwijder Alle Tijdelijke",
+    temporary_added: "tijdelijk toegevoegd! Login om permanent op te slaan.",
+    temporary_button: "Tijdelijk",
+    already_permanent: "staat al permanent in je favorieten!",
+    added_permanent: "toegevoegd aan je permanente favorieten!",
+    saved_button: "Opgeslagen",
+    temp_saved_logged_in: "Je hebt {count} stripmuur(en) tijdelijk opgeslagen. Klik hieronder om deze permanent op te slaan!",
+    save_all_favorites: "Bewaar Alle {count} Favorieten",
+    must_login_to_save: "Je moet ingelogd zijn om favorieten permanent op te slaan!",
+    no_temp_favorites_to_save: "Geen tijdelijke favorieten om op te slaan.",
+    no_temp_favorites_to_remove: "Geen tijdelijke favorieten om te verwijderen.",
+    all_temp_favorites_removed: "Alle tijdelijke favorieten zijn verwijderd.",
+    temp_favorites_saved_permanently: "✅ Tijdelijke favorieten zijn nu permanent opgeslagen!",
+    temp_favorites_saved_success: "✅ {count} van de {total} tijdelijke favorieten zijn permanent opgeslagen voor {user}!",
+    confirm_remove_all_temp: "Weet je zeker dat je alle {count} tijdelijke favorieten wilt verwijderen?",
+    confirm_save_temp_login: "Je hebt {count} tijdelijke favoriet(en). Wil je deze nu permanent opslaan?",
+    remove_temp: "Verwijder tijdelijk",
+    remove_permanent: "Verwijderen",
   },
   fr: {
     title: "🎨 BrusselsExplorer",
@@ -197,6 +221,30 @@ const translations = {
     logout: "Se déconnecter",
     dashboard: "Tableau de Bord",
     admin_dashboard: "Dashboard Admin",
+    // Tijdelijke favorieten berichten
+    temp_favorites_question: "Voulez-vous voir vos favoris temporaires ?",
+    already_in_temp_favorites: "est déjà dans vos favoris temporaires ! Connectez-vous pour sauvegarder de façon permanente.",
+    temp_favorites_title: "Favoris Temporaires",
+    temp_favorites_message: "Vous avez ajouté {count} fresque(s) BD temporairement. Elles restent sauvegardées jusqu'à ce que vous les enregistriez de façon permanente ou les supprimiez. Connectez-vous pour les sauvegarder de façon permanente !",
+    login_to_save: "Se connecter pour sauvegarder",
+    remove_all_temp: "Supprimer Tous les Temporaires",
+    temporary_added: "ajouté temporairement ! Connectez-vous pour sauvegarder de façon permanente.",
+    temporary_button: "Temporaire",
+    already_permanent: "est déjà dans vos favoris permanents !",
+    added_permanent: "ajouté à vos favoris permanents !",
+    saved_button: "Sauvegardé",
+    temp_saved_logged_in: "Vous avez {count} fresque(s) BD sauvegardées temporairement. Cliquez ci-dessous pour les sauvegarder de façon permanente !",
+    save_all_favorites: "Sauvegarder Tous les {count} Favoris",
+    must_login_to_save: "Vous devez être connecté pour sauvegarder les favoris de façon permanente !",
+    no_temp_favorites_to_save: "Aucun favori temporaire à sauvegarder.",
+    no_temp_favorites_to_remove: "Aucun favori temporaire à supprimer.",
+    all_temp_favorites_removed: "Tous les favoris temporaires ont été supprimés.",
+    temp_favorites_saved_permanently: "✅ Les favoris temporaires sont maintenant sauvegardés de façon permanente !",
+    temp_favorites_saved_success: "✅ {count} des {total} favoris temporaires ont été sauvegardés de façon permanente pour {user} !",
+    confirm_remove_all_temp: "Êtes-vous sûr de vouloir supprimer tous les {count} favoris temporaires ?",
+    confirm_save_temp_login: "Vous avez {count} favori(s) temporaire(s). Voulez-vous les sauvegarder de façon permanente maintenant ?",
+    remove_temp: "Supprimer temporaire",
+    remove_permanent: "Supprimer",
   },
 };
 
@@ -235,6 +283,16 @@ languageSelect.addEventListener("change", () => {
   // Update filter functies als beschikbaar
   if (typeof window.filterFuncties !== 'undefined' && window.filterFuncties.wijzigTaal) {
     window.filterFuncties.wijzigTaal(selectedLang);
+  }
+
+  // Update favorieten knoppen als beschikbaar
+  if (typeof favorietenManager !== 'undefined' && favorietenManager.updateFavorietenDisplay) {
+    favorietenManager.updateFavorietenDisplay();
+  }
+
+  // Update favorieten pagina als deze geladen is
+  if (typeof favorietenManager !== 'undefined' && favorietenManager.toonFavorieten) {
+    favorietenManager.toonFavorieten();
   }
 
   // Fallback: Herladen stripmuren als script aanwezig is
