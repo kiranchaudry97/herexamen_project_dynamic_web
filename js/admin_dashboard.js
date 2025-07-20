@@ -137,8 +137,7 @@ function createBerichtCard(bericht, index) {
                 <div class="bericht-info">
                     <h3>${bericht.voornaam} ${bericht.achternaam}</h3>
                     <p class="bericht-contact">
-                        📧 <a href="mailto:${bericht.email}">${bericht.email}</a> | 
-                        📞 <a href="tel:${bericht.telefoon}">${bericht.telefoon}</a>
+                        📧 <a href="mailto:${bericht.email}">${bericht.email}</a>
                     </p>
                     <p class="bericht-datum">📅 ${datum}</p>
                 </div>
@@ -155,6 +154,9 @@ function createBerichtCard(bericht, index) {
             </div>
             
             <div class="bericht-acties">
+                <button onclick="stuurEmailAntwoord(${index})" class="button primary">
+                    📧 E-mail antwoord
+                </button>
                 <button onclick="markeerAlsGelezen(${index})" class="button ${bericht.status === 'nieuw' ? '' : 'disabled'}">
                     👁️ Markeer als gelezen
                 </button>
@@ -219,6 +221,57 @@ function verwijderBericht(index) {
         laadContactBerichten();
         updateStatistieken();
         toonMelding('Bericht verwijderd!', 'success');
+    }
+}
+
+function stuurEmailAntwoord(index) {
+    const berichten = getContactBerichten();
+    const bericht = berichten[index];
+    
+    if (!bericht) {
+        toonMelding('Bericht niet gevonden!', 'error');
+        return;
+    }
+    
+    // Maak een professionele e-mail template
+    const onderwerp = `Re: Uw bericht via BrusselsExplorer website`;
+    
+    const emailBody = `Beste ${bericht.voornaam} ${bericht.achternaam},
+
+Bedankt voor uw bericht via onze website. 
+
+Uw oorspronkelijke bericht:
+"${bericht.opmerking}"
+
+[HIER UW ANTWOORD TYPEN]
+
+Met vriendelijke groeten,
+BrusselsExplorer Team
+
+---
+Brussels Explorer
+info@brusselsexplorer.be
++32 2 123 45 67
+Rue des Comics 1, 1000 Brussel, België`;
+
+    // Maak mailto URL
+    const mailtoUrl = `mailto:${bericht.email}?subject=${encodeURIComponent(onderwerp)}&body=${encodeURIComponent(emailBody)}`;
+    
+    try {
+        // Open standaard e-mail client
+        window.location.href = mailtoUrl;
+        
+        // Markeer automatisch als beantwoord na korte delay
+        setTimeout(() => {
+            if (confirm('Wilt u dit bericht markeren als beantwoord?')) {
+                markeerAlsBeantwoord(index);
+            }
+        }, 1000);
+        
+        toonMelding('E-mail client geopend!', 'success');
+    } catch (error) {
+        console.error('Fout bij openen e-mail client:', error);
+        toonMelding('Kon e-mail client niet openen. Kopieer handmatig: ' + bericht.email, 'error');
     }
 }
 
