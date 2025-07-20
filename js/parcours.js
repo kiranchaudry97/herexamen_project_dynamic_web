@@ -1,5 +1,4 @@
-// ========== DIRECTE EVENT LISTENER - ALTIJD WERKEND ==========
-// Deze wordt onmiddellijk uitgevoerd zonder te wachten op DOMContentLoaded
+ // zie commit bericht voor uitleg
 (function() {
   console.log('Directe event listener setup gestart');
   
@@ -7,7 +6,7 @@
   function setupDirectEventListener() {
     console.log('Setup directe event listener');
     
-    // Gebruik event delegation op document - dit werkt altijd
+    
     document.addEventListener('click', function(e) {
       if (e.target.classList.contains('favoriet-button')) {
         console.log('FAVORIET KNOP GEKLIKT! 🎉');
@@ -17,7 +16,7 @@
         const muralId = parseInt(e.target.dataset.id);
         console.log('Mural ID:', muralId);
         
-        // Check of favorietenManager beschikbaar is
+       
         if (typeof favorietenManager === 'undefined') {
           console.error('FavorietenManager niet geladen!');
           showNotification('Favorieten systeem wordt geladen... Probeer het opnieuw.', 'error');
@@ -90,7 +89,7 @@
         
         return false;
       }
-    }, true); // Gebruik capture fase voor maximale betrouwbaarheid
+    }, true); 
   }
   
   if (document.readyState === 'loading') {
@@ -107,7 +106,7 @@ let cachedData = [];
 let map;
 let markersLayer;
 
-// ========== Helper functie om stripmuur data op te halen per ID ==========
+//Helper functie om stripmuur data op te halen per ID
 function getStripmuurById(id) {
   console.log('getStripmuurById aangeroepen met ID:', id); // Debug
   
@@ -208,7 +207,7 @@ function toonStripmuren(data, taal = "nl") {
     kaart.dataset.muralId = muralId;
 
     kaart.innerHTML = `
-      <img src="${afbeelding}" alt="${naam}" />
+      <img data-src="${afbeelding}" src="img/placeholder.jpg" alt="${naam}" class="lazy-load" />
       <h3>${naam}</h3>
       <p><strong>${taal === "fr" ? "Artiste" : "Kunstenaar"}:</strong> ${kunstenaar}</p>
       <p><strong>${taal === "fr" ? "Adresse" : "Adres"}:</strong> ${adres}</p>
@@ -222,6 +221,9 @@ function toonStripmuren(data, taal = "nl") {
 
     container.appendChild(kaart);
   });
+  
+  // 🔍 INTERSECTION OBSERVER - Start lazy loading na het laden van stripmuren
+  observeImages();
   
   // Update favoriet knoppen na het laden van de stripmuren
   if (typeof favorietenManager !== 'undefined') {
@@ -279,11 +281,14 @@ function toonKaart(data, taal = "nl") {
   }, 200);
 }
 
-// ========== Initialisatie ==========
+//  Initialisatie 
 document.addEventListener("DOMContentLoaded", async () => {
   try {
     console.log('Parcours.js initialisatie gestart'); // Debug
     console.log('FavorietenManager bij start:', typeof favorietenManager); // Debug
+    
+    // observer Setup lazy loading eerst
+    setupLazyLoading();
     
     // Wacht een moment om ervoor te zorgen dat filter.js eerst laadt
     setTimeout(async () => {
@@ -340,7 +345,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 });
 
-// ========== Aparte functie voor favoriet event listeners ==========
+//  Aparte functie voor favoriet event listeners 
 function setupFavorietenEventListeners() {
   // Gebruik event delegation op document level voor betere betrouwbaarheid
   document.removeEventListener('click', handleFavorietClick); // Verwijder oude listener eerst
@@ -431,7 +436,7 @@ function handleFavorietClick(e) {
   }
 }
 
-// ========== Notification systeem ==========
+//  Notification systeem 
 function showNotification(message, type = 'info') {
   // Verwijder bestaande notifications
   const existingNotification = document.querySelector('.notification');
@@ -564,4 +569,77 @@ function setupViewToggle() {
       }
     );
   }
+}
+
+//  INTERSECTION OBSERVER API - LAZY LOADING 
+// IntersectionObserver voor lazy loading van stripmuur afbeeldingen
+let imageObserver;
+
+function setupLazyLoading() {
+  console.log('🔍 Intersection Observer setup gestart...');
+  
+  // Maak IntersectionObserver aan
+  imageObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const img = entry.target;
+        const src = img.dataset.src;
+        
+        if (src) {
+          console.log('📸 Lazy loading afbeelding:', src);
+          
+          // Voeg fade-in animatie toe
+          img.style.opacity = '0';
+          img.style.transition = 'opacity 0.3s ease-in-out';
+          
+          // Laad de afbeelding
+          img.src = src;
+          img.removeAttribute('data-src');
+          
+          // Verwijder lazy class en voeg fade-in toe
+          img.classList.remove('lazy-load');
+          
+          img.onload = () => {
+            img.style.opacity = '1';
+            console.log('✅ Afbeelding geladen en zichtbaar gemaakt');
+          };
+          
+          img.onerror = () => {
+            console.error('❌ Fout bij laden afbeelding:', src);
+            img.src = 'img/placeholder.jpg'; // Fallback afbeelding
+            img.style.opacity = '1';
+          };
+          
+          // Stop observeren van deze afbeelding
+          observer.unobserve(img);
+        }
+      }
+    });
+  }, {
+    // Observer opties
+    root: null, // viewport als root
+    rootMargin: '50px', // Begin laden 50px voordat het zichtbaar wordt
+    threshold: 0.1 // Trigger als 10% van de afbeelding zichtbaar is
+  });
+  
+  console.log('✅ IntersectionObserver succesvol aangemaakt');
+}
+
+function observeImages() {
+  if (!imageObserver) {
+    setupLazyLoading();
+  }
+  
+  // Zoek alle lazy-load afbeeldingen
+  const lazyImages = document.querySelectorAll('img[data-src]');
+  console.log(`🔍 Gevonden ${lazyImages.length} afbeeldingen voor lazy loading`);
+  
+  lazyImages.forEach((img, index) => {
+    // Voeg lazy-load klasse toe voor styling
+    img.classList.add('lazy-load');
+    
+    // Start observeren
+    imageObserver.observe(img);
+    console.log(`👁️ Observeren gestart voor afbeelding ${index + 1}:`, img.dataset.src);
+  });
 }
