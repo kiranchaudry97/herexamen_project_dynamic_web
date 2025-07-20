@@ -1,3 +1,5 @@
+// commit bericht voor login.js
+
 // Login functionaliteit
 document.addEventListener('DOMContentLoaded', function() {
     const loginForm = document.getElementById('loginForm');
