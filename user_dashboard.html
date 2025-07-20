@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BrusselsExplorer - Gebruiker Dashboard</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ✅ Navigatie -->
+  <nav class="main-nav">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo">
+        <img src="img/logo brussel parcours.png" alt="BrusselsExplorer logo" />
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html" data-i18n="home">Home</a></li>
+        <li><a href="parcours.html" data-i18n="parcours">Parcours</a></li>
+        <li><a href="about.html" data-i18n="about">Over ons</a></li>
+        <li><a href="contact.html" data-i18n="contact">Contact</a></li>
+        <li><a href="favorieten.html" data-i18n="favorites">Favorieten</a></li>
+        <li><a href="#" id="logoutBtn" data-i18n="logout">Uitloggen</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ✅ Instellingen -->
+  <section class="settings">
+    <div>
+      <label for="language" data-i18n="language">Taal:</label>
+      <select id="language">
+        <option value="nl">Nederlands</option>
+        <option value="fr">Frans</option>
+      </select>
+    </div>
+
+    <div class="theme-toggle">
+      <label class="switch">
+        <input type="checkbox" id="themeToggle">
+        <span class="slider round"></span>
+      </label>
+      <span class="theme-label" data-i18n="theme"></span>
+    </div>
+  </section>
+
+  <main>
+    <header class="pagina-header">
+      <h1 data-i18n="user_dashboard_title">👤 Gebruiker Dashboard</h1>
+    </header>
+
+    <div class="dashboard-container">
+      <section class="welcome-section">
+        <h2 data-i18n="welcome_message">Welkom terug!</h2>
+        <p data-i18n="user_info">Ingelogd als: <span id="userEmail"></span></p>
+      </section>
+
+      <section class="dashboard-actions">
+        <div class="action-card">
+          <h3 data-i18n="my_favorites">🌟 Mijn Favorieten</h3>
+          <p data-i18n="favorites_description">Bekijk en beheer je opgeslagen stripmuren.</p>
+          <a href="favorieten.html" class="action-button" data-i18n="view_favorites">Favorieten bekijken</a>
+        </div>
+
+        <div class="action-card">
+          <h3 data-i18n="explore_murals">🎨 Stripmuren Ontdekken</h3>
+          <p data-i18n="explore_description">Ontdek alle stripmuren in Brussel.</p>
+          <a href="parcours.html" class="action-button" data-i18n="explore_now">Nu ontdekken</a>
+        </div>
+
+        <div class="action-card">
+          <h3 data-i18n="profile_settings">⚙️ Instellingen</h3>
+          <p data-i18n="settings_description">Pas je voorkeuren en instellingen aan.</p>
+          <button class="action-button" data-i18n="manage_settings">Instellingen beheren</button>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- ✅ Footer -->
+  <footer>
+    <p>© 2025 BrusselsExplorer | Herexamen Project Dynamic Web | Kiran Chaud-ry</p>
+  </footer>
+
+  <!-- ✅ Scripts -->
+  <script src="js/thematoggle.js"></script>
+  <script src="js/taal.js"></script>
+  <script src="js/navigatie.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>
