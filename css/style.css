@@ -123,10 +123,47 @@ body {
 }
 
 /*  SLIDER  */
-.theme-toggle {
+.theme-toggle,
+.toggle-weergave,
+.geolocatie-toggle {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+.geolocatie-toggle {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+}
+
+.geo-label {
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.geo-label.disabled {
+  color: #999;
+  font-size: 0.8rem;
+}
+
+.locatie-status {
+  font-size: 12px;
+  color: #666;
+  min-height: 16px;
+  text-align: left;
+}
+
+.afstand-info {
+  background: #3498db !important;
+  color: white !important;
+  padding: 4px 8px !important;
+  border-radius: 12px !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  margin-top: 8px !important;
+  text-align: center !important;
+  display: inline-block;
 }
 
 .switch {
@@ -477,19 +514,78 @@ body.dark-mode .kaart-acties button {
 /*  KAARTWEERGAVE (LEAFLET)  */
 #map-container {
   margin: 2rem auto;
-  max-width: 1000px;
-  border-radius: 16px;
+  max-width: 1200px;
+  border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  border: 2px solid #ccc;
+  border: 2px solid #ddd;
   display: none;
-  height: 500px;
+  height: 600px;
   width: 100%;
 }
 
-#map-container .leaflet-container {
-  height: 500px;
+#map {
+  height: 600px;
   width: 100%;
+}
+
+/* Brussels striproute stijl markers - blauwe markers zoals in screenshot */
+.strip-marker {
+  background: transparent !important;
+  border: none !important;
+}
+
+.strip-marker div {
+  background: #3498db !important;
+  border: 3px solid white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  box-shadow: 0 2px 6px rgba(52, 152, 219, 0.4);
+  transition: all 0.2s ease;
+}
+
+.strip-marker:hover div {
+  transform: scale(1.2);
+  box-shadow: 0 3px 8px rgba(52, 152, 219, 0.6);
+}
+
+/* Brussels-stijl popup styling */
+.brussels-popup-container .leaflet-popup-content-wrapper {
+  background: white;
+  color: #2c3e50;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  border: 1px solid #e74c3c;
+}
+
+.brussels-popup-container .leaflet-popup-tip {
+  background: white;
+  border: 1px solid #e74c3c;
+}
+
+.brussels-popup-container .leaflet-popup-content {
+  margin: 12px 16px;
+  line-height: 1.5;
+}
+
+/* Custom marker hover effect */
+.strip-marker:hover {
+  transform: scale(1.1);
+  transition: transform 0.2s ease;
+}
+
+/* Popup button styling */
+.brussels-popup button:hover {
+  background: #c0392b !important;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.brussels-popup a:hover {
+  background: #2980b9 !important;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
 /* Titel styling voor parcours pagina */
@@ -519,22 +615,6 @@ body.dark-mode #map-container {
 body.dark-mode #titel-lijst,
 body.dark-mode #titel-kaart {
   color: #ffa54d;
-}
-
-#map-container::before {
-  content: "Striplocatie";
-  display: block;
-  text-align: center;
-  font-size: 1.3rem;
-  font-weight: 600;
-  color: #333;
-  padding: 1rem 0 0.5rem;
-  background-color: white;
-}
-
-body.dark-mode #map-container::before {
-  color: white;
-  background-color: #121212;
 }
 
 /*  RESPONSIVE VOOR HOMEPAGE  */
@@ -766,6 +846,24 @@ body.dark-mode .about-content h2 {
   padding-right: 2.5rem;
 }
 
+/* Afstand filter specifieke styling */
+#filterAfstand {
+  border: 2px solid #3498db;
+  background-color: #e8f4f8;
+  transition: all 0.3s ease;
+}
+
+#filterAfstand:disabled {
+  opacity: 0.5;
+  background-color: #f5f5f5;
+  border-color: #ddd;
+}
+
+#filterAfstand option {
+  padding: 8px;
+  font-size: 14px;
+}
+
 .filterbar button {
   background-color: transparent;
   color: #c85a13;
@@ -784,6 +882,16 @@ body.dark-mode .filterbar button {
   background-color: #2d2d2d;
   border-color: #555;
   color: #f0f0f0;
+}
+
+body.dark-mode #filterAfstand {
+  background-color: #1e3a4a;
+  border-color: #3498db;
+}
+
+body.dark-mode #filterAfstand:disabled {
+  background-color: #2d2d2d;
+  border-color: #555;
 }
 
 body.dark-mode .filterbar input::placeholder {

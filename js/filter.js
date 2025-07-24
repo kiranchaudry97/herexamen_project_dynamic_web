@@ -1,10 +1,9 @@
-// zie commit bericht voor filter.js
-
 // DOM-elementen ophalen
 const zoekInput = document.getElementById("zoekInput");
 const sortSelect = document.getElementById("sorteerSelect");
 const jaarSelect = document.getElementById("filterJaar");
 const kunstenaarSelect = document.getElementById("filterKunstenaar");
+const afstandSelect = document.getElementById("filterAfstand");
 const resetButton = document.getElementById("resetFilters");
 
 // Globale variabelen
@@ -26,52 +25,33 @@ async function haalStripmurenOp() {
 
 // Filteropties vullen
 function vulFilterOpties(data) {
-  // Controleer of vertalingen beschikbaar zijn
-  const vertalingen = window.translations || {
-    nl: { allYears: "Alle jaren", allArtists: "Alle kunstenaars" },
-    fr: { allYears: "Toutes les années", allArtists: "Tous les artistes" }
-  };
+  // Jaren verzamelen
+  const jaren = [...new Set(data.map(muur => muur.date).filter(jaar => jaar))].sort();
+  jaarSelect.innerHTML = '<option value="">Alle jaren</option>';
+  jaren.forEach(jaar => {
+    const option = document.createElement("option");
+    option.value = jaar;
+    option.textContent = jaar;
+    jaarSelect.appendChild(option);
+  });
 
-  // Jaren verzamelen en sorteren (numeriek)
-  const jaren = [...new Set(data.map(muur => muur.date).filter(jaar => jaar))].sort((a, b) => a - b);
-  console.log('🔍 Filter jaren gevonden:', jaren); // Debug
-  
-  if (jaarSelect) {
-    jaarSelect.innerHTML = `<option value="">${vertalingen[huidigeTaal]?.allYears || "Alle jaren"}</option>`;
-    jaren.forEach(jaar => {
-      const option = document.createElement("option");
-      option.value = jaar;
-      option.textContent = jaar;
-      jaarSelect.appendChild(option);
-    });
-    console.log('✅ Jaar filter gevuld met', jaren.length, 'opties'); // Debug
-  }
-
-  // Kunstenaars verzamelen en alfabetisch sorteren
+  // Kunstenaars verzamelen
   const kunstenaars = [...new Set(data.map(muur => muur.dessinateur).filter(kunstenaar => kunstenaar))].sort();
-  console.log('🔍 Filter kunstenaars gevonden:', kunstenaars); // Debug
-  
-  if (kunstenaarSelect) {
-    kunstenaarSelect.innerHTML = `<option value="">${vertalingen[huidigeTaal]?.allArtists || "Alle kunstenaars"}</option>`;
-    kunstenaars.forEach(kunstenaar => {
-      const option = document.createElement("option");
-      option.value = kunstenaar;
-      option.textContent = kunstenaar;
-      kunstenaarSelect.appendChild(option);
-    });
-    console.log('✅ Kunstenaar filter gevuld met', kunstenaars.length, 'opties'); // Debug
-  }
+  kunstenaarSelect.innerHTML = '<option value="">Alle kunstenaars</option>';
+  kunstenaars.forEach(kunstenaar => {
+    const option = document.createElement("option");
+    option.value = kunstenaar;
+    option.textContent = kunstenaar;
+    kunstenaarSelect.appendChild(option);
+  });
 }
 
 // Filteren en zoeken
 function filterEnZoek() {
-  console.log('🔍 filterEnZoek() aangeroepen'); // Debug
-  
   const zoekterm = zoekInput.value.toLowerCase();
   const geselecteerdJaar = jaarSelect.value;
   const geselecteerdeKunstenaar = kunstenaarSelect.value;
-  
-  console.log('🔍 Filter criteria:', { zoekterm, geselecteerdJaar, geselecteerdeKunstenaar }); // Debug
+  const geselecteerdeAfstand = afstandSelect ? afstandSelect.value : "";
 
   gefilterdeMuren = alleStripmuren.filter(muur => {
     const naam = (muur[`naam_fresco_${huidigeTaal}`] || muur.nom_de_la_fresque || "").toLowerCase();
@@ -100,17 +80,43 @@ function filterEnZoek() {
     // Kunstenaarfilter
     const voldoetAanKunstenaar = !geselecteerdeKunstenaar || muur.dessinateur === geselecteerdeKunstenaar;
 
-    return voldoetAanZoek && voldoetAanJaar && voldoetAanKunstenaar;
+    // Afstandfilter (alleen als geolocatie beschikbaar is)
+    let voldoetAanAfstand = true;
+    if (geselecteerdeAfstand && typeof window.geolocatieManager !== 'undefined' && window.geolocatieManager.gebruikerLocatie) {
+      const afstand = window.geolocatieManager.getAfstandVoorStripmuur(muur);
+      
+      if (afstand !== null) {
+        switch(geselecteerdeAfstand) {
+          case "0-0.5":
+            voldoetAanAfstand = afstand <= 0.5;
+            break;
+          case "0.5-1":
+            voldoetAanAfstand = afstand > 0.5 && afstand <= 1;
+            break;
+          case "1-2":
+            voldoetAanAfstand = afstand > 1 && afstand <= 2;
+            break;
+          case "2-5":
+            voldoetAanAfstand = afstand > 2 && afstand <= 5;
+            break;
+          case "5+":
+            voldoetAanAfstand = afstand > 5;
+            break;
+          default:
+            voldoetAanAfstand = true;
+        }
+      } else {
+        // Als geen coördinaten beschikbaar, toon niet bij afstand filtering
+        voldoetAanAfstand = false;
+      }
+    }
+
+    return voldoetAanZoek && voldoetAanJaar && voldoetAanKunstenaar && voldoetAanAfstand;
   });
 
   sorteerMuren();
   toonStripmuren(gefilterdeMuren, huidigeTaal);
   updateKaart();
-  
-  // Update globale variabelen
-  window.gefilterdeMuren = gefilterdeMuren;
-  
-  console.log('✅ Filter resultaat:', gefilterdeMuren.length, 'van', alleStripmuren.length, 'stripmuren'); // Debug
 }
 
 // Sorteren
@@ -130,6 +136,20 @@ function sorteerMuren() {
         return jaarA - jaarB;
       case "jaar_af":
         return jaarB - jaarA;
+      case "afstand":
+        // Sorteer op afstand als geolocatie beschikbaar is
+        if (typeof window.geolocatieManager !== 'undefined' && window.geolocatieManager.gebruikerLocatie) {
+          const afstandA = window.geolocatieManager.getAfstandVoorStripmuur(a);
+          const afstandB = window.geolocatieManager.getAfstandVoorStripmuur(b);
+          
+          // Zet items zonder coordinaten achteraan
+          if (afstandA === null && afstandB === null) return 0;
+          if (afstandA === null) return 1;
+          if (afstandB === null) return -1;
+          
+          return afstandA - afstandB;
+        }
+        return naamA.localeCompare(naamB); // Fallback naar alfabetisch
       case "az":
       default:
         return naamA.localeCompare(naamB);
@@ -140,13 +160,7 @@ function sorteerMuren() {
 // Kaart updaten met gefilterde resultaten
 function updateKaart() {
   // Controleer of kaart functionaliteit beschikbaar is (uit parcours.js)
-  if (typeof window.parcoursFuncties !== 'undefined' && window.parcoursFuncties.toonKaart) {
-    const isKaartZichtbaar = document.getElementById("viewToggle")?.checked;
-    if (isKaartZichtbaar) {
-      window.parcoursFuncties.toonKaart(gefilterdeMuren, huidigeTaal);
-    }
-  } else if (typeof toonKaart === 'function') {
-    // Fallback naar globale functie
+  if (typeof toonKaart === 'function') {
     const isKaartZichtbaar = document.getElementById("viewToggle")?.checked;
     if (isKaartZichtbaar) {
       toonKaart(gefilterdeMuren, huidigeTaal);
@@ -160,25 +174,18 @@ function resetFilters() {
   sortSelect.value = "az";
   jaarSelect.value = "";
   kunstenaarSelect.value = "";
+  if (afstandSelect) afstandSelect.value = "";
   
   gefilterdeMuren = [...alleStripmuren];
   sorteerMuren();
   toonStripmuren(gefilterdeMuren, huidigeTaal);
   updateKaart();
-  
-  // Update globale variabelen
-  window.gefilterdeMuren = gefilterdeMuren;
 }
 
 // Taal wijzigen
 function wijzigTaal(nieuweTaal) {
   huidigeTaal = nieuweTaal;
-  
-  // Update filteropties met nieuwe taal
-  vulFilterOpties(alleStripmuren);
-  
-  // Herfilter met nieuwe taal
-  filterEnZoek(); 
+  filterEnZoek(); // Herfilter met nieuwe taal
 }
 
 function toonStripmuren(data, taal = "nl") {
@@ -204,45 +211,60 @@ function toonStripmuren(data, taal = "nl") {
       muur.description_fr ||
       muur.info_nl ||
       muur.info_fr ||
-      translations[taal].noDescription;
+      (taal === "fr" ? "Pas de description disponible." : "Geen beschrijving beschikbaar.");
     const afbeelding = muur.image || "img/placeholder.jpg";
     const mapLink = `https://www.google.com/maps?q=${encodeURIComponent(adres)}`;
-    
-    // Genereer unieke ID voor deze stripmuur
-    const muralId = muur.id || index + 1;
 
     const kaart = document.createElement("div");
     kaart.classList.add("muur-kaart");
-    kaart.dataset.muralId = muralId;
 
     kaart.innerHTML = `
-      <img src="${afbeelding}" alt="${naam}" />
+      <img src="${afbeelding}" alt="${naam}" loading="lazy" />
       <h3>${naam}</h3>
       <p><strong>${taal === "fr" ? "Artiste" : "Kunstenaar"}:</strong> ${kunstenaar}</p>
       <p><strong>${taal === "fr" ? "Adresse" : "Adres"}:</strong> ${adres}</p>
       <p><strong>${taal === "fr" ? "Année" : "Jaar"}:</strong> ${jaar}</p>
-      <p><strong>${taal === "fr" ? "Description" : "Beschrijving"}:</strong> ${beschrijving}</p>
+      <p class="description"><strong>${taal === "fr" ? "Description" : "Beschrijving"}:</strong> ${beschrijving}</p>
       <div class="kaart-acties">
-        <a href="${mapLink}" target="_blank" class="button">${taal === "fr" ? "🗺️ Ouvrir dans Google Maps" : "🗺️ Open in Google Maps"}</a>
-        <button class="favoriet-button button" data-id="${muralId}" style="background-color: #e53935;">${translations[taal].add}</button>
+        <a href="${mapLink}" target="_blank">${taal === "fr" ? "Ouvrir dans Google Maps" : "Open in Google Maps"}</a>
+        <button class="favoriet-button" data-id="${muur.id || index + 1}">
+          ⭐ ${taal === "fr" ? "Favoris" : "Favoriet"}
+        </button>
       </div>
     `;
 
     container.appendChild(kaart);
   });
-  
-  // Roep parcours.js functionaliteit aan na het tonen van stripmuren
-  if (typeof window.parcoursFuncties !== 'undefined') {
-    if (window.parcoursFuncties.observeImages) {
-      window.parcoursFuncties.observeImages(); // Start lazy loading
-    }
-  } else if (typeof observeImages === 'function') {
-    observeImages(); // Fallback naar globale functie
+
+  // Update afstanden als geolocatie beschikbaar is
+  if (typeof window.geolocatieManager !== 'undefined') {
+    setTimeout(() => {
+      window.geolocatieManager.updateAfstandenDisplay();
+    }, 200);
   }
+
+  // Update favorieten display
+  if (typeof window.favorietenManager !== 'undefined') {
+    setTimeout(() => {
+      window.favorietenManager.updateFavorietenDisplay();
+    }, 300);
+  }
+}
+
+// Afstand filter zichtbaarheid beheren
+function updateAfstandFilterZichtbaarheid() {
+  if (!afstandSelect) return;
   
-  // Update favoriet knoppen als favorietenManager beschikbaar is
-  if (typeof favorietenManager !== 'undefined') {
-    favorietenManager.updateFavorietenDisplay();
+  const heeftGeolocatie = typeof window.geolocatieManager !== 'undefined' && 
+                         window.geolocatieManager.gebruikerLocatie;
+  
+  if (heeftGeolocatie) {
+    afstandSelect.style.display = 'inline-block';
+    afstandSelect.disabled = false;
+  } else {
+    afstandSelect.style.display = 'none';
+    afstandSelect.disabled = true;
+    afstandSelect.value = ""; // Reset waarde als niet beschikbaar
   }
 }
 
@@ -251,10 +273,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Data ophalen
   alleStripmuren = await haalStripmurenOp();
   gefilterdeMuren = [...alleStripmuren];
-  
-  // Update globale variabelen
-  window.alleStripmuren = alleStripmuren;
-  window.gefilterdeMuren = gefilterdeMuren;
   
   // Taal uit localStorage halen
   huidigeTaal = localStorage.getItem("language") || "nl";
@@ -265,18 +283,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Initiële weergave
   toonStripmuren(gefilterdeMuren, huidigeTaal);
   
-  // Wacht even voor parcours.js functionaliteit
-  setTimeout(() => {
-    // Setup parcours functionaliteit als beschikbaar
-    if (typeof window.parcoursFuncties !== 'undefined') {
-      if (window.parcoursFuncties.setupViewToggle) {
-        window.parcoursFuncties.setupViewToggle();
-      }
-      if (window.parcoursFuncties.setupFavorietenEventListeners) {
-        window.parcoursFuncties.setupFavorietenEventListeners();
-      }
-    }
-  }, 1000);
+  // Update afstand filter zichtbaarheid
+  updateAfstandFilterZichtbaarheid();
+  
+  // Check periodiek voor geolocatie updates
+  setInterval(updateAfstandFilterZichtbaarheid, 2000);
   
   // Event listeners
   if (zoekInput) {
@@ -295,8 +306,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     kunstenaarSelect.addEventListener("change", filterEnZoek);
   }
   
+  if (afstandSelect) {
+    afstandSelect.addEventListener("change", filterEnZoek);
+  }
+  
   if (resetButton) {
     resetButton.addEventListener("click", resetFilters);
+  }
+  
+  // Luister naar taalwijzigingen
+  const taalSelect = document.getElementById("language");
+  if (taalSelect) {
+    taalSelect.addEventListener("change", (e) => {
+      wijzigTaal(e.target.value);
+    });
   }
 });
 
@@ -305,12 +328,5 @@ window.filterFuncties = {
   wijzigTaal,
   filterEnZoek,
   toonStripmuren,
-  gefilterdeMuren: () => gefilterdeMuren,
-  alleStripmuren: () => alleStripmuren,
-  vulFilterOpties,
-  resetFilters
+  gefilterdeMuren: () => gefilterdeMuren
 };
-
-// Maak data ook globaal beschikbaar
-window.alleStripmuren = alleStripmuren;
-window.gefilterdeMuren = gefilterdeMuren;
