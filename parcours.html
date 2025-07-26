@@ -1,4 +1,4 @@
-  <!--  zie commit bericht voor parcours.html -->
+  <!--  zie commit bericht -->
 
 
 <!DOCTYPE html>
@@ -72,6 +72,15 @@
       <option value="" data-i18n="allArtists">Alle kunstenaars</option>
     </select>
 
+    <select id="filterAfstand">
+      <option value="" data-i18n="allDistances">Alle afstanden</option>
+      <option value="0-0.5" data-i18n="distance0to500">📍 Zeer dichtbij (0-500m)</option>
+      <option value="0.5-1" data-i18n="distance500to1km">🚶 Loopafstand (500m-1km)</option>
+      <option value="1-2" data-i18n="distance1to2km">🚲 Fietsafstand (1-2km)</option>
+      <option value="2-5" data-i18n="distance2to5km">🚗 Nabij (2-5km)</option>
+      <option value="5+" data-i18n="distance5plus">🚌 Ver weg (5km+)</option>
+    </select>
+
     <button id="resetFilters" data-i18n="resetFilters">Reset</button>
   </section>
 
@@ -86,7 +95,9 @@
 
   <section id="parcours-lijst" class="parcours-container"></section>
 
-  <section id="map-container" class="map-container" aria-label="Kaartweergave stripmuren"></section>
+  <section id="map-container" class="map-container" aria-label="Kaartweergave stripmuren">
+    <div id="map"></div>
+  </section>
 
   <noscript>
     <p class="noscript-message">
@@ -99,11 +110,9 @@
   </footer>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="js/favorieten.js"></script>
   <script src="js/thematoggle.js"></script>
   <script src="js/taal.js"></script>
-  <script src="js/navigatie.js"></script>
-  <script src="js/filter.js"></script>
-  <script src="js/favorieten.js"></script>
   <script src="js/parcours.js"></script>
 </body>
-</html>
+ 
