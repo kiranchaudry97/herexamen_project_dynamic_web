@@ -1,41 +1,34 @@
-// zie commit bericht voor favorieten.js
-
 // Favorieten functionaliteit
 class FavorietenManager {
     constructor() {
-        this.migreerOudeFavorieten(); // Migreer oude favorieten structuur
+        this.migreerOudeFavorieten(); 
         this.favorieten = this.getFavorieten();
         this.initEventListeners();
-        this.watchLoginStatus(); // Watch voor login status veranderingen
+        this.watchLoginStatus(); 
     }
 
-    // Migreer oude favorieten structuur naar nieuwe gebruiker-specifieke structuur
     migreerOudeFavorieten() {
         const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
         const userEmail = localStorage.getItem('userEmail');
         
         if (!isLoggedIn || !userEmail) {
-            return; // Geen migratie nodig als niet ingelogd
+            return; 
         }
         
         const oudeFavorieten = localStorage.getItem('favorieten');
         const nieuweKey = `favorieten_${userEmail}`;
         const nieuweFavorieten = localStorage.getItem(nieuweKey);
         
-        // Als er oude favorieten zijn maar geen nieuwe voor deze gebruiker
         if (oudeFavorieten && !nieuweFavorieten) {
             console.log(`Migreren oude favorieten naar ${userEmail}`);
             localStorage.setItem(nieuweKey, oudeFavorieten);
-            // Verwijder de oude globale favorieten niet - andere gebruikers kunnen ze nog nodig hebben
         }
     }
 
-    // Watch login status changes
     watchLoginStatus() {
         let lastLoginState = localStorage.getItem('isLoggedIn') === 'true';
         let lastUserEmail = localStorage.getItem('userEmail');
         
-        // Check login status elke seconde (voor real-time updates bij login/logout)
         setInterval(() => {
             const currentLoginState = localStorage.getItem('isLoggedIn') === 'true';
             const currentUserEmail = localStorage.getItem('userEmail');
@@ -112,7 +105,7 @@ class FavorietenManager {
         localStorage.setItem('tijdelijkeFavorieten', JSON.stringify(tijdelijke));
     }
 
-    // Voeg favoriet toe (werkt voor iedereen)
+    // Voeg favoriet toe 
     voegFavorietToe(stripmuur) {
         const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
         const tijdelijke = this.getTijdelijkeFavorieten();
@@ -174,15 +167,13 @@ class FavorietenManager {
         const userEmail = localStorage.getItem('userEmail');
         
         if (!isLoggedIn || !userEmail) {
-            const currentLang = localStorage.getItem('language') || 'nl';
-            alert(translations[currentLang].must_login_to_save);
+            alert('Je moet ingelogd zijn om favorieten permanent op te slaan!');
             return;
         }
 
         const tijdelijke = this.getTijdelijkeFavorieten();
         if (tijdelijke.length === 0) {
-            const currentLang = localStorage.getItem('language') || 'nl';
-            alert(translations[currentLang].no_temp_favorites_to_save);
+            alert('Geen tijdelijke favorieten om op te slaan.');
             return;
         }
 
@@ -213,20 +204,14 @@ class FavorietenManager {
         this.updateFavorietenDisplay();
         
         // Toon success melding
-        const currentLang = localStorage.getItem('language') || 'nl';
-        alert(translations[currentLang].temp_favorites_saved_success
-            .replace('{count}', nieuweItems)
-            .replace('{total}', tijdelijke.length)
-            .replace('{user}', userEmail));
+        alert(`✅ ${nieuweItems} van de ${tijdelijke.length} tijdelijke favorieten zijn permanent opgeslagen voor ${userEmail}!`);
     }
 
     // Verwijder alle tijdelijke favorieten
     verwijderAlleTijdelijkeFavorieten() {
         const tijdelijke = this.getTijdelijkeFavorieten();
-        const currentLang = localStorage.getItem('language') || 'nl';
-        
         if (tijdelijke.length === 0) {
-            alert(translations[currentLang].no_temp_favorites_to_remove);
+            alert('Geen tijdelijke favorieten om te verwijderen.');
             return;
         }
 
@@ -234,7 +219,7 @@ class FavorietenManager {
             localStorage.removeItem('tijdelijkeFavorieten');
             this.toonFavorieten();
             this.updateFavorietenDisplay();
-            alert(translations[currentLang].all_temp_favorites_removed);
+            alert('Alle tijdelijke favorieten zijn verwijderd.');
         }
     }
 
@@ -256,14 +241,8 @@ class FavorietenManager {
 
     // Toon favorieten op de favorieten pagina
     toonFavorieten() {
-        console.log('🔍 toonFavorieten() aangeroepen'); // Debug
         const container = document.getElementById('favorietenContainer');
-        if (!container) {
-            console.error('❌ favorietenContainer element niet gevonden!'); // Debug
-            return;
-        }
-        
-        console.log('✅ favorietenContainer gevonden'); // Debug
+        if (!container) return;
 
         const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
         const tijdelijke = this.getTijdelijkeFavorieten();
@@ -275,15 +254,31 @@ class FavorietenManager {
 
         // Als er helemaal geen favorieten zijn
         if (permanenteFavorieten.length === 0 && tijdelijke.length === 0) {
+
+            const currentLang = localStorage.getItem('language') || 'nl';
             container.innerHTML = `
                 <div class="geen-favorieten">
-                    <h3>🤷‍♂️ Geen favorieten</h3>
+                    <h3 data-i18n="no_favorites_title">🤷‍♂️ Geen favorieten</h3>
                     <p data-i18n="no_favorites">Je hebt nog geen favorieten opgeslagen.</p>
-                    <a href="parcours.html" class="button terug-button" data-i18n="back_to_murals">
-                        ← Terug naar stripmuren
-                    </a>
+                    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 1.5rem;">
+                        <a href="parcours.html" class="button terug-button" data-i18n="back_to_murals">
+                            🎨 Ontdek stripmuren
+                        </a>
+                        ${!isLoggedIn ? `
+                            <a href="login.html" class="button terug-button">
+                                🔐 ${currentLang === 'fr' ? 'Se connecter' : 'Inloggen'}
+                            </a>
+                        ` : ''}
+                    </div>
                 </div>
             `;
+            // Pas vertalingen toe na HTML injection
+            setTimeout(() => {
+                if (typeof applyLanguage === 'function') {
+                    const currentLang = localStorage.getItem('language') || 'nl';
+                    applyLanguage(currentLang);
+                }
+            }, 100);
             return;
         }
 
@@ -292,32 +287,39 @@ class FavorietenManager {
         // Sectie voor tijdelijke favorieten (ALTIJD tonen als er zijn, ongeacht login status)
         if (tijdelijke.length > 0) {
             const currentLang = localStorage.getItem('language') || 'nl';
+            const translations = window.translations || {};
+            const t = translations[currentLang] || translations['nl'] || {};
+            
             html += `
                 <div class="tijdelijke-favorieten-sectie">
                     <div class="bewaar-sectie" style="background: linear-gradient(135deg, #fff3e0, #ffe0b2); padding: 1.5rem; margin-bottom: 2rem; border-radius: 12px; border-left: 5px solid #ff9800; box-shadow: 0 4px 12px rgba(255,152,0,0.1);">
-                        <h3 style="color: #f57c00; margin-bottom: 1rem;">⏳ ${translations[currentLang].temp_favorites_title} (${tijdelijke.length})</h3>
+                        <h3 style="color: #f57c00; margin-bottom: 1rem;">${currentLang === 'fr' ? '⏳ Favoris Temporaires' : '⏳ Tijdelijke Favorieten'} (${tijdelijke.length})</h3>
                         <p style="margin-bottom: 1rem; color: #555;">
                             ${isLoggedIn ? 
-                                translations[currentLang].temp_saved_logged_in.replace('{count}', tijdelijke.length) :
-                                translations[currentLang].temp_favorites_message.replace('{count}', tijdelijke.length)
+                                (currentLang === 'fr' ? 
+                                    `Vous avez ${tijdelijke.length} fresque(s) BD sauvegardées temporairement. Cliquez ci-dessous pour les sauvegarder de façon permanente !` :
+                                    `Je hebt ${tijdelijke.length} stripmuur(en) tijdelijk opgeslagen. Klik hieronder om deze permanent op te slaan!`) :
+                                (currentLang === 'fr' ? 
+                                    `Vous avez ajouté ${tijdelijke.length} fresque(s) BD temporairement. Elles restent sauvegardées jusqu'à ce que vous les enregistriez de façon permanente ou les supprimiez. Connectez-vous pour les sauvegarder de façon permanente !` :
+                                    `Je hebt ${tijdelijke.length} stripmuur(en) tijdelijk toegevoegd. Deze blijven bewaard tot je ze permanent opslaat of verwijdert. Log in om deze permanent op te slaan!`)
                             }
                         </p>
                         <div style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; align-items: center;">
                             ${isLoggedIn ? 
                                 `<button onclick="favorietenManager.bewaarAlleTijdelijkeFavorieten()" class="button" style="background: linear-gradient(135deg, #4caf50, #45a049); border: none; padding: 0.75rem 1.5rem; border-radius: 8px; color: white; font-weight: bold; cursor: pointer; box-shadow: 0 2px 8px rgba(76,175,80,0.3);">
-                                    💾 ${translations[currentLang].save_all_favorites.replace('{count}', tijdelijke.length)}
+                                    💾 ${currentLang === 'fr' ? `Sauvegarder Tous les ${tijdelijke.length} Favoris` : `Bewaar Alle ${tijdelijke.length} Favorieten`}
                                 </button>` :
                                 `<a href="login.html" class="button" style="background: linear-gradient(135deg, #2196f3, #1976d2); border: none; padding: 0.75rem 1.5rem; border-radius: 8px; color: white; text-decoration: none; font-weight: bold; box-shadow: 0 2px 8px rgba(33,150,243,0.3); display: inline-block; text-align: center;">
-                                    🔐 ${translations[currentLang].login_to_save}
+                                    🔐 ${currentLang === 'fr' ? 'Se connecter pour sauvegarder' : 'Inloggen om te bewaren'}
                                 </a>`
                             }
                             <button onclick="favorietenManager.verwijderAlleTijdelijkeFavorieten()" class="button" style="background: linear-gradient(135deg, #f44336, #d32f2f); border: none; padding: 0.75rem 1.5rem; border-radius: 8px; color: white; font-weight: bold; cursor: pointer; box-shadow: 0 2px 8px rgba(244,67,54,0.3);">
-                                🗑️ ${translations[currentLang].remove_all_temp}
+                                🗑️ ${currentLang === 'fr' ? 'Supprimer Tous les Temporaires' : 'Verwijder Alle Tijdelijke'}
                             </button>
                         </div>
                     </div>
                     
-                    <h3 style="color: #ff9800; margin-bottom: 1rem;">⏳ ${translations[currentLang].temp_favorites_title}</h3>
+                    <h3 style="color: #ff9800; margin-bottom: 1rem;">${currentLang === 'fr' ? '⏳ Favoris Temporaires' : '⏳ Tijdelijke Favorieten'}</h3>
                     <div class="parcours-container">
             `;
             
@@ -330,9 +332,10 @@ class FavorietenManager {
 
         // Sectie voor permanente favorieten (alleen tonen als ingelogd EN er zijn permanente favorieten)
         if (isLoggedIn && permanenteFavorieten.length > 0) {
+            const currentLang = localStorage.getItem('language') || 'nl';
             html += `
                 <div class="permanente-favorieten-sectie">
-                    <h3 style="color: #4caf50; margin-bottom: 1rem;">✅ Opgeslagen Favorieten (${permanenteFavorieten.length})</h3>
+                    <h3 style="color: #4caf50; margin-bottom: 1rem;">${currentLang === 'fr' ? '✅ Favoris Sauvegardés' : '✅ Opgeslagen Favorieten'} (${permanenteFavorieten.length})</h3>
                     <div class="parcours-container">
             `;
             
@@ -345,42 +348,40 @@ class FavorietenManager {
 
         // Als er geen content is, toon een lege state
         if (html === '') {
+            const currentLang = localStorage.getItem('language') || 'nl';
             html = `
                 <div class="geen-favorieten">
-                    <h3>🤷‍♂️ Geen favorieten om te tonen</h3>
-                    <p>Er zijn momenteel geen favorieten beschikbaar om te tonen.</p>
+                    <h3>${currentLang === 'fr' ? '🤷‍♂️ Aucun favori à afficher' : '🤷‍♂️ Geen favorieten om te tonen'}</h3>
+                    <p>${currentLang === 'fr' ? 'Il n\'y a actuellement aucun favori disponible à afficher.' : 'Er zijn momenteel geen favorieten beschikbaar om te tonen.'}</p>
                     <a href="parcours.html" class="button terug-button">
-                        ← Terug naar stripmuren
+                        ${currentLang === 'fr' ? '← Retour aux fresques BD' : '← Terug naar stripmuren'}
                     </a>
                 </div>
             `;
         }
 
-        console.log('📝 Generated HTML length:', html.length); // Debug
-        console.log('📝 HTML preview:', html.substring(0, 200) + '...'); // Debug
         container.innerHTML = html;
-        console.log('✅ HTML toegevoegd aan container'); // Debug
+        
+        setTimeout(() => {
+            if (typeof applyLanguage === 'function') {
+                const currentLang = localStorage.getItem('language') || 'nl';
+                applyLanguage(currentLang);
+            }
+        }, 100);
     }
 
     // Maak een stripmuur kaart (met verwijder optie voor favorieten)
     createStripmuurCard(stripmuur, showRemove = false, isTijdelijk = false) {
-        console.log('🎨 createStripmuurCard aangeroepen voor:', stripmuur.id); // Debug
-        const currentLang = localStorage.getItem('language') || 'nl';
         let removeButton = '';
         let tijdelijkLabel = '';
-        
-        // Check of translations object beschikbaar is
-        if (typeof translations === 'undefined') {
-            console.error('❌ Translations object niet beschikbaar in createStripmuurCard'); // Debug
-            return '<div class="error">Translations not available</div>';
-        }
+        const currentLang = localStorage.getItem('language') || 'nl';
         
         // Gebruik correcte data properties
-        const titel = stripmuur.title || stripmuur.naam_fresco_nl || stripmuur.nom_de_la_fresque || 'Naam onbekend';
-        const kunstenaar = stripmuur.dessinateur || stripmuur.artist || 'Onbekend';
-        const locatie = stripmuur.adres || stripmuur.adresse || stripmuur.location || 'Locatie onbekend';
-        const jaar = stripmuur.date || stripmuur.year || 'Onbekend';
-        const beschrijving = stripmuur.description_nl || stripmuur.description_fr || stripmuur.description || translations[currentLang].noDescription;
+        const titel = stripmuur.title || stripmuur.naam_fresco_nl || stripmuur.nom_de_la_fresque || (currentLang === 'fr' ? 'Nom inconnu' : 'Naam onbekend');
+        const kunstenaar = stripmuur.dessinateur || stripmuur.artist || (currentLang === 'fr' ? 'Inconnu' : 'Onbekend');
+        const locatie = stripmuur.adres || stripmuur.adresse || stripmuur.location || (currentLang === 'fr' ? 'Lieu inconnu' : 'Locatie onbekend');
+        const jaar = stripmuur.date || stripmuur.year || (currentLang === 'fr' ? 'Inconnu' : 'Onbekend');
+        const beschrijving = stripmuur.description_nl || stripmuur.description_fr || stripmuur.description || (currentLang === 'fr' ? 'Aucune description disponible.' : 'Geen beschrijving beschikbaar.');
         const afbeelding = stripmuur.image || 'img/placeholder.jpg';
         
         // Maak Google Maps link
@@ -389,27 +390,27 @@ class FavorietenManager {
         if (showRemove) {
             if (isTijdelijk) {
                 removeButton = `<button onclick="favorietenManager.verwijderTijdelijkeFavoriet(${stripmuur.id})" class="button" style="background-color: #ff9800;">
-                    🗑️ ${translations[currentLang].remove_temp}
+                    🗑️ ${currentLang === 'fr' ? 'Supprimer temporaire' : 'Verwijder tijdelijk'}
                 </button>`;
-                tijdelijkLabel = `<span class="tijdelijk-label" style="background: #ff9800; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.8em; margin-left: 8px;">${translations[currentLang].temporary_button}</span>`;
+                tijdelijkLabel = `<span class="tijdelijk-label" style="background: #ff9800; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.8em; margin-left: 8px;">${currentLang === 'fr' ? 'Temporaire' : 'Tijdelijk'}</span>`;
             } else {
                 removeButton = `<button onclick="favorietenManager.verwijderFavoriet(${stripmuur.id})" class="button" style="background-color: #e53935;">
-                    ❌ ${translations[currentLang].remove_permanent}
+                    ❌ ${currentLang === 'fr' ? 'Supprimer' : 'Verwijderen'}
                 </button>`;
-                tijdelijkLabel = `<span class="permanent-label" style="background: #4caf50; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.8em; margin-left: 8px;">${translations[currentLang].saved_button}</span>`;
+                tijdelijkLabel = `<span class="permanent-label" style="background: #4caf50; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.8em; margin-left: 8px;">${currentLang === 'fr' ? 'Sauvegardé' : 'Opgeslagen'}</span>`;
             }
         }
-        
+
         return `
             <div class="muur-kaart">
                 <img src="${afbeelding}" alt="${titel}" />
                 <h3>${titel} ${tijdelijkLabel}</h3>
-                <p><strong>${translations[currentLang].artist}:</strong> ${kunstenaar}</p>
-                <p><strong>${translations[currentLang].locationLabel}:</strong> ${locatie}</p>
-                <p><strong>${translations[currentLang].year}:</strong> ${jaar}</p>
-                <p><strong>${translations[currentLang].description}:</strong> ${beschrijving}</p>
+                <p><strong>${currentLang === 'fr' ? 'Artiste' : 'Kunstenaar'}:</strong> ${kunstenaar}</p>
+                <p><strong>${currentLang === 'fr' ? 'Adresse' : 'Adres'}:</strong> ${locatie}</p>
+                <p><strong>${currentLang === 'fr' ? 'Année' : 'Jaar'}:</strong> ${jaar}</p>
+                <p><strong>${currentLang === 'fr' ? 'Description' : 'Beschrijving'}:</strong> ${beschrijving}</p>
                 <div class="kaart-acties">
-                    <a href="${mapLink}" target="_blank" class="button">🗺️ ${translations[currentLang].openMap}</a>
+                    <a href="${mapLink}" target="_blank" class="button">🗺️ ${currentLang === 'fr' ? 'Ouvrir dans Google Maps' : 'Open in Google Maps'}</a>
                     ${removeButton}
                 </div>
             </div>
@@ -429,18 +430,15 @@ class FavorietenManager {
             const isTijdelijk = tijdelijke.some(fav => fav.id === id);
             
             if (isPermanent) {
-                const currentLang = localStorage.getItem('language') || 'nl';
-                button.textContent = `⭐ ${translations[currentLang].saved_button}`;
+                button.textContent = '⭐ Opgeslagen';
                 button.style.backgroundColor = '#4caf50';
                 button.disabled = true;
             } else if (isTijdelijk) {
-                const currentLang = localStorage.getItem('language') || 'nl';
-                button.textContent = `🟡 ${translations[currentLang].temporary_button}`;
+                button.textContent = '🟡 Tijdelijk';
                 button.style.backgroundColor = '#ff9800';
                 button.disabled = true;
             } else {
-                const currentLang = localStorage.getItem('language') || 'nl';
-                button.textContent = `🌟 ${translations[currentLang].add}`;
+                button.textContent = '🌟 Voeg toe';
                 button.style.backgroundColor = '#e53935';
                 button.disabled = false;
             }
@@ -506,8 +504,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const confirmBewaar = confirm(`Je hebt ${tijdelijke.length} tijdelijke favoriet(en). Wil je deze nu permanent opslaan?`);
             if (confirmBewaar) {
                 favorietenManager.bewijdTijdelijkeFavorieten();
-                const currentLang = localStorage.getItem('language') || 'nl';
-                alert(translations[currentLang].temp_favorites_saved_permanently);
+                alert('✅ Tijdelijke favorieten zijn nu permanent opgeslagen!');
             }
         }
     }
