@@ -65,8 +65,9 @@ const translations = {
     // Favorieten pagina vertalingen
     nav_favorites: "Mijn Favorieten",
     favorites_title: "Favorieten",
+    no_favorites_title: "🤷‍♂️ Geen favorieten",
     no_favorites: "Je hebt nog geen favorieten opgeslagen.",
-    back_to_murals: "← Terug naar stripmuren",
+    back_to_murals: "🎨 Ontdek stripmuren",
     back_to_dashboard: "← Terug naar Dashboard",
     // Login pagina vertalingen
     login_title: "🔐 Login",
@@ -131,6 +132,15 @@ const translations = {
     confirm_remove_all_temp: "Weet je zeker dat je alle {count} tijdelijke favorieten wilt verwijderen?",
     confirm_save_temp_login: "Je hebt {count} tijdelijke favoriet(en). Wil je deze nu permanent opslaan?",
     remove_temp: "Verwijder tijdelijk",
+    // Map popup vertalingen
+    popup_add_favorite: "⭐ Favoriet",
+    popup_show_details: "ℹ️ Details",
+    popup_your_location: "📍 Jouw locatie",
+    popup_found_at: "Gevonden op:",
+    popup_unknown_artist: "Onbekende kunstenaar",
+    popup_unknown_year: "Onbekend jaar",
+    popup_address_unavailable: "Adres niet beschikbaar",
+    popup_no_description: "Geen beschrijving beschikbaar",
   },
   fr: {
     title: "🎨 BrusselsExplorer",
@@ -193,8 +203,9 @@ const translations = {
     // Favorieten pagina vertalingen
     nav_favorites: "Mes Favoris",
     favorites_title: "Favoris",
+    no_favorites_title: "🤷‍♂️ Aucun favori",
     no_favorites: "Vous n'avez pas encore sauvegardé de favoris.",
-    back_to_murals: "← Retour aux fresques BD",
+    back_to_murals: "🎨 Découvrir les fresques BD",
     back_to_dashboard: "← Retour au Tableau de Bord",
     // Contact pagina vertalingen
     nav_contact: "Contact",
@@ -259,6 +270,15 @@ const translations = {
     confirm_remove_all_temp: "Êtes-vous sûr de vouloir supprimer tous les {count} favoris temporaires ?",
     confirm_save_temp_login: "Vous avez {count} favori(s) temporaire(s). Voulez-vous les sauvegarder de façon permanente maintenant ?",
     remove_temp: "Supprimer temporaire",
+    // Map popup vertalingen
+    popup_add_favorite: "⭐ Favori",
+    popup_show_details: "ℹ️ Détails",
+    popup_your_location: "📍 Votre localisation",
+    popup_found_at: "Trouvé le :",
+    popup_unknown_artist: "Artiste inconnu",
+    popup_unknown_year: "Année inconnue",
+    popup_address_unavailable: "Adresse non disponible",
+    popup_no_description: "Aucune description disponible",
   },
 };
 
