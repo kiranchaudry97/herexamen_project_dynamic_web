@@ -68,102 +68,254 @@ herexamen_project_dynamic_web/
 
 ##  Implementatie van Technische Vereisten
 
-### 1. **JavaScript Fundamentals**
-- **Locatie**: Alle `.js` bestanden
-- **Implementatie**: 
-  - `parcours.js` (lijnen 1-900+): ES6+ syntax, arrow functions, async/await
-  - `favorieten.js` (lijnen 1-500+): Classes, localStorage, modern JS patterns
-  - `taal.js` (lijnen 1-400+): Object destructuring, template literals
+### **DOM Manipulatie**
 
-### 2. **DOM Manipulatie**
-- **Locatie**: `parcours.js` (lijnen 200-350)
+#### Elementen selecteren
+- **Locatie**: `parcours.js` (lijnen 1-30, 1170-1200)
 - **Implementatie**: 
   ```javascript
-  // Dynamic HTML creation and injection
+  const zoekInput = document.getElementById("zoekInput");
+  const sortSelect = document.getElementById("sorteerSelect");
+  const container = document.getElementById("parcours-lijst");
+  const buttons = document.querySelectorAll('.favoriet-button');
+  ```
+
+#### Elementen manipuleren
+- **Locatie**: `parcours.js` (lijnen 259-390), `favorieten.js` (lijnen 244-370)
+- **Implementatie**:
+  ```javascript
   function toonStripmuren(data, taal = "nl") {
     const container = document.getElementById("parcours-lijst");
-    container.innerHTML = "";
-    // ... dynamic content generation
+    container.innerHTML = ""; // Clear existing content
+    // Dynamic HTML creation and injection
+    data.forEach((muur, index) => {
+      const kaart = document.createElement("div");
+      kaart.classList.add("muur-kaart");
+      kaart.innerHTML = `<h3>${titel}</h3>...`;
+      container.appendChild(kaart);
+    });
   }
   ```
 
-### 3. **Event Handling**
-- **Locatie**: `parcours.js` (lijnen 800-900)
+#### Events aan elementen koppelen
+- **Locatie**: `parcours.js` (lijnen 957-1040, 1170-1200)
 - **Implementatie**:
   ```javascript
   function setupEventListeners() {
     zoekInput.addEventListener("input", filterEnZoek);
     sortSelect.addEventListener("change", filterEnZoek);
-    // ... multiple event listeners
+    document.addEventListener('click', function(e) {
+      if (e.target.classList.contains('favoriet-button')) {
+        // Handle favoriet button clicks
+      }
+    });
   }
   ```
 
-### 4. **Asynchrone Programmering**
-- **Locatie**: `parcours.js` (lijnen 40-80)
+### **Modern JavaScript**
+
+#### Gebruik van constanten
+- **Locatie**: Alle `.js` bestanden
+- **Implementatie**:
+  ```javascript
+  const taalSelect = document.getElementById("language");
+  const API_URL = "https://opendata.brussels.be/api/explore/v2.1/catalog/datasets/bruxelles_parcours_bd/records";
+  const kunstenaars = [...new Set(data.map(muur => muur.fields.dessinateur))];
+  ```
+
+#### Template literals
+- **Locatie**: `parcours.js` (lijnen 259-390), `favorieten.js` (lijnen 375-420), `taal.js` (lijnen 123-270)
+- **Implementatie**:
+  ```javascript
+  const favorietenKey = `favorieten_${userEmail}`;
+  kaart.innerHTML = `
+    <h3>${titel}</h3>
+    <p><strong>${taal === 'fr' ? 'Artiste' : 'Kunstenaar'}:</strong> ${kunstenaar}</p>
+    <button onclick="favorietenManager.voegFavorietToe(${stripmuur.id})">
+      ⭐ ${taal === 'fr' ? 'Ajouter aux favoris' : 'Voeg toe favorieten'}
+    </button>
+  `;
+  ```
+
+#### Iteratie over arrays
+- **Locatie**: `parcours.js` (lijnen 259-390, 414-450), `favorieten.js` (lijnen 185-210)
+- **Implementatie**:
+  ```javascript
+  data.forEach((muur, index) => {
+    // Process each stripmuur
+  });
+  
+  tijdelijke.forEach(favoriet => {
+    const exists = this.favorieten.find(fav => fav.id === favoriet.id);
+    if (!exists) {
+      this.favorieten.push(favoriet);
+    }
+  });
+  ```
+
+#### Array methodes
+- **Locatie**: `parcours.js` (lijnen 414-450, 619-800), `admin_dashboard.js` (lijnen 524-550)
+- **Implementatie**:
+  ```javascript
+  // map, filter, find, sort
+  const jaren = [...new Set(data.map(muur => muur.fields.date).filter(jaar => jaar))].sort();
+  const gefilterde = alleStripmuren.filter(muur => {
+    return naam.includes(zoekterm) && voldoetAanJaar && voldoetAanKunstenaar;
+  });
+  const existing = this.favorieten.find(fav => fav.id === stripmuur.id);
+  ```
+
+#### Arrow functions
+- **Locatie**: `parcours.js` (lijnen 1119-1160), `taal.js` (lijnen 285-320)
+- **Implementatie**:
+  ```javascript
+  const updateViewLabel = (isKaart) => {
+    if (viewLabel) viewLabel.textContent = isKaart ? "🗺️ Kaart" : "📋 Lijst";
+  };
+  
+  elements.forEach((el) => {
+    const key = el.getAttribute("data-i18n");
+    if (translations[lang] && translations[lang][key]) {
+      el.innerText = translations[lang][key];
+    }
+  });
+  ```
+
+#### Conditional (ternary) operator
+- **Locatie**: `parcours.js` (lijnen 259-390), `favorieten.js` (lijnen 310-420)
+- **Implementatie**:
+  ```javascript
+  const naam = taal === 'nl' ? naam_nl : naam_fr;
+  const label = currentLang === 'fr' ? 'Artiste' : 'Kunstenaar';
+  const buttonText = isPermanent ? '⭐ Opgeslagen' : (isTijdelijk ? '🟡 Tijdelijk' : '⭐ Favoriet');
+  ```
+
+#### Callback functions
+- **Locatie**: `parcours.js` (lijnen 957-1040), `favorieten.js` (lijnen 29-55)
+- **Implementatie**:
+  ```javascript
+  document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('favoriet-button')) {
+      // Callback function voor event handling
+    }
+  });
+  
+  setInterval(() => {
+    const currentLoginState = localStorage.getItem('isLoggedIn') === 'true';
+    // Callback function voor periodic checks
+  }, 1000);
+  ```
+
+#### Promises
+- **Locatie**: `parcours.js` (lijnen 33-90)
 - **Implementatie**:
   ```javascript
   async function haalStripmurenOp() {
     try {
-      const response = await fetch("https://opendata.brussels.be/api/...");
+      const response = await fetch(API_URL);
       const data = await response.json();
       return data.results;
     } catch (error) {
       console.error('API fetch error:', error);
+      return [];
     }
   }
   ```
 
-### 5. **LocalStorage Gebruik**
-- **Locatie**: `favorieten.js` (lijnen 80-120)
+#### Async & Await
+- **Locatie**: `parcours.js` (lijnen 33-90, 1201-1250)
 - **Implementatie**:
   ```javascript
+  document.addEventListener("DOMContentLoaded", async () => {
+    try {
+      cachedData = await haalStripmurenOp();
+      alleStripmuren = [...cachedData];
+      // Process loaded data
+    } catch (error) {
+      console.error('Initialization error:', error);
+    }
+  });
+  ```
+
+#### Observer API (IntersectionObserver)
+- **Locatie**: `parcours.js` (lijnen 1119-1170)
+- **Implementatie**:
+  ```javascript
+  function setupLazyLoading() {
+    imageObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const img = entry.target;
+          const src = img.dataset.src;
+          img.src = src;
+          imageObserver.unobserve(img);
+        }
+      });
+    }, {
+      root: null,
+      rootMargin: '50px',
+      threshold: 0.1
+    });
+  }
+  ```
+
+### **Data & API**
+
+#### Fetch om data op te halen
+- **Locatie**: `parcours.js` (lijnen 33-90)
+- **Implementatie**:
+  ```javascript
+  async function haalStripmurenOp() {
+    const response = await fetch("https://opendata.brussels.be/api/explore/v2.1/catalog/datasets/bruxelles_parcours_bd/records?limit=28");
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data.results;
+  }
+  ```
+
+#### JSON manipuleren en weergeven
+- **Locatie**: `parcours.js` (lijnen 49-90, 259-390)
+- **Implementatie**:
+  ```javascript
+  // Parse JSON response en extract Brussels Open Data fields
+  const fields = muur.fields || muur;
+  const naam_nl = fields.naam_fresco_nl || "Naam onbekend";
+  const coords = fields.coordonnees_geographiques;
+  
+  // Display JSON data in HTML
+  kaart.innerHTML = `
+    <h3>${titel}</h3>
+    <p><strong>Kunstenaar:</strong> ${fields.dessinateur}</p>
+    <p><strong>Jaar:</strong> ${fields.date}</p>
+  `;
+  ```
+
+### **Opslag & Validatie**
+
+#### Formulier validatie
+- **Locatie**: `contact.js`, `login.js`
+- **Implementatie**: Form validation voor contact formulier en login systeem
+
+#### Gebruik van LocalStorage
+- **Locatie**: `favorieten.js` (lijnen 61-105), `taal.js` (lijnen 5-15)
+- **Implementatie**:
+  ```javascript
+  // User-specific favorieten opslag
   saveFavorieten() {
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    const userEmail = localStorage.getItem('userEmail');
     const favorietenKey = `favorieten_${userEmail}`;
     localStorage.setItem(favorietenKey, JSON.stringify(this.favorieten));
   }
-  ```
-
-### 6. **API Integratie**
-- **Locatie**: `parcours.js` (lijnen 40-80)
-- **API**: Brussels Open Data API
-- **Implementatie**: RESTful API calls met error handling
-
-### 7. **Responsive Design**
-- **Locatie**: `css/style.css` (lijnen 500-800)
-- **Implementatie**: 
-  - CSS Grid en Flexbox layouts
-  - Media queries voor verschillende schermformaten
-  - Mobile-first design approach
-
-### 8. **CSS Preprocessor Features**
-- **Locatie**: `css/style.css` (lijnen 1-50)
-- **Implementatie**:
-  ```css
-  :root {
-    --primary-color: #2c3e50;
-    --secondary-color: #3498db;
-    /* CSS Custom Properties voor theming */
-  }
-  ```
-
-### 9. **JavaScript Modules/Classes**
-- **Locatie**: `favorieten.js` (lijnen 1-50)
-- **Implementatie**:
-  ```javascript
-  class FavorietenManager {
-    constructor() {
-      this.favorieten = this.getFavorieten();
-      this.initEventListeners();
-    }
-    // ... class methods
-  }
-  ```
-
-### 10. **External Libraries**
-- **Locatie**: `parcours.html` (lijn 107)
-- **Implementatie**: Leaflet.js CDN integratie
-  ```html
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  
+  // Taal voorkeur opslag
+  const savedLanguage = localStorage.getItem("language") || "nl";
+  localStorage.setItem("language", selectedLang);
+  
+  // Tijdelijke favorieten opslag
+  localStorage.setItem('tijdelijkeFavorieten', JSON.stringify(tijdelijke));
   ```
 
 ##  Installatiehandleiding
