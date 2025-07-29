@@ -351,29 +351,94 @@ herexamen_project_dynamic_web/
 ##  Screenshots
 
 ### Desktop Interface
-![Desktop Homepage]()
+![Desktop Homepage](https://github.com/kiranchaudry97/herexamen_project_dynamic_web/blob/5e23aeb89bbe6ce9d96d2ae79ce9254c7ed04a15/screenshots/Homepage.jpg)
 *Homepage met hoofdnavigatie en intro sectie*
 
-![Desktop Parcours]()
+![Desktop Parcours](https://github.com/kiranchaudry97/herexamen_project_dynamic_web/blob/5e23aeb89bbe6ce9d96d2ae79ce9254c7ed04a15/screenshots/parcours_pagine_filter.jpg)
 *Parcours pagina met filter opties en stripmuren lijst*
 
-![Desktop Map View]()
+![Desktop Map View](https://github.com/kiranchaudry97/herexamen_project_dynamic_web/blob/5e23aeb89bbe6ce9d96d2ae79ce9254c7ed04a15/screenshots/interactieve_kaart.jpg)
 *Interactieve kaart weergave met Brussels stripmuren markers*
 
+![Desktop Map View op afstand](https://github.com/kiranchaudry97/herexamen_project_dynamic_web/blob/5e23aeb89bbe6ce9d96d2ae79ce9254c7ed04a15/screenshots/filteren_op_afstand.jpg)
+*geolocatie of basis van jou afstand en de stripmuren*
+
+
+
 ### Mobile Interface
-![Mobile Menu]()
+![Mobile Menu](https://github.com/kiranchaudry97/herexamen_project_dynamic_web/blob/5e23aeb89bbe6ce9d96d2ae79ce9254c7ed04a15/screenshots/Responsive_hamburger.jpg)
 *Responsive hamburger menu voor mobiele apparaten*
 
-![Mobile Filters]()
+![Mobile Filters](https://github.com/kiranchaudry97/herexamen_project_dynamic_web/blob/5e23aeb89bbe6ce9d96d2ae79ce9254c7ed04a15/screenshots/Mobiele_filter.jpg)
 *Mobiele filter interface*
 
 ### Favorieten Systeem
-![Favorites System]()
-*Tijdelijke en permanente favorieten management*
+![Favorites System](https://github.com/kiranchaudry97/herexamen_project_dynamic_web/blob/5e23aeb89bbe6ce9d96d2ae79ce9254c7ed04a15/screenshots/favorieten_opslaan.jpg)
+
+![Favorites System](https://github.com/kiranchaudry97/herexamen_project_dynamic_web/blob/5e23aeb89bbe6ce9d96d2ae79ce9254c7ed04a15/screenshots/Tijdelijke_en_permanente_favorieten.jpg)
+
+![Favorites System](https://github.com/kiranchaudry97/herexamen_project_dynamic_web/blob/5e23aeb89bbe6ce9d96d2ae79ce9254c7ed04a15/screenshots/favorieten_pagina.jpg)
+*Tijdelijke en permanente favorieten management en favorieten pagina overzicht*
 
 ### Dark Mode
-![Dark Theme]()
+![Dark Theme](https://github.com/kiranchaudry97/herexamen_project_dynamic_web/blob/5e23aeb89bbe6ce9d96d2ae79ce9254c7ed04a15/screenshots/donkere_modus.jpg)
 *Donkere modus interface*
+
+### Taal keuze
+![Taal](https://github.com/kiranchaudry97/herexamen_project_dynamic_web/blob/5e23aeb89bbe6ce9d96d2ae79ce9254c7ed04a15/screenshots/vertaling.jpg)
+*Taal veranderen *
+
+### Over ons pagina 
+
+![about](https://github.com/kiranchaudry97/herexamen_project_dynamic_web/blob/5e23aeb89bbe6ce9d96d2ae79ce9254c7ed04a15/screenshots/about_pagina.jpg)
+*Over ons pagina *
+
+### Contact pagina 
+
+![contact](https://github.com/kiranchaudry97/herexamen_project_dynamic_web/blob/5e23aeb89bbe6ce9d96d2ae79ce9254c7ed04a15/screenshots/contact_pagina.jpg)
+*Contact pagina *
+
+![contact bericht](https://github.com/kiranchaudry97/herexamen_project_dynamic_web/blob/5e23aeb89bbe6ce9d96d2ae79ce9254c7ed04a15/screenshots/contact_bericht.jpg)
+*Contact pagina bericht kunnen versturen *
+
+
+### Login pagina 
+
+![Login](https://github.com/kiranchaudry97/herexamen_project_dynamic_web/blob/5e23aeb89bbe6ce9d96d2ae79ce9254c7ed04a15/screenshots/log_page.jpg)
+*login pagina voor gebruikers en admin*
+
+### Gebruiker Dashboard 
+
+![gebruiker dashboard](https://github.com/kiranchaudry97/herexamen_project_dynamic_web/blob/5e23aeb89bbe6ce9d96d2ae79ce9254c7ed04a15/screenshots/gebruiker_dashboard.jpg)
+*Gebruikers dashbaord *
+
+![gebruiker dashboard favorieten](https://github.com/kiranchaudry97/herexamen_project_dynamic_web/blob/5e23aeb89bbe6ce9d96d2ae79ce9254c7ed04a15/screenshots/favorieten_opslaan.jpg)
+*Gebruikers dashbaord & mijn favortien*
+
+
+### Admin Dashboard & bericht versturen
+
+![Admin  dashboard](https://github.com/kiranchaudry97/herexamen_project_dynamic_web/blob/5e23aeb89bbe6ce9d96d2ae79ce9254c7ed04a15/screenshots/admin_dashboard.jpg)
+*Admin dashbaord en overzichtelijke berichten van de gebruikers & toegevoegde favorieten*
+
+![Adin  dashboard & bericht](https://github.com/kiranchaudry97/herexamen_project_dynamic_web/blob/5e23aeb89bbe6ce9d96d2ae79ce9254c7ed04a15/screenshots/mail_bericht_naar_gebruiker.jpg)
+*Admin dashbaord en overzichtelijke berichten van de gebruikers, kunnen beantwoorden , updaten*
+
+### Toggle 
+![toggle](https://github.com/kiranchaudry97/herexamen_project_dynamic_web/blob/5e23aeb89bbe6ce9d96d2ae79ce9254c7ed04a15/screenshots/toggle.jpg)
+*Toggle *
+
+### Filteren 
+![filteren](https://github.com/kiranchaudry97/herexamen_project_dynamic_web/blob/5e23aeb89bbe6ce9d96d2ae79ce9254c7ed04a15/screenshots/parcours_pagine_filter.jpg)
+*Filteren *
+
+
+### Geolocatie & op afstand  
+![afstand filteren](https://github.com/kiranchaudry97/herexamen_project_dynamic_web/blob/5e23aeb89bbe6ce9d96d2ae79ce9254c7ed04a15/screenshots/geolocatie_afstand.jpg)
+
+![afstand filteren](https://github.com/kiranchaudry97/herexamen_project_dynamic_web/blob/5e23aeb89bbe6ce9d96d2ae79ce9254c7ed04a15/screenshots/filteren_op_afstand.jpg)
+* afstand kunnen filteren *
+
 
 ## Live Demo
 
