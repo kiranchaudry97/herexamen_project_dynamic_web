@@ -27,6 +27,8 @@ const translations = {
     year: "Jaar",
     description: "Beschrijving",
     noDescription: "Geen beschrijving beschikbaar.",
+    aboutArtwork: "Informatie over dit kunstwerk",
+    noscript_message: "JavaScript is vereist om de stripmuren en kaart te bekijken.",
     // Nieuwe filter vertalingen
     searchPlaceholder: "Zoek op titel, kunstenaar of jaar...",
     sortAZ: "Sorteer A → Z",
@@ -65,9 +67,8 @@ const translations = {
     // Favorieten pagina vertalingen
     nav_favorites: "Mijn Favorieten",
     favorites_title: "Favorieten",
-    no_favorites_title: "🤷‍♂️ Geen favorieten",
     no_favorites: "Je hebt nog geen favorieten opgeslagen.",
-    back_to_murals: "🎨 Ontdek stripmuren",
+    back_to_murals: "← Terug naar stripmuren",
     back_to_dashboard: "← Terug naar Dashboard",
     // Login pagina vertalingen
     login_title: "🔐 Login",
@@ -141,6 +142,26 @@ const translations = {
     popup_unknown_year: "Onbekend jaar",
     popup_address_unavailable: "Adres niet beschikbaar",
     popup_no_description: "Geen beschrijving beschikbaar",
+    popup_artist: "Kunstenaar",
+    popup_publisher: "Uitgeverij",
+    popup_address: "Adres",
+    popup_year: "Jaar",
+    popup_area: "Oppervlakte",
+    popup_realization: "Realisatie",
+    popup_distance: "Afstand",
+    popup_more_info: "Meer info",
+    // Favorieten knoppen
+    remove_favorite: "Verwijderen",
+    remove_temp_favorite: "Verwijder tijdelijk",
+    fav_saved: "Opgeslagen",
+    fav_temporary: "Tijdelijk",
+    
+    // Favorieten keuze dialoog
+    favorites_choice_title: "Favorieten bekijken",
+    favorites_choice_message: "Je bent niet ingelogd. Wat wil je doen?",
+    favorites_choice_continue: "Doorgaan als gast",
+    favorites_choice_login: "Inloggen",
+    favorites_choice_cancel: "Annuleren",
   },
   fr: {
     title: "🎨 BrusselsExplorer",
@@ -165,6 +186,8 @@ const translations = {
     year: "Année",
     description: "Description",
     noDescription: "Pas de description disponible.",
+    aboutArtwork: "Description de cette œuvre d'art",
+    noscript_message: "JavaScript est nécessaire pour voir les fresques BD et la carte.",
     // Nieuwe filter vertalingen
     searchPlaceholder: "Rechercher par titre, artiste ou année...",
     sortAZ: "Trier A → Z",
@@ -203,9 +226,8 @@ const translations = {
     // Favorieten pagina vertalingen
     nav_favorites: "Mes Favoris",
     favorites_title: "Favoris",
-    no_favorites_title: "🤷‍♂️ Aucun favori",
     no_favorites: "Vous n'avez pas encore sauvegardé de favoris.",
-    back_to_murals: "🎨 Découvrir les fresques BD",
+    back_to_murals: "← Retour aux fresques BD",
     back_to_dashboard: "← Retour au Tableau de Bord",
     // Contact pagina vertalingen
     nav_contact: "Contact",
@@ -270,6 +292,14 @@ const translations = {
     confirm_remove_all_temp: "Êtes-vous sûr de vouloir supprimer tous les {count} favoris temporaires ?",
     confirm_save_temp_login: "Vous avez {count} favori(s) temporaire(s). Voulez-vous les sauvegarder de façon permanente maintenant ?",
     remove_temp: "Supprimer temporaire",
+    
+    // Favorieten keuze dialoog
+    favorites_choice_title: "Consulter les favoris",
+    favorites_choice_message: "Vous n'êtes pas connecté. Que voulez-vous faire ?",
+    favorites_choice_continue: "Continuer en tant qu'invité",
+    favorites_choice_login: "Se connecter",
+    favorites_choice_cancel: "Annuler",
+    
     // Map popup vertalingen
     popup_add_favorite: "⭐ Favori",
     popup_show_details: "ℹ️ Détails",
@@ -279,6 +309,19 @@ const translations = {
     popup_unknown_year: "Année inconnue",
     popup_address_unavailable: "Adresse non disponible",
     popup_no_description: "Aucune description disponible",
+    popup_artist: "Artiste",
+    popup_publisher: "Maison d'édition",
+    popup_address: "Adresse",
+    popup_year: "Année",
+    popup_area: "Surface",
+    popup_realization: "Réalisation",
+    popup_distance: "Distance",
+    popup_more_info: "Plus d'infos",
+    // Favorieten knoppen
+    remove_favorite: "Supprimer",
+    remove_temp_favorite: "Supprimer temporaire",
+    fav_saved: "Sauvegardé",
+    fav_temporary: "Temporaire",
   },
 };
 
