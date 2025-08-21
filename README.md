@@ -262,33 +262,42 @@ herexamen_project_dynamic_web/
 ### **Data & API**
 
 #### Fetch om data op te halen
-- **Locatie**: `parcours.js` (lijnen 33-90)
+- **Locatie**: `parcours.js` (lijnen 31-91)
 - **Implementatie**:
   ```javascript
   async function haalStripmurenOp() {
-    const response = await fetch("https://opendata.brussels.be/api/explore/v2.1/catalog/datasets/bruxelles_parcours_bd/records?limit=28");
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+    try {
+      const response = await fetch("https://bruxellesdata.opendatasoft.com/api/explore/v2.1/catalog/datasets/bruxelles_parcours_bd/records?limit=28");
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      return data.results;
+    } catch (error) {
+      console.error('❌ === API FETCH ERROR ===');
+      return [];
     }
-    const data = await response.json();
-    return data.results;
   }
   ```
 
 #### JSON manipuleren en weergeven
-- **Locatie**: `parcours.js` (lijnen 49-90, 259-390)
+- **Locatie**: `parcours.js` (lijnen 280-345)
 - **Implementatie**:
   ```javascript
-  // Parse JSON response en extract Brussels Open Data fields
+  // Support voor Brussels Open Data format
   const fields = muur.fields || muur;
-  const naam_nl = fields.naam_fresco_nl || "Naam onbekend";
-  const coords = fields.coordonnees_geographiques;
+  
+  const titel_nl = fields.naam_fresco_nl || muur.naam_fresco_nl || '';
+  const titel_fr = fields.nom_de_la_fresque || muur.nom_de_la_fresque || '';
+  const tekenaar = fields.dessinateur || muur.dessinateur || "Onbekend";
+  const jaar = fields.date || muur.date || "Onbekend";
   
   // Display JSON data in HTML
-  kaart.innerHTML = `
+  muurElement.innerHTML = `
+    <img src="${afbeelding}" alt="${titel_nl || titel_fr}">
     <h3>${titel}</h3>
-    <p><strong>Kunstenaar:</strong> ${fields.dessinateur}</p>
-    <p><strong>Jaar:</strong> ${fields.date}</p>
+    <p><strong>Kunstenaar:</strong> ${tekenaar}</p>
+    <p><strong>Jaar:</strong> ${jaar}</p>
   `;
   ```
 
