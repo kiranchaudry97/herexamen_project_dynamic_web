@@ -32,9 +32,9 @@ const resetButton = document.getElementById("resetFilters");
 async function haalStripmurenOp() {
   try {
     console.log('📡 === BRUSSELS STRIPMUREN API DEBUG ===');
-    console.log('🌐 Fetching from: https://opendata.brussels.be/api/explore/v2.1/catalog/datasets/bruxelles_parcours_bd/records?limit=28');
+    console.log('🌐 Fetching from: https://bruxellesdata.opendatasoft.com/api/explore/v2.1/catalog/datasets/bruxelles_parcours_bd/records?limit=28');
     
-    const response = await fetch("https://opendata.brussels.be/api/explore/v2.1/catalog/datasets/bruxelles_parcours_bd/records?limit=28");
+    const response = await fetch("https://bruxellesdata.opendatasoft.com/api/explore/v2.1/catalog/datasets/bruxelles_parcours_bd/records?limit=28");
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -192,7 +192,15 @@ function getAfstandVoorStripmuur(muur) {
   // Zoek coördinaten in verschillende formaten
   let lat = null, lng = null;
   
-  if (fields.coordonnees_geographiques) {
+  // First try geo_point (new API format)
+  if (fields.geo_point) {
+    if (fields.geo_point.lat && fields.geo_point.lon) {
+      lat = parseFloat(fields.geo_point.lat);
+      lng = parseFloat(fields.geo_point.lon);
+    }
+  }
+  // Fallback to coordonnees_geographiques (old format)
+  else if (fields.coordonnees_geographiques) {
     const coords = fields.coordonnees_geographiques;
     if (coords.lat && coords.lon) {
       lat = parseFloat(coords.lat);
@@ -204,7 +212,10 @@ function getAfstandVoorStripmuur(muur) {
     return null;
   }
   
-  return berekenAfstand(gebruikerLocatie.lat, gebruikerLocatie.lng, lat, lng);
+  const userLat = gebruikerLocatie.latitude !== undefined ? gebruikerLocatie.latitude : gebruikerLocatie.lat;
+  const userLng = gebruikerLocatie.longitude !== undefined ? gebruikerLocatie.longitude : gebruikerLocatie.lng;
+  
+  return berekenAfstand(userLat, userLng, lat, lng);
 }
 
 function updateAfstandFilterZichtbaarheid() {
@@ -275,37 +286,63 @@ function toonStripmuren(data, taal = "nl") {
     return;
   }
 
-    data.forEach((muur, index) => {
+  data.forEach((muur, index) => {
     // Support voor Brussels Open Data format
     const fields = muur.fields || muur;
     
     const titel_nl = fields.naam_fresco_nl || muur.naam_fresco_nl || '';
     const titel_fr = fields.nom_de_la_fresque || muur.nom_de_la_fresque || '';
-    const beschrijving_nl = fields.description_nl || muur.description_nl || muur.info_nl || '';
-    const beschrijving_fr = fields.description_fr || muur.description_fr || muur.info_fr || '';
+    const beschrijving_nl = fields.description_nl || fields.info_nl || fields.omschrijving || fields.beschrijving || muur.description_nl || muur.info_nl || '';
+    const beschrijving_fr = fields.description_fr || fields.info_fr || fields.description || muur.description_fr || muur.info_fr || '';
     const tekenaar = fields.dessinateur || muur.dessinateur || "Onbekend";
-    const adres = fields.adres || fields.adresse || muur.adres || muur.adresse || "Adres niet beschikbaar";
+    
+    // Get the correct address based on language
+    const adresNL = fields.adres_nl || fields.adres || muur.adres || "Adres niet beschikbaar";
+    const adresFR = fields.adresse_fr || fields.adresse || muur.adresse || "Adresse non disponible";
+    const adres = taal === 'nl' ? adresNL : adresFR;
+    
     const jaar = fields.date || muur.date || "Onbekend";
-    const link = fields.link_site_striproute || fields.lien_site_parcours_bd || muur.link_site_striproute || muur.lien_site_parcours_bd || "#";
+    
+    // Get the proper site link
+    const linkNL = fields.link_site_striproute || "#";
+    const linkFR = fields.lien_site_parcours_bd || "#";
+    const link = taal === 'nl' ? linkNL : linkFR;
+    
+    // Get extra details
+    const uitgever = fields.maison_d_edition || '';
+    const realisator = fields.realisateur || '';
+    const oppervlakte = fields.surface_m2 ? `${fields.surface_m2} m²` : '';
     
     // Probeer verschillende afbeelding velden uit de Brussels Open Data API
-    const afbeelding = fields.photo || fields.image || fields.foto || fields.picture || 
-                       fields.url_photo || fields.image_url || fields.photo_url || 
-                       "img/placeholder.jpg";
+    // Use the extractImageUrl utility function
+    const afbeelding = window.extractImageUrl ? window.extractImageUrl(fields) : "img/placeholder.jpg";
 
     // Bepaal coördinaten voor Google Maps button
     let lat = null, lng = null;
-    if (fields.coordonnees_geographiques) {
+    
+    // First try geo_point (new API format)
+    if (fields.geo_point) {
+      if (fields.geo_point.lat && fields.geo_point.lon) {
+        lat = parseFloat(fields.geo_point.lat);
+        lng = parseFloat(fields.geo_point.lon);
+      }
+    }
+    // Fallback to coordonnees_geographiques (old format)
+    else if (fields.coordonnees_geographiques) {
       const coords = fields.coordonnees_geographiques;
       if (coords.lat && coords.lon) {
-        lat = coords.lat;
-        lng = coords.lon;
+        lat = parseFloat(coords.lat);
+        lng = parseFloat(coords.lon);
       }
     }
 
+    // Use Google Maps link from API if available, otherwise generate it
+    const googleMapsLink = fields.google_maps || (lat && lng ? `https://www.google.com/maps?q=${lat},${lng}` : null);
+    const googleStreetViewLink = fields.google_street_view || null;
+
     // Bereken afstand als geolocatie beschikbaar is
     let afstandText = '';
-    if (geolocatieToegekend && gebruikerLocatie) {
+    if (geolocatieToegekend && gebruikerLocatie && lat && lng) {
       const afstand = getAfstandVoorStripmuur(muur);
       if (afstand !== null) {
         if (afstand < 1) {
@@ -340,7 +377,7 @@ function toonStripmuren(data, taal = "nl") {
       } else {
         favorietButtonHtml = `
           <button class="favoriet-button" data-id="${muralId}">
-            🌟 ${taal === 'fr' ? 'Ajouter aux favoris' : 'Voeg toe favorieten'}
+            🌟 ${taal === 'fr' ? 'Ajouter aux favoris' : 'Voeg toe aan favorieten'}
           </button>
         `;
       }
@@ -348,7 +385,7 @@ function toonStripmuren(data, taal = "nl") {
       // Fallback als favorietenManager niet beschikbaar is
       favorietButtonHtml = `
         <button class="favoriet-button" data-id="${muralId}">
-          ⭐ ${taal === 'fr' ? 'Ajouter aux favoris' : 'Voeg toe favorieten'}
+          ⭐ ${taal === 'fr' ? 'Ajouter aux favoris' : 'Voeg toe aan favorieten'}
         </button>
       `;
     }
@@ -359,18 +396,29 @@ function toonStripmuren(data, taal = "nl") {
       <img src="${afbeelding}" 
            alt="${titel_nl || titel_fr}" 
            loading="lazy" 
-           onerror="this.src='img/placeholder.jpg'; this.onerror=null;" />
+           onload="this.classList.add('loaded')" 
+           style="opacity: 0; transition: opacity 0.5s ease;"
+           onerror="this.src='img/placeholder.jpg'; this.onerror=null; setTimeout(() => { this.style.opacity = '1'; }, 100);" />
       <h3>${taal === 'nl' ? titel_nl : titel_fr}</h3>
       ${titel_nl && titel_fr && titel_nl !== titel_fr ? `<p class="sub-title">${taal === 'nl' ? titel_fr : titel_nl}</p>` : ''}
       <p><strong>${taal === 'fr' ? 'Artiste' : 'Kunstenaar'}:</strong> ${tekenaar}</p>
+      ${uitgever ? `<p><strong>${taal === 'fr' ? 'Éditeur' : 'Uitgeverij'}:</strong> ${uitgever}</p>` : ''}
       <p><strong>${taal === 'fr' ? 'Adresse' : 'Adres'}:</strong> ${adres}</p>
       <p><strong>${taal === 'fr' ? 'Année' : 'Jaar'}:</strong> ${jaar}</p>
+      ${oppervlakte ? `<p><strong>${taal === 'fr' ? 'Surface' : 'Oppervlakte'}:</strong> ${oppervlakte}</p>` : ''}
+      ${realisator ? `<p><strong>${taal === 'fr' ? 'Réalisation' : 'Realisatie'}:</strong> ${realisator}</p>` : ''}
       ${afstandText}
-      ${beschrijving_nl || beschrijving_fr ? `<p class="description">${taal === 'nl' ? beschrijving_nl : beschrijving_fr}</p>` : ''}
+      ${beschrijving_nl || beschrijving_fr ? 
+        `<div class="description">
+          <p class="description-title"><strong>${taal === 'fr' ? translations.fr.aboutArtwork : translations.nl.aboutArtwork}</strong></p>
+          ${beschrijving_nl ? `<div class="description-text nl"><strong>NL:</strong> ${beschrijving_nl}</div>` : ''}
+          ${beschrijving_fr ? `<div class="description-text fr"><strong>FR:</strong> ${beschrijving_fr}</div>` : ''}
+          ${!beschrijving_nl && !beschrijving_fr ? `<p class="no-description">${taal === 'fr' ? translations.fr.noDescription : translations.nl.noDescription}</p>` : ''}
+         </div>` : ''}
       
       <div class="kaart-acties">
-        ${link !== "#" ? `<a href="${link}" target="_blank">${taal === 'fr' ? 'Plus d\'info' : 'Meer info'}</a>` : ''}
-        ${lat && lng ? `<a href="https://www.google.com/maps?q=${lat},${lng}" target="_blank" class="google-maps-btn">🗺️ ${taal === 'fr' ? 'Ouvrir dans Google Maps' : 'Open in Google Maps'}</a>` : ''}
+        ${link !== "#" ? `<a href="${link}" target="_blank" class="meer-info-btn">ℹ️ ${taal === 'fr' ? 'Plus d\'info' : 'Meer info'}</a>` : ''}
+        ${googleMapsLink ? `<a href="${googleMapsLink}" target="_blank" class="google-maps-btn">🗺️ ${taal === 'fr' ? 'Google Maps' : 'Google Maps'}</a>` : ''}
         ${favorietButtonHtml}
       </div>
     `;
@@ -647,12 +695,13 @@ function toonBrusselsStripmurenOpLeaflet(data) {
     const kunstenaar = fields.dessinateur || muur.dessinateur || "Onbekend";
     const adres = fields.adres || fields.adresse || muur.adres || muur.adresse || '';
     const jaar = fields.date || muur.date || '';
-    const beschrijving_nl = fields.description_nl || '';
-    const beschrijving_fr = fields.description_fr || '';
+    const beschrijving_nl = fields.description_nl || fields.info_nl || fields.omschrijving || fields.beschrijving || '';
+    const beschrijving_fr = fields.description_fr || fields.info_fr || fields.description || '';
     const link = fields.link_site_striproute || fields.lien_site_parcours_bd || muur.link_site_striproute || muur.lien_site_parcours_bd || '#';
-    const afbeelding = fields.photo || fields.image || fields.foto || fields.picture || 
-                       fields.url_photo || fields.image_url || fields.photo_url || 
-                       "img/placeholder.jpg";
+    
+    // Extract image URL from API data
+    // Use the extractImageUrl utility function
+    const afbeelding = window.extractImageUrl ? window.extractImageUrl(fields) : "img/placeholder.jpg";
     
     console.log('Extracted data:', {
       titel_nl, titel_fr, kunstenaar, adres, jaar
@@ -661,20 +710,30 @@ function toonBrusselsStripmurenOpLeaflet(data) {
     // Coordinates handling
     let lat = null, lng = null;
     
-    console.log('Coordinate field raw:', fields.coordonnees_geographiques);
+    console.log('Checking for geo coordinates...');
     
-    if (fields.coordonnees_geographiques) {
+    // First try geo_point (new API format)
+    if (fields.geo_point) {
+      console.log('Geo_point found:', fields.geo_point);
+      if (fields.geo_point.lat && fields.geo_point.lon) {
+        lat = parseFloat(fields.geo_point.lat);
+        lng = parseFloat(fields.geo_point.lon);
+        console.log(`✅ Coordinates found in geo_point: [${lat}, ${lng}]`);
+      }
+    } 
+    // Fallback to coordonnees_geographiques (old format)
+    else if (fields.coordonnees_geographiques) {
       const coords = fields.coordonnees_geographiques;
-      console.log('Coordinates object:', coords);
+      console.log('Coordinates object (fallback):', coords);
       if (coords.lat && coords.lon) {
         lat = parseFloat(coords.lat);
         lng = parseFloat(coords.lon);
-        console.log(`✅ Coordinates found: [${lat}, ${lng}]`);
+        console.log(`✅ Coordinates found in coordonnees_geographiques: [${lat}, ${lng}]`);
       } else {
         console.warn('❌ No lat/lon in coordinates object');
       }
     } else {
-      console.warn('❌ No coordonnees_geographiques field');
+      console.warn('❌ No geo coordinates fields found');
     }
     
     if (lat && lng && !isNaN(lat) && !isNaN(lng)) {
@@ -718,23 +777,69 @@ function toonBrusselsStripmurenOpLeaflet(data) {
           `;
         }
         
-        // Popup content met afbeelding en favoriet knop
+        // Bereken afstand tussen gebruiker en de stripmuur
+        let afstandHTML = '';
+        if (geolocatieToegekend && gebruikerLocatie) {
+          const afstand = berekenAfstand(
+            gebruikerLocatie.latitude, 
+            gebruikerLocatie.longitude, 
+            lat, 
+            lng
+          );
+          
+          if (afstand !== null) {
+            const afstandFormatted = afstand < 1 
+              ? `${Math.round(afstand * 1000)} m` 
+              : `${afstand.toFixed(1)} km`;
+            afstandHTML = `<span>🚶 Afstand: <b>${afstandFormatted}</b></span><br>`;
+          }
+        }
+        
+        // Use Google Maps link from API if available, otherwise generate it
+        const googleMapsLink = fields.google_maps || `https://www.google.com/maps?q=${lat},${lng}`;
+        const googleStreetViewLink = fields.google_street_view || null;
+        
+        // Get the correct address based on language
+        const displayAdres = huidigeTaal === 'fr' 
+            ? (fields.adresse_fr || adres)
+            : (fields.adres_nl || adres);
+            
+        // Get the proper site link
+        const siteLink = huidigeTaal === 'fr' 
+            ? (fields.lien_site_parcours_bd || link)
+            : (fields.link_site_striproute || link);
+            
+        // Get extra details
+        const uitgever = fields.maison_d_edition || '';
+        const realisator = fields.realisateur || '';
+        const oppervlakte = fields.surface_m2 ? `${fields.surface_m2} m²` : '';
+        
+        // Popup content met afbeelding, afstand en favoriet knop - Updated
         let popupHtml = `
           <div style="text-align: center; margin-bottom: 10px;">
             <img src="${afbeelding}" 
                  alt="${titel_nl || titel_fr}" 
                  style="max-width: 200px; max-height: 150px; width: 100%; height: auto; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.3);"
-                 onerror="this.src='img/placeholder.jpg'; this.style.display='none';" />
+                 onerror="this.onerror=null; this.src='img/placeholder.jpg';" />
           </div>
-          <strong>${titel_nl ? `<div><b>NL:</b> ${titel_nl}</div>` : ''}
-          ${titel_fr ? `<div><b>FR:</b> ${titel_fr}</div>` : ''}</strong><br>
-          <span>👨‍🎨 Kunstenaar: ${kunstenaar}</span><br>
-          <span>📍 Adres: ${adres}</span><br>
-          <span>📅 Jaar: ${jaar}</span><br>
-          ${beschrijving_nl ? `<span><b>NL:</b> ${beschrijving_nl}</span><br>` : ''}
-          ${beschrijving_fr ? `<span><b>FR:</b> ${beschrijving_fr}</span><br>` : ''}
-          <a href="https://www.google.com/maps?q=${lat},${lng}" target="_blank">🗺️ Open in Google Maps</a><br>
-          ${link !== "#" ? `<a href="${link}" target="_blank">➕ Meer info</a><br>` : ''}
+          <div style="margin-bottom: 8px;">
+            <strong>${titel_nl ? `<div><b>NL:</b> ${titel_nl}</div>` : ''}
+            ${titel_fr ? `<div><b>FR:</b> ${titel_fr}</div>` : ''}</strong>
+          </div>
+          <span>👨‍🎨 ${translations[huidigeTaal].popup_artist}: ${kunstenaar}</span><br>
+          ${uitgever ? `<span>📚 ${translations[huidigeTaal].popup_publisher}: ${uitgever}</span><br>` : ''}
+          <span>📍 ${translations[huidigeTaal].popup_address}: ${displayAdres}</span><br>
+          <span>📅 ${translations[huidigeTaal].popup_year}: ${jaar}</span><br>
+          ${oppervlakte ? `<span>📏 ${translations[huidigeTaal].popup_area}: ${oppervlakte}</span><br>` : ''}
+          ${realisator ? `<span>🔨 ${translations[huidigeTaal].popup_realization}: ${realisator}</span><br>` : ''}
+          ${afstandHTML}
+          ${beschrijving_nl || beschrijving_fr ? `<div style="margin-top: 5px; border-top: 1px solid #eee; padding-top: 5px;"><b>${huidigeTaal === 'fr' ? 'Description de cette œuvre d\'art' : 'Informatie over dit kunstwerk'}</b></div>` : ''}
+          ${beschrijving_nl ? `<div style="margin-top: 5px;"><b>NL:</b> ${beschrijving_nl}</div>` : ''}
+          ${beschrijving_fr ? `<div style="margin-top: 5px;"><b>FR:</b> ${beschrijving_fr}</div>` : ''}
+          <div style="margin-top: 8px;">
+            <a href="${googleMapsLink}" target="_blank" style="margin-right: 10px;">🗺️ Google Maps</a>
+          </div>
+          ${siteLink && siteLink !== "#" ? `<div style="margin-top: 5px;"><a href="${siteLink}" target="_blank">➕ ${translations[huidigeTaal].popup_more_info}</a></div>` : ''}
           ${favorietButtonHtml}
         `;
         
@@ -762,7 +867,10 @@ function toonBrusselsStripmurenOpLeaflet(data) {
         });
         
         // Voeg marker toe aan layer in plaats van direct aan map
-        marker.bindPopup(popupHtml);
+        marker.bindPopup(popupHtml, {
+          className: 'brussels-leaflet-popup',
+          maxWidth: 300
+        });
         brusselsMarkersLayer.addLayer(marker);
         validMarkers++;
         
