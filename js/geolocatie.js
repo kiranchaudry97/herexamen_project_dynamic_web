@@ -8,13 +8,13 @@ class GeolocatieManager {
 
     // Haal geolocatie voorkeur op uit localStorage
     getGeolocatieVoorkeur() {
-        const saved = localStorage.getItem('geolocatieToegestal');
+        const saved = localStorage.getItem('geolocatieToegestaan');
         return saved === 'true';
     }
 
     // Sla geolocatie voorkeur op
     saveGeolocatieVoorkeur(toegestaan) {
-        localStorage.setItem('geolocatieToegestal', toegestaan.toString());
+        localStorage.setItem('geolocatieToegestaan', toegestaan.toString());
         localStorage.setItem('geolocatieGewijzigd', new Date().toISOString());
         console.log('💾 Geolocatie voorkeur opgeslagen:', toegestaan);
     }
@@ -77,9 +77,12 @@ class GeolocatieManager {
         // Toon geolocatie UI
         this.toonGeolocatieUi(true);
 
+        // Standaard geolocatie toestaan voor afstandsfilter
+        this.geolocatieToegestaan = true;
+        
         // Probeer opgeslagen locatie eerst
         const opgeslagenLocatie = this.getOpgeslagenLocatie();
-        if (opgeslagenLocatie && this.geolocatieToegestal) {
+        if (opgeslagenLocatie) {
             console.log('📍 Gebruik opgeslagen locatie');
             this.gebruikerLocatie = {
                 lat: opgeslagenLocatie.lat,
@@ -278,49 +281,17 @@ class GeolocatieManager {
         return null;
     }
 
-    // Toon geolocatie UI
+    // Toon geolocatie UI (alleen afstandsfilter, geen toggle)
     toonGeolocatieUi(ondersteuning) {
-        // Voeg geolocatie sectie toe aan settings als het nog niet bestaat
-        const settingsSection = document.querySelector('.settings');
-        if (!settingsSection) return;
+        // We tonen geen geolocatie toggle meer, maar behouden wel de functionaliteit voor afstandsfiltering
+        console.log('ℹ️ Geolocatie UI toggle is uitgeschakeld, maar afstandsfilter blijft werken');
         
-        let geoSection = document.getElementById('geolocatie-sectie');
-        if (!geoSection) {
-            geoSection = document.createElement('div');
-            geoSection.id = 'geolocatie-sectie';
-            geoSection.className = 'geolocatie-toggle';
-            
-            if (ondersteuning) {
-                geoSection.innerHTML = `
-                    <label class="switch">
-                        <input type="checkbox" id="geolocatieToggle" ${this.geolocatieToegestal ? 'checked' : ''} />
-                        <span class="slider round"></span>
-                    </label>
-                    <span class="geo-label" data-i18n="geolocatie">Locatie delen</span>
-                    <div id="locatie-status" class="locatie-status"></div>
-                `;
-                
-                // Event listener voor toggle
-                const toggle = geoSection.querySelector('#geolocatieToggle');
-                toggle.addEventListener('change', (e) => {
-                    if (e.target.checked) {
-                        this.vraagHuidigeLocatie();
-                    } else {
-                        this.gebruikerLocatie = null;
-                        this.saveGeolocatieVoorkeur(false);
-                        localStorage.removeItem('gebruikerLocatie');
-                        this.updateAfstandenDisplay();
-                        this.toonLocatieStatus('📍 Locatie delen uitgeschakeld');
-                    }
-                });
-            } else {
-                geoSection.innerHTML = `
-                    <span class="geo-label disabled">⚠️ Geolocatie niet ondersteund</span>
-                `;
-            }
-            
-            settingsSection.appendChild(geoSection);
+        // Activeer geolocatie automatisch in de achtergrond als deze beschikbaar is
+        if (ondersteuning) {
+            console.log('🗺️ Geolocatie wordt automatisch geactiveerd voor afstandsfiltering...');
+            this.vraagHuidigeLocatie();
         }
+        return;
     }
 
     // Toon locatie status
@@ -378,6 +349,13 @@ window.geolocatieManager = new GeolocatieManager();
 // Voeg geolocatie sorteer optie toe aan filter als deze bestaat
 document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
+        // Controleer of er een oude geolocatie UI bestaat en verwijder deze
+        const geolocatieSection = document.getElementById('geolocatie-sectie');
+        if (geolocatieSection) {
+            console.log('🔄 Oude Geolocatie UI verwijderen...');
+            geolocatieSection.remove();
+        }
+        
         const sorteerSelect = document.getElementById('sorteerSelect');
         if (sorteerSelect && window.geolocatieManager.gebruikerLocatie) {
             // Voeg afstand sorteer optie toe
