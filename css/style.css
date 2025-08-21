@@ -369,6 +369,24 @@ body.dark-mode .info p {
   width: 100%;
   height: 190px;
   object-fit: cover;
+  transition: opacity 0.5s ease;
+  border-radius: 8px;
+}
+
+/* Verbeterde afbeeldingscontainer voor favorieten pagina */
+.muur-afbeelding-container {
+  height: 190px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  margin: 0 0 10px 0;
+}
+
+.muur-kaart img.loaded {
+  opacity: 1 !important;
 }
 
 .muur-kaart h3 {
@@ -407,13 +425,76 @@ body.dark-mode .info p {
   content: "\2139 \FE0F ";
 }
 
+.muur-kaart .description {
+  margin-top: 0.8rem;
+  padding: 0.5rem 1rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  max-height: 180px;
+  overflow-y: auto;
+  border: 1px solid #eaeaea;
+}
+
+.muur-kaart .description-title {
+  color: #333;
+  font-size: 1rem;
+  margin-bottom: 8px;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 5px;
+}
+
+.muur-kaart .description-text {
+  margin: 0.4rem 0;
+  padding: 6px 8px;
+  background-color: #fff;
+  border-radius: 4px;
+  border-left: 3px solid #3498db;
+}
+
+.muur-kaart .description-text.fr {
+  border-left-color: #e74c3c;
+}
+
+.muur-kaart .no-description {
+  font-style: italic;
+  color: #777;
+  margin: 0.4rem 0;
+}
+
+.muur-kaart .description p {
+  margin: 0.4rem 0;
+}
+
+.muur-kaart .afstand-info {
+  color: #2c3e50;
+  font-weight: 500;
+  margin-top: 0.5rem;
+  padding: 0.3rem 0.5rem;
+  background-color: #e3f2fd;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.muur-kaart .sub-title {
+  font-size: 0.9rem;
+  color: #555;
+  text-align: center;
+  font-style: italic;
+  margin-top: -0.3rem;
+  margin-bottom: 0.7rem;
+}
+
 /*  ACTIEKNOPPEN  */
 .kaart-acties {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.7rem;
   margin: 1rem;
+  width: 100%;
+  padding: 0 1rem;
 }
 
 .kaart-acties a {
@@ -426,7 +507,47 @@ body.dark-mode .info p {
   transition: background-color 0.3s;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
+  width: 100%;
+  text-align: center;
+}
+
+.kaart-acties .meer-info-btn {
+  background-color: #2bb673;
+}
+
+.kaart-acties .google-maps-btn {
+  background-color: #4285F4;
+}
+
+.kaart-acties .street-view-btn {
+  background-color: #DB4437;
+}
+
+.favoriet-button {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.favoriet-button:hover {
+  background-color: #2980b9;
+  transform: translateY(-2px);
+}
+
+.favoriet-button:disabled {
+  cursor: default;
 }
 
 .kaart-acties a:hover {
@@ -612,7 +733,7 @@ body.dark-mode .kaart-acties button {
   right: 8px;
   top: 8px;
 }
-}
+
 
 /* Custom marker hover effect */
 .strip-marker:hover {
