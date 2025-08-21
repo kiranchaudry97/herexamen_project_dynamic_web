@@ -113,23 +113,18 @@ function generatePopupHtml(data, muur) {
   `;
 }
 
-// Replace the old popup HTML generation
 document.addEventListener('DOMContentLoaded', () => {
-  // If the original toonBrusselsStripmurenOpLeaflet function exists, override it
   if (typeof toonBrusselsStripmurenOpLeaflet === 'function') {
     console.log('📱 Enhancing popup display with fixed icons...');
     
-    // Store the original function
     const originalToonBrusselsStripmurenOpLeaflet = toonBrusselsStripmurenOpLeaflet;
     
-    // Override with our fixed version
     window.toonBrusselsStripmurenOpLeaflet = function(data) {
       if (!brusselsMap || !brusselsMarkersLayer) {
         console.error('❌ Brussels Leaflet kaart niet geïnitialiseerd!');
         return;
       }
       
-      // Clear existing markers
       brusselsMarkersLayer.clearLayers();
       console.log('🧹 Bestaande markers gecleared');
       
@@ -138,17 +133,15 @@ document.addEventListener('DOMContentLoaded', () => {
       data.forEach((muur, index) => {
         const fields = muur.fields || muur;
         
-        // Get coordinates
         let lat = null, lng = null;
         
-        // First try geo_point (new API format)
         if (fields.geo_point) {
           if (fields.geo_point.lat && fields.geo_point.lon) {
             lat = parseFloat(fields.geo_point.lat);
             lng = parseFloat(fields.geo_point.lon);
           }
         }
-        // Fallback to coordonnees_geographiques (old format)
+        // Fallback 
         else if (fields.coordonnees_geographiques) {
           const coords = fields.coordonnees_geographiques;
           if (coords.lat && coords.lon) {
@@ -158,12 +151,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         if (lat && lng && !isNaN(lat) && !isNaN(lng)) {
-          // Validate Brussels coordinates (wider range for more strip walls)
           if (lat >= 50.6 && lat <= 51.0 && lng >= 4.0 && lng <= 4.8) {
-            // Generate our enhanced popup HTML
             const popupHtml = generatePopupHtml(data, muur);
             
-            // Create and add marker
             const marker = L.marker([lat, lng], {
               icon: L.divIcon({
                 className: 'brussels-strip-marker',
@@ -187,7 +177,6 @@ document.addEventListener('DOMContentLoaded', () => {
               })
             });
             
-            // Add marker to layer with our enhanced popup
             marker.bindPopup(popupHtml, {
               className: 'brussels-leaflet-popup',
               maxWidth: 300
@@ -198,14 +187,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
       
-      // Add a test marker if no valid markers were found
       if (validMarkers === 0) {
         console.log('⚠️ Geen markers gevonden, voeg test marker toe');
         const testMarker = L.marker([50.8505, 4.3488]).bindPopup('🧪 Test - Geen echte data gevonden');
         brusselsMarkersLayer.addLayer(testMarker);
       }
       
-      // Adjust map zoom to show all markers if there are any
       if (validMarkers > 0 && brusselsMarkersLayer.getLayers().length > 0) {
         try {
           setTimeout(() => {

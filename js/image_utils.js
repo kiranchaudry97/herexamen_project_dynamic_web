@@ -12,7 +12,7 @@ function extractImageUrl(fields) {
   let afbeelding = "img/placeholder.jpg";
   
   try {
-    // Debug the entire fields object for image-related properties
+    
     console.log('🔍 Extracting image URL, field keys:', Object.keys(fields));
     if (fields.image) {
       console.log('🖼️ Image field type:', typeof fields.image, 
@@ -20,7 +20,6 @@ function extractImageUrl(fields) {
                   fields.image);
     }
     
-    // Check if image is an object with URL property (new API format)
     if (fields.image && typeof fields.image === 'object') {
       // Direct URL property
       if (fields.image.url) {
