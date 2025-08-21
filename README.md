@@ -4,6 +4,13 @@
 
 BrusselsExplorer is een interactieve webapplicatie ontwikkeld voor het herexamen Project Dynamic Web. De applicatie stelt gebruikers in staat om de beroemde stripmuren van Brussel te verkennen via een moderne, responsive interface met geavanceerde filter- en kaartfunctionaliteiten.
 
+##  Screenshots van parcours de laatse update van 20 augustus 
+
+### update parcous js 
+![api]()https://github.com/kiranchaudry97/herexamen_project_dynamic_web/blob/8ca8ce9160aa9c795bef1828d3ec16b511bfa973/screenshots/update_van_parcours_url.png
+*ik heb deze aangemaakt op 27 juli alles werkte perfect, wou ik laatse momenten even checken of alles inorde is maar zag dat er geen afbeeldigen, locatie , stripinof niet meer weegeven , door de update waren er sommige zaken niete meer werkte door dez wijziging van de api *
+
+
 ###  Hoofdfunctionaliteiten
 
 - **Interactieve Stripmuren Verkenning**: Bekijk 28+ authentieke Brussels stripmuren met echte data
