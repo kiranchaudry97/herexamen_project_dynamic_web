@@ -78,5 +78,5 @@ function updateNavigation() {
     });
 }
 
-// Update navigatie wanneer pagina laadt
-document.addEventListener('DOMContentLoaded', updateNavigation);
+// Update navigatie wanneer pagina laadt wordt nu door navigatie.js gedaan
+// document.addEventListener('DOMContentLoaded', updateNavigation);
