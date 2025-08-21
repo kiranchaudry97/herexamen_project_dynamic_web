@@ -1,3 +1,5 @@
+//zie commit bericht
+
 // Favorieten functionaliteit
 class FavorietenManager {
     constructor() {
@@ -143,6 +145,11 @@ class FavorietenManager {
     verwijderFavoriet(id) {
         this.favorieten = this.favorieten.filter(fav => fav.id !== id);
         this.saveFavorieten();
+        
+        // Zorgt ervoor dat de pagina correct bijwerkt na het verwijderen
+        if (document.getElementById('favorietenContainer')) {
+            this.toonFavorieten();
+        }
         this.updateFavorietenDisplay();
     }
 
@@ -151,7 +158,12 @@ class FavorietenManager {
         let tijdelijke = this.getTijdelijkeFavorieten();
         tijdelijke = tijdelijke.filter(fav => fav.id !== id);
         this.saveTijdelijkeFavorieten(tijdelijke);
-        this.toonFavorieten();
+        
+        // Zorgt ervoor dat de pagina correct bijwerkt na het verwijderen
+        if (document.getElementById('favorietenContainer')) {
+            this.toonFavorieten();
+        }
+        this.updateFavorietenDisplay();
     }
 
     // Check of een stripmuur een favoriet is (permanent of tijdelijk)
@@ -224,7 +236,8 @@ class FavorietenManager {
     }
 
     // Bewaard tijdelijke favorieten (oude functie - behouden voor compatibiliteit) als permanente (na login)
-    bewijdTijdelijkeFavorieten() {
+    // LET OP: De naam was verkeerd gespeld in het origineel (bewijdTijdelijkeFavorieten)
+    bewaarTijdelijkeFavorieten() {
         const tijdelijke = this.getTijdelijkeFavorieten();
         tijdelijke.forEach(fav => {
             const exists = this.favorieten.find(existing => existing.id === fav.id);
@@ -263,6 +276,9 @@ class FavorietenManager {
                     <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 1.5rem;">
                         <a href="parcours.html" class="button terug-button" data-i18n="back_to_murals">
                             🎨 Ontdek stripmuren
+                        </a>
+                        <a href="${isLoggedIn ? (localStorage.getItem('userType') === 'admin' ? 'admin_dashboard.html' : 'user_dashboard.html') : 'index.html'}" class="button terug-button">
+                            🏠 ${currentLang === 'fr' ? 'Retour au tableau de bord' : 'Terug naar dashboard'}
                         </a>
                         ${!isLoggedIn ? `
                             <a href="login.html" class="button terug-button">
@@ -382,7 +398,19 @@ class FavorietenManager {
         const locatie = stripmuur.adres || stripmuur.adresse || stripmuur.location || (currentLang === 'fr' ? 'Lieu inconnu' : 'Locatie onbekend');
         const jaar = stripmuur.date || stripmuur.year || (currentLang === 'fr' ? 'Inconnu' : 'Onbekend');
         const beschrijving = stripmuur.description_nl || stripmuur.description_fr || stripmuur.description || (currentLang === 'fr' ? 'Aucune description disponible.' : 'Geen beschrijving beschikbaar.');
-        const afbeelding = stripmuur.image || 'img/placeholder.jpg';
+        
+        // Verbeterde afbeelding extractie
+        let afbeelding;
+        if (typeof window.extractImageUrl === 'function') {
+            // Gebruik de utility functie als deze beschikbaar is
+            afbeelding = window.extractImageUrl(stripmuur);
+        } else {
+            // Fallback op verschillende mogelijke afbeeldingsvelden
+            afbeelding = stripmuur.image || 
+                        (stripmuur.fields && stripmuur.fields.image) ||
+                        stripmuur.photo || stripmuur.url_image || 
+                        stripmuur.image_url || 'img/placeholder.jpg';
+        }
         
         // Maak Google Maps link
         const mapLink = `https://www.google.com/maps?q=${encodeURIComponent(locatie)}`;
@@ -390,20 +418,23 @@ class FavorietenManager {
         if (showRemove) {
             if (isTijdelijk) {
                 removeButton = `<button onclick="favorietenManager.verwijderTijdelijkeFavoriet(${stripmuur.id})" class="button" style="background-color: #ff9800;">
-                    🗑️ ${currentLang === 'fr' ? 'Supprimer temporaire' : 'Verwijder tijdelijk'}
+                    🗑️ ${translations[currentLang].remove_temp_favorite}
                 </button>`;
-                tijdelijkLabel = `<span class="tijdelijk-label" style="background: #ff9800; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.8em; margin-left: 8px;">${currentLang === 'fr' ? 'Temporaire' : 'Tijdelijk'}</span>`;
+                tijdelijkLabel = `<span class="tijdelijk-label" style="background: #ff9800; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.8em; margin-left: 8px;">${translations[currentLang].fav_temporary}</span>`;
             } else {
                 removeButton = `<button onclick="favorietenManager.verwijderFavoriet(${stripmuur.id})" class="button" style="background-color: #e53935;">
-                    ❌ ${currentLang === 'fr' ? 'Supprimer' : 'Verwijderen'}
+                    ❌ ${translations[currentLang].remove_favorite}
                 </button>`;
-                tijdelijkLabel = `<span class="permanent-label" style="background: #4caf50; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.8em; margin-left: 8px;">${currentLang === 'fr' ? 'Sauvegardé' : 'Opgeslagen'}</span>`;
+                tijdelijkLabel = `<span class="permanent-label" style="background: #4caf50; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.8em; margin-left: 8px;">${translations[currentLang].fav_saved}</span>`;
             }
         }
 
         return `
             <div class="muur-kaart">
-                <img src="${afbeelding}" alt="${titel}" />
+                <div class="muur-afbeelding-container" style="height: 200px; overflow: hidden; display: flex; align-items: center; justify-content: center; background-color: #f5f5f5; border-radius: 8px; margin-bottom: 10px;">
+                    <img src="${afbeelding}" alt="${titel}" style="max-width: 100%; max-height: 100%; object-fit: cover;" 
+                         onerror="this.onerror=null; this.src='img/placeholder.jpg'; console.log('⚠️ Afbeelding kon niet worden geladen:', this.alt);" />
+                </div>
                 <h3>${titel} ${tijdelijkLabel}</h3>
                 <p><strong>${currentLang === 'fr' ? 'Artiste' : 'Kunstenaar'}:</strong> ${kunstenaar}</p>
                 <p><strong>${currentLang === 'fr' ? 'Adresse' : 'Adres'}:</strong> ${locatie}</p>
@@ -476,13 +507,29 @@ class FavorietenManager {
 // Functie om dashboard knop te tonen/verbergen
 function updateDashboardButton() {
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-    const dashboardButton = document.querySelector('.navigation-buttons');
+    const dashboardButtonContainer = document.querySelector('.navigation-buttons');
     
-    if (dashboardButton) {
+    if (dashboardButtonContainer) {
+        // Alleen tonen als ingelogd
+        dashboardButtonContainer.style.display = isLoggedIn ? 'block' : 'none';
+    }
+}
+
+// Functie om "Terug naar Dashboard" link bij te werken
+function updateBackToDashboardLink() {
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    const userType = localStorage.getItem('userType');
+    const backButton = document.getElementById('back-to-dashboard');
+    
+    if (backButton) {
         if (isLoggedIn) {
-            dashboardButton.style.display = 'block';
+            if (userType === 'admin') {
+                backButton.href = 'admin_dashboard.html';
+            } else {
+                backButton.href = 'user_dashboard.html';
+            }
         } else {
-            dashboardButton.style.display = 'none';
+            backButton.href = 'index.html';
         }
     }
 }
@@ -495,6 +542,7 @@ document.addEventListener('DOMContentLoaded', () => {
     favorietenManager.toonFavorieten();
     favorietenManager.updateFavorietenDisplay();
     updateDashboardButton(); // Toon/verberg dashboard knop
+    updateBackToDashboardLink(); // Update de "Terug naar Dashboard" link
     
     // Check bij page load of er tijdelijke favorieten zijn en de gebruiker nu ingelogd is
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
@@ -503,7 +551,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (tijdelijke.length > 0) {
             const confirmBewaar = confirm(`Je hebt ${tijdelijke.length} tijdelijke favoriet(en). Wil je deze nu permanent opslaan?`);
             if (confirmBewaar) {
-                favorietenManager.bewijdTijdelijkeFavorieten();
+                favorietenManager.bewaarAlleTijdelijkeFavorieten();
                 alert('✅ Tijdelijke favorieten zijn nu permanent opgeslagen!');
             }
         }
