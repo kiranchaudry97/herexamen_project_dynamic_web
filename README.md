@@ -474,6 +474,7 @@ De applicatie is live beschikbaar op: [https://kiranchaudry97.github.io/herexame
 ##  Problemen die voorkomen 
 
 ### Known Issues
+- Afbeeldingen kunnen soms niet weergeven worden en bij de kaartweergave vooral de informaties.
 - Geolocatie werkt mogelijk niet over HTTP (alleen HTTPS)
 - Map markers kunnen overlappen bij hoge zoom levels
 - Favorieten data verloren bij browser cache clear
