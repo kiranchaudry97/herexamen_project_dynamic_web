@@ -8,7 +8,7 @@ BrusselsExplorer is een interactieve webapplicatie ontwikkeld voor het herexamen
 
 ### update parcous js 
 ![api](https://github.com/kiranchaudry97/herexamen_project_dynamic_web/blob/8ca8ce9160aa9c795bef1828d3ec16b511bfa973/screenshots/update_van_parcours_url.png)
-*ik heb deze aangemaakt op 27 juli alles werkte perfect, wou ik laatse momenten even checken of alles inorde is maar zag dat er geen afbeeldigen, locatie , strip infp niet meer weegeven , door de update waren er sommige zaken niet meer werkte door dez wijziging van de api *
+*ik heb deze aangemaakt op 27 juli alles werkte perfect, wou ik laatse momenten even checken of alles inorde is maar zag dat er geen afbeeldigen, locatie , strip infp niet meer weegeven , door de update waren er sommige zaken niet meer werkte door deze wijziging van de api en moeste aanpassen *
 
 
 ###  Hoofdfunctionaliteiten
