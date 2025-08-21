@@ -60,15 +60,143 @@ function createHamburgerButton() {
     }
 }
 
+// Functie om dialoog te tonen met opties voor niet-ingelogde gebruikers
+function showFavorietenOptionsDialog() {
+    const currentLang = localStorage.getItem('language') || 'nl';
+    const translations = window.languageData || (typeof getTranslations === 'function' ? getTranslations() : null);
+    
+    if (!translations) {
+        console.error('Translations not available');
+        window.location.href = 'favorieten.html'; // Fallback naar standaard gedrag
+        return;
+    }
+    
+    // Maak dialog overlay
+    const overlay = document.createElement('div');
+    overlay.className = 'dialog-overlay';
+    overlay.style.position = 'fixed';
+    overlay.style.top = '0';
+    overlay.style.left = '0';
+    overlay.style.right = '0';
+    overlay.style.bottom = '0';
+    overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+    overlay.style.zIndex = '9999';
+    overlay.style.display = 'flex';
+    overlay.style.justifyContent = 'center';
+    overlay.style.alignItems = 'center';
+    
+    // Maak dialog box
+    const dialog = document.createElement('div');
+    dialog.className = 'dialog-box';
+    dialog.style.background = 'white';
+    dialog.style.borderRadius = '8px';
+    dialog.style.padding = '20px';
+    dialog.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
+    dialog.style.maxWidth = '90%';
+    dialog.style.width = '400px';
+    dialog.style.textAlign = 'center';
+    
+    // Dark mode ondersteuning
+    const isDarkMode = localStorage.getItem('darkMode') === 'enabled';
+    if (isDarkMode) {
+        dialog.style.backgroundColor = '#333';
+        dialog.style.color = '#fff';
+    }
+    
+    // Inhoud dialog
+    const title = document.createElement('h3');
+    title.textContent = translations[currentLang].favorites_choice_title;
+    title.style.marginTop = '0';
+    
+    const message = document.createElement('p');
+    message.textContent = translations[currentLang].favorites_choice_message;
+    
+    // Knoppen container
+    const buttonsContainer = document.createElement('div');
+    buttonsContainer.style.display = 'flex';
+    buttonsContainer.style.justifyContent = 'center';
+    buttonsContainer.style.gap = '10px';
+    buttonsContainer.style.marginTop = '15px';
+    
+    // Knop stijl functie
+    function styleButton(btn, isPrimary) {
+        btn.style.padding = '10px 15px';
+        btn.style.border = 'none';
+        btn.style.borderRadius = '5px';
+        btn.style.cursor = 'pointer';
+        
+        if (isPrimary) {
+            btn.style.backgroundColor = '#3498db';
+            btn.style.color = 'white';
+        } else {
+            if (isDarkMode) {
+                btn.style.backgroundColor = '#555';
+                btn.style.color = '#fff';
+            } else {
+                btn.style.backgroundColor = '#eee';
+                btn.style.color = '#333';
+            }
+        }
+    }
+    
+    // Maak knoppen
+    const continueBtn = document.createElement('button');
+    continueBtn.textContent = translations[currentLang].favorites_choice_continue;
+    styleButton(continueBtn, true);
+    continueBtn.onclick = function() {
+        document.body.removeChild(overlay);
+        window.location.href = 'favorieten.html';
+    };
+    
+    const loginBtn = document.createElement('button');
+    loginBtn.textContent = translations[currentLang].favorites_choice_login;
+    styleButton(loginBtn, false);
+    loginBtn.onclick = function() {
+        document.body.removeChild(overlay);
+        window.location.href = 'login.html';
+    };
+    
+    const cancelBtn = document.createElement('button');
+    cancelBtn.textContent = translations[currentLang].favorites_choice_cancel;
+    styleButton(cancelBtn, false);
+    cancelBtn.onclick = function() {
+        document.body.removeChild(overlay);
+    };
+    
+    // Voeg knoppen toe aan container
+    buttonsContainer.appendChild(continueBtn);
+    buttonsContainer.appendChild(loginBtn);
+    buttonsContainer.appendChild(cancelBtn);
+    
+    // Voeg alles toe aan dialog
+    dialog.appendChild(title);
+    dialog.appendChild(message);
+    dialog.appendChild(buttonsContainer);
+    
+    // Voeg dialog toe aan overlay
+    overlay.appendChild(dialog);
+    
+    // Voeg overlay toe aan body
+    document.body.appendChild(overlay);
+}
+
 function updateNavigationLinks() {
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
     const userType = localStorage.getItem('userType');
     
-    // Favorieten link gaat ALTIJD naar favorieten.html
-    // Gebruikers kunnen altijd hun favorieten bekijken
+    // Favorieten links
     const favorietenLinks = document.querySelectorAll('a[href="favorieten.html"], a[data-i18n="favorites"]');
     favorietenLinks.forEach(link => {
+        // Standaard gaat het naar favorieten.html
         link.href = 'favorieten.html';
+        
+        // Voeg een click event handler toe om niet-ingelogde gebruikers een keuze te geven
+        if (!isLoggedIn) {
+            link.addEventListener('click', function(e) {
+                e.preventDefault(); // Voorkom standaard navigatie
+                showFavorietenOptionsDialog();
+            });
+        }
     });
     
     // Update login link naar dashboard als ingelogd
