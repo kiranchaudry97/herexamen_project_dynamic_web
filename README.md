@@ -465,7 +465,7 @@ De applicatie is live beschikbaar op: [https://kiranchaudry97.github.io/herexame
 
 
 ### AI Assistance
-- **GitHub Copilot**: Code completion en suggesties
+- **GitHub Copilot**: teksten,teksten vertalen , icons toevoegen,design, geolocatie , debuggingen suggesties
 - **ChatGPT**: Debugging hulp en code optimalisatie
 
 
